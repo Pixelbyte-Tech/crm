@@ -1,50 +1,6 @@
 # CRM Project Monorepo
 
-This is the boilerplate monorepo structure that can be used as a starting point for any new project. It includes a
-pre-configured setup for various tools and technologies commonly used in modern web development.
-
-## Updates required before use
-
-After creating a new project repo from this boilerplate repo, you will need customize certain for your specific project,
-please make the following changes:
-
-- `/.github/workflows/**/*`
-  - Update any references to `project-` to reflect your project name.
-
-- `/.infra/**/*`
-  - Update any references to `project-` to reflect your project name.
-  - Update any references to `<project>` to reflect your project name.
-  - Update the `example.com` domain to your project's domain.
-
-- `/apps/**/*`
-  - Update any references to `@project` with your project scope, e.g. `@super-project`.
-
-- `/packages/**/*`
-  - Rename `@project` with your project scope, e.g. `@super-project`.
-
-- `docker-compose.yaml`
-  - Remove any non-required infrastructure containers.
-  - Replace instances of `project` where applicable to reflect your project name.
-  - Update db name `project_db` to reflect your project name.
-
-- `Dockerfile`
-  - Replace `@project` with your project scope, e.g. `@super-project`.
-
-- `eslint.config.mjs`
-  - Replace `@project` with your project scope, e.g. `@super-project`.
-
-- `package.json`
-  - Rename the `name` field to reflect your project name.
-  - Replace `@project` with your project scope, e.g. `@super-project`.
-
-- `env.example`
-  - Update db name `project_db` to reflect your project name.
-
-
-The `sample` app can be removed, it is only included to demonstrate the coding practises for backend nestjs services
-within the monorepo structure.
-
-> Remember to update the `gateway:sample:gen` script in `package.json` if you remove or rename the sample app.
+This monorepo holds all BE and FE services for the CRM project.
 
 ## Getting started
 
@@ -80,7 +36,12 @@ Apply environment variables:
 
 ```bash
 cp ./apps/analytics/.env.example ./apps/analytics/.env
-cp ./apps/sample/.env.example ./apps/sample/.env
+cp ./apps/broker/.env.example ./apps/broker/.env
+cp ./apps/bull-monitor/.env.example ./apps/bull-monitor/.env
+cp ./apps/compliance/.env.example ./apps/compliance/.env
+cp ./apps/payment/.env.example ./apps/payment/.env
+cp ./apps/prop/.env.example ./apps/prop/.env
+cp ./apps/user/.env.example ./apps/user/.env
 ```
 
 > Ensure to enable eslint and prettier on save in your IDE to maintain code quality and consistency across the codebase.
