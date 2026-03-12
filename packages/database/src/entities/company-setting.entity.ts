@@ -13,7 +13,7 @@ import {
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'company_setting' })
-@Unique(['key', 'companyId'])
+@Unique(['companyId', 'key'])
 export class CompanySettingEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

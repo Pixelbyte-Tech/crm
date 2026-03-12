@@ -18,6 +18,12 @@ export * from './common/integration.enum';
 export * from './common/integration-type.enum';
 export * from './common/sort-dir.enum';
 
+export * from './loyalty/loyalty-points-source.enum';
+export * from './loyalty/loyalty-program.enum';
+
+export * from './payment/payment-transaction-status.enum';
+export * from './payment/payment-transaction-type.enum';
+
 export * from './platform/monetization.enum';
 export * from './platform/platform.enum';
 export * from './platform/platform-client-type.enum';
@@ -32,3 +38,7 @@ export * from './trading-event/volatility.enum';
 export * from './user/user-employment-status.enum';
 export * from './user/user-experience.enum';
 export * from './user/user-status.enum';
+
+export * from './wallet/asset-type.enum';
+export * from './wallet/wallet-transaction-status.enum';
+export * from './wallet/wallet-transaction-type.enum';

@@ -14,20 +14,27 @@ import {
 
 import { UserStatus } from '@crm/types';
 
+import { WalletEntity } from './wallet.entity';
 import { CompanyEntity } from './company.entity';
+import { LoyaltyEntity } from './loyalty.entity';
 import { UserNoteEntity } from './user-note.entity';
+import { WheelSpinEntity } from './wheel-spin.entity';
 import { UserAvatarEntity } from './user-avatar.entity';
 import { UserDetailEntity } from './user-detail.entity';
 import { UserSettingEntity } from './user-setting.entity';
 import { UserDocumentEntity } from './user-document.entity';
-import { UserNotification } from './user-notification.entity';
 import { TradingAccountEntity } from './trading-account.entity';
+import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
+import { UserNotificationEntity } from './user-notification.entity';
+import { WalletTransactionEntity } from './wallet-transaction.entity';
+import { PaymentTransactionEntity } from './payment-transaction.entity';
+import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
 @Entity({ name: 'user' })
 @Unique(['detailId'])
 @Unique(['settingsId'])
-@Unique(['email', 'companyId'])
+@Unique(['companyId', 'email'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -111,6 +118,10 @@ export class UserEntity {
   @Column({ type: 'text' })
   settingsId: string;
 
+  @OneToOne(() => LoyaltyEntity, (e) => e.user)
+  @JoinColumn()
+  loyalty: LoyaltyEntity[];
+
   /** One-to-many relations */
   @OneToMany(() => UserAuthSessionEntity, (e) => e.user)
   @JoinColumn()
@@ -120,17 +131,41 @@ export class UserEntity {
   @JoinColumn()
   documents: UserDocumentEntity[];
 
+  @OneToMany(() => LoyaltyHistoryEntity, (e) => e.user)
+  @JoinColumn()
+  loyaltyHistory: LoyaltyHistoryEntity[];
+
   @OneToMany(() => UserNoteEntity, (e) => e.user)
   @JoinColumn()
   notes: UserNoteEntity[];
 
-  @OneToMany(() => UserNotification, (e) => e.user)
+  @OneToMany(() => UserNotificationEntity, (e) => e.user)
   @JoinColumn()
-  notifications: UserNotification[];
+  notifications: UserNotificationEntity[];
+
+  @OneToMany(() => PaymentTransactionEntity, (e) => e.user)
+  @JoinColumn()
+  paymentTransactions: PaymentTransactionEntity[];
 
   @OneToMany(() => TradingAccountEntity, (e) => e.user)
   @JoinColumn()
   tradingAccounts: TradingAccountEntity[];
+
+  @OneToMany(() => WalletEntity, (e) => e.user)
+  @JoinColumn()
+  wallets: WalletEntity[];
+
+  @OneToMany(() => WalletTransactionEntity, (e) => e.user)
+  @JoinColumn()
+  walletTransactions: WalletTransactionEntity[];
+
+  @OneToMany(() => WalletTransactionHistoryEntity, (e) => e.user)
+  @JoinColumn()
+  walletTransactionHistory: WalletTransactionHistoryEntity[];
+
+  @OneToMany(() => WheelSpinEntity, (e) => e.user)
+  @JoinColumn()
+  wheelSpins: WheelSpinEntity[];
 
   /** Many-to-one relations */
   @ManyToOne(() => CompanyEntity, (e) => e.users, {

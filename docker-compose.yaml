@@ -278,7 +278,7 @@ services:
       target: 'base'
     command: 'echo ''Specify your command like "pnpm db:migrate:up" in the docker-compose command'''
     env_file:
-      - apps/sample/.env
+      - apps/broker/.env
     volumes:
       - ./:/app
     depends_on:

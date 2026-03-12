@@ -10,27 +10,29 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { LoyaltyPointsSource } from '@crm/types';
+
 import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
+import { LoyaltyEntity } from './loyalty.entity';
 
-@Entity({ name: 'user_auth_session' })
-@Unique(['userId', 'createdAt'])
-export class UserAuthSessionEntity {
+@Entity({ name: 'loyalty_history' })
+@Unique(['userId', 'points', 'createdAt'])
+export class LoyaltyHistoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'int' })
+  points: number;
+
+  @Column({ type: 'enum', enum: LoyaltyPointsSource })
+  source: LoyaltyPointsSource;
+
   @Column({ type: 'text' })
-  hash: string;
-
-  @Index()
-  @Column({ type: 'text', nullable: true })
-  ipAddress?: string | null;
-
-  @Column({ type: 'text', nullable: true })
-  userAgent?: string | null;
+  reason: string;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userAuthSessions, {
+  @ManyToOne(() => CompanyEntity, (e) => e.loyaltyHistory, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
@@ -41,7 +43,18 @@ export class UserAuthSessionEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => UserEntity, (e) => e.authSessions, {
+  @ManyToOne(() => LoyaltyEntity, (e) => e.history, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'loyaltyId' })
+  loyalty: LoyaltyEntity;
+
+  @Index()
+  @Column({ type: 'text' })
+  loyaltyId: string;
+
+  @ManyToOne(() => UserEntity, (e) => e.loyaltyHistory, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

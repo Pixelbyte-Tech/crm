@@ -13,7 +13,7 @@ import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_notification' })
-export class UserNotification {
+export class UserNotificationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

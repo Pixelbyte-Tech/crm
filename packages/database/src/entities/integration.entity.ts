@@ -4,6 +4,7 @@ import {
   Column,
   Unique,
   ManyToOne,
+  OneToMany,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -13,6 +14,7 @@ import {
 import { Integration, IntegrationType } from '@crm/types';
 
 import { CompanyEntity } from './company.entity';
+import { PaymentTransactionEntity } from './payment-transaction.entity';
 
 @Entity({ name: 'integration' })
 @Unique(['companyId', 'name'])
@@ -43,7 +45,12 @@ export class IntegrationEntity {
   @Column({ type: 'varchar', length: 3, array: true, nullable: true })
   excludedCountries?: string[] | null;
 
-  /** Many-to-many relations */
+  /** One-to-many relations */
+  @OneToMany(() => PaymentTransactionEntity, (e) => e.integration)
+  @JoinColumn()
+  paymentTransactions: PaymentTransactionEntity[];
+
+  /** Many-to-one relations */
   @ManyToOne(() => CompanyEntity, (e) => e.integrations, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

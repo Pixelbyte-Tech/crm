@@ -16,7 +16,10 @@ import { Platform, Monetization, TradingAccountStatus } from '@crm/types';
 import { UserEntity } from './user.entity';
 import { ServerEntity } from './server.entity';
 import { CompanyEntity } from './company.entity';
+import { TradingAccountNote } from './trading-account-note.entity';
+import { WalletTransactionEntity } from './wallet-transaction.entity';
 import { TradingAccountTagEntity } from './trading-account-tag.entity';
+import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
 @Entity({ name: 'trading_account' })
 @Unique(['serverId', 'platformId'])
@@ -55,9 +58,21 @@ export class TradingAccountEntity {
   password: string;
 
   /** One-to-many relations */
+  @OneToMany(() => TradingAccountNote, (e) => e.tradingAccount)
+  @JoinColumn()
+  notes: TradingAccountNote[];
+
   @OneToMany(() => TradingAccountTagEntity, (e) => e.tradingAccount)
   @JoinColumn()
   tradingAccountTags: TradingAccountTagEntity[];
+
+  @OneToMany(() => WalletTransactionEntity, (e) => e.tradingAccount)
+  @JoinColumn()
+  walletTransactions: WalletTransactionEntity[];
+
+  @OneToMany(() => WalletTransactionHistoryEntity, (e) => e.tradingAccount)
+  @JoinColumn()
+  walletTransactionHistory: WalletTransactionHistoryEntity[];
 
   /** Many-to-many relations */
   @ManyToOne(() => CompanyEntity, (e) => e.tradingAccounts, {

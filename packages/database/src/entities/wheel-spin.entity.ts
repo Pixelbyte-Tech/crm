@@ -2,7 +2,6 @@ import {
   Index,
   Entity,
   Column,
-  Unique,
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
@@ -13,24 +12,22 @@ import {
 import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'user_auth_session' })
-@Unique(['userId', 'createdAt'])
-export class UserAuthSessionEntity {
+@Entity({ name: 'wheel_spin' })
+export class WheelSpinEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
-  hash: string;
+  @Column({ type: 'boolean', default: false })
+  isRespin: boolean;
 
-  @Index()
-  @Column({ type: 'text', nullable: true })
-  ipAddress?: string | null;
+  @Column({ type: 'boolean', default: false })
+  isClosed: boolean;
 
-  @Column({ type: 'text', nullable: true })
-  userAgent?: string | null;
+  @Column({ type: 'int' })
+  sector: number;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userAuthSessions, {
+  @ManyToOne(() => CompanyEntity, (e) => e.wheelSpins, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
@@ -41,7 +38,7 @@ export class UserAuthSessionEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => UserEntity, (e) => e.authSessions, {
+  @ManyToOne(() => UserEntity, (e) => e.wheelSpins, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

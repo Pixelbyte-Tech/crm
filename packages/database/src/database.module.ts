@@ -3,8 +3,38 @@ import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-toke
 import { Type, Global, Module, Provider, DynamicModule, ModuleMetadata } from '@nestjs/common';
 import { OptionalFactoryDependency } from '@nestjs/common/interfaces/modules/optional-factory-dependency.interface';
 
+import { TagEntity } from './entities/tag.entity';
+import { UserEntity } from './entities/user.entity';
 import { AlertEntity } from './entities/alert.entity';
+import { ServerEntity } from './entities/server.entity';
+import { TenantEntity } from './entities/tenant.entity';
+import { WalletEntity } from './entities/wallet.entity';
+import { ChannelEntity } from './entities/channel.entity';
+import { CompanyEntity } from './entities/company.entity';
+import { AuditLogEntity } from './entities/audit-log.entity';
+import { UserNoteEntity } from './entities/user-note.entity';
+import { UserAvatarEntity } from './entities/user-avatar.entity';
+import { UserDetailEntity } from './entities/user-detail.entity';
+import { IntegrationEntity } from './entities/integration.entity';
+import { BillingInfoEntity } from './entities/billing-info.entity';
+import { UserSettingEntity } from './entities/user-setting.entity';
+import { OrganisationEntity } from './entities/organisation.entity';
+import { ExchangeRateEntity } from './entities/exchange-rate.entity';
+import { TradingEventEntity } from './entities/trading-event.entity';
+import { UserDocumentEntity } from './entities/user-document.entity';
+import { TenantCompanyEntity } from './entities/tenant-company.entity';
+import { CompanySettingEntity } from './entities/company-setting.entity';
+import { PlatformClientEntity } from './entities/platform-client.entity';
+import { TradingAccountEntity } from './entities/trading-account.entity';
+import { TradingAccountNote } from './entities/trading-account-note.entity';
+import { UserAuthSessionEntity } from './entities/user-auth-session.entity';
+import { UserNotificationEntity } from './entities/user-notification.entity';
+import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
 import { TenantAuthSessionEntity } from './entities/tenant-auth-session.entity';
+import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
+import { TradingAccountTypeEntity } from './entities/trading-account-type.entity';
+import { WalletTransactionHistoryEntity } from './entities/wallet-transaction-history.entity';
+import { TradingAccountTypeLeverageEntity } from './entities/trading-account-type-leverage.entity';
 
 export interface DatabaseModuleOptions {
   host: string;
@@ -78,7 +108,41 @@ export class DatabaseModule {
           }),
         }),
       ],
-      providers: [...providers, TenantAuthSessionEntity, AlertEntity],
+      providers: [
+        ...providers,
+        AlertEntity,
+        AuditLogEntity,
+        BillingInfoEntity,
+        ChannelEntity,
+        CompanyEntity,
+        CompanySettingEntity,
+        ExchangeRateEntity,
+        IntegrationEntity,
+        OrganisationEntity,
+        PlatformClientEntity,
+        ServerEntity,
+        TagEntity,
+        TenantEntity,
+        TenantAuthSessionEntity,
+        TenantCompanyEntity,
+        TradingAccountEntity,
+        TradingAccountNote,
+        TradingAccountTagEntity,
+        TradingAccountTypeEntity,
+        TradingAccountTypeLeverageEntity,
+        TradingEventEntity,
+        UserEntity,
+        UserAuthSessionEntity,
+        UserAvatarEntity,
+        UserDetailEntity,
+        UserDocumentEntity,
+        UserNoteEntity,
+        UserNotificationEntity,
+        UserSettingEntity,
+        WalletEntity,
+        WalletTransactionEntity,
+        WalletTransactionHistoryEntity,
+      ],
       exports: ['DB_CONFIG_OPTIONS'],
     };
   }

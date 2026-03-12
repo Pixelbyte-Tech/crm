@@ -17,7 +17,7 @@ import { AlertEntity } from './alert.entity';
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'channel' })
-@Unique(['type', 'companyId'])
+@Unique(['companyId', 'type'])
 export class ChannelEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -18,9 +18,12 @@ import { TagEntity } from './tag.entity';
 import { UserEntity } from './user.entity';
 import { AlertEntity } from './alert.entity';
 import { ServerEntity } from './server.entity';
+import { WalletEntity } from './wallet.entity';
 import { ChannelEntity } from './channel.entity';
+import { LoyaltyEntity } from './loyalty.entity';
 import { AuditLogEntity } from './audit-log.entity';
 import { UserNoteEntity } from './user-note.entity';
+import { WheelSpinEntity } from './wheel-spin.entity';
 import { UserDetailEntity } from './user-detail.entity';
 import { UserAvatarEntity } from './user-avatar.entity';
 import { IntegrationEntity } from './integration.entity';
@@ -29,13 +32,18 @@ import { UserSettingEntity } from './user-setting.entity';
 import { OrganisationEntity } from './organisation.entity';
 import { UserDocumentEntity } from './user-document.entity';
 import { TenantCompanyEntity } from './tenant-company.entity';
-import { UserNotification } from './user-notification.entity';
 import { CompanySettingEntity } from './company-setting.entity';
 import { PlatformClientEntity } from './platform-client.entity';
 import { TradingAccountEntity } from './trading-account.entity';
+import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
+import { TradingAccountNote } from './trading-account-note.entity';
+import { UserNotificationEntity } from './user-notification.entity';
+import { WalletTransactionEntity } from './wallet-transaction.entity';
 import { TenantAuthSessionEntity } from './tenant-auth-session.entity';
+import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
+import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 import { TradingAccountTypeLeverageEntity } from './trading-account-type-leverage.entity';
 
 @Entity({ name: 'company' })
@@ -84,6 +92,18 @@ export class CompanyEntity {
   @JoinColumn()
   integrations: IntegrationEntity[];
 
+  @OneToMany(() => LoyaltyEntity, (e) => e.company)
+  @JoinColumn()
+  loyalty: LoyaltyEntity[];
+
+  @OneToMany(() => LoyaltyHistoryEntity, (e) => e.company)
+  @JoinColumn()
+  loyaltyHistory: LoyaltyHistoryEntity[];
+
+  @OneToMany(() => PaymentTransactionEntity, (e) => e.company)
+  @JoinColumn()
+  paymentTransactions: PaymentTransactionEntity[];
+
   @OneToMany(() => PlatformClientEntity, (e) => e.company)
   @JoinColumn()
   platformClients: PlatformClientEntity[];
@@ -111,6 +131,10 @@ export class CompanyEntity {
   @OneToMany(() => TradingAccountEntity, (e) => e.company)
   @JoinColumn()
   tradingAccounts: TradingAccountEntity[];
+
+  @OneToMany(() => TradingAccountNote, (e) => e.company)
+  @JoinColumn()
+  tradingAccountNotes: TradingAccountNote[];
 
   @OneToMany(() => TradingAccountTypeEntity, (e) => e.company)
   @JoinColumn()
@@ -140,9 +164,9 @@ export class CompanyEntity {
   @JoinColumn()
   userDocuments: UserDocumentEntity[];
 
-  @OneToMany(() => UserNotification, (e) => e.company)
+  @OneToMany(() => UserNotificationEntity, (e) => e.company)
   @JoinColumn()
-  userNotifications: UserNotification[];
+  userNotifications: UserNotificationEntity[];
 
   @OneToMany(() => UserNoteEntity, (e) => e.company)
   @JoinColumn()
@@ -151,6 +175,22 @@ export class CompanyEntity {
   @OneToMany(() => UserSettingEntity, (e) => e.company)
   @JoinColumn()
   userSettings: UserSettingEntity[];
+
+  @OneToMany(() => WalletEntity, (e) => e.company)
+  @JoinColumn()
+  wallets: WalletEntity[];
+
+  @OneToMany(() => WalletTransactionEntity, (e) => e.company)
+  @JoinColumn()
+  walletTransactions: WalletTransactionEntity[];
+
+  @OneToMany(() => WalletTransactionHistoryEntity, (e) => e.company)
+  @JoinColumn()
+  walletTransactionHistory: WalletTransactionHistoryEntity[];
+
+  @OneToMany(() => WheelSpinEntity, (e) => e.company)
+  @JoinColumn()
+  wheelSpins: WheelSpinEntity[];
 
   /** Many-to-one relations */
   @ManyToOne(() => OrganisationEntity, (e) => e.companies, {
