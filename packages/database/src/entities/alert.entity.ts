@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -69,7 +69,7 @@ export class AlertEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

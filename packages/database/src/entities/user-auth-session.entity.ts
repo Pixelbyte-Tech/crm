@@ -5,7 +5,7 @@ import {
   Unique,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -13,8 +13,8 @@ import {
 import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'user_auth_session' })
 @Unique(['userId', 'createdAt'])
+@Entity({ name: 'user_auth_session' })
 export class UserAuthSessionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -52,7 +52,7 @@ export class UserAuthSessionEntity {
   @Column({ type: 'text' })
   userId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

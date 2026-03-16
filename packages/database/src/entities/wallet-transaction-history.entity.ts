@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -78,7 +78,7 @@ export class WalletTransactionHistoryEntity {
   @Column({ type: 'text' })
   walletId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

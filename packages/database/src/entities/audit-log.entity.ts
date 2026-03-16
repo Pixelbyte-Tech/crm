@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -14,8 +14,8 @@ import { AuditActor, AuditAction, AuditTarget, AuditResult } from '@crm/types';
 import { TenantEntity } from './tenant.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'audit_log' })
 @Index(['tenantId', 'targetType', 'targetId'])
+@Entity({ name: 'audit_log' })
 export class AuditLogEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -81,7 +81,7 @@ export class AuditLogEntity {
   @Column({ type: 'text', nullable: true })
   tenantId?: string | null;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

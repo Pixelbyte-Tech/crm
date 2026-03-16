@@ -744,6 +744,9 @@ importers:
       class-transformer:
         specifier: '*'
         version: 0.5.1
+      luxon:
+        specifier: ^3.7.2
+        version: 3.7.2
       pg:
         specifier: 8.16.3
         version: 8.16.3
@@ -753,6 +756,10 @@ importers:
       typeorm:
         specifier: '*'
         version: 0.3.28(ioredis@5.9.2)(pg@8.16.3)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3))
+    devDependencies:
+      '@types/luxon':
+        specifier: ^3.7.1
+        version: 3.7.1
 
   packages/http:
     dependencies:

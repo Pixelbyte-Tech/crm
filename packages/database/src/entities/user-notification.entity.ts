@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -50,7 +50,7 @@ export class UserNotificationEntity {
   @Column({ type: 'text' })
   userId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

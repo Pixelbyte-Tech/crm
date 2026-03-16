@@ -5,7 +5,7 @@ import {
   Unique,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -13,8 +13,8 @@ import {
 import { TenantEntity } from './tenant.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'tenant_auth_session' })
 @Unique(['tenantId', 'createdAt'])
+@Entity({ name: 'tenant_auth_session' })
 export class TenantAuthSessionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -52,7 +52,7 @@ export class TenantAuthSessionEntity {
   @Column({ type: 'text' })
   tenantId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

@@ -5,7 +5,7 @@ import {
   Unique,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,7 +17,7 @@ import { CompanyEntity } from './company.entity';
 import { IntegrationEntity } from './integration.entity';
 
 @Entity({ name: 'payment_transaction' })
-@Unique(['externalId', 'integrationId'])
+@Unique(['externalId', 'integrationId', 'createdAt'])
 export class PaymentTransactionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -83,7 +83,7 @@ export class PaymentTransactionEntity {
   @Column({ type: 'text' })
   integrationId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()

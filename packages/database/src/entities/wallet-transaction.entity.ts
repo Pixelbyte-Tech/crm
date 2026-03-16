@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
+  PrimaryColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -34,6 +34,12 @@ export class WalletTransactionEntity {
 
   @Column({ type: 'decimal' })
   amount: number;
+
+  @Column({ type: 'decimal' })
+  balanceBefore: number;
+
+  @Column({ type: 'decimal' })
+  balanceAfter: number;
 
   @Column({ type: 'varchar', nullable: true })
   ipAddress?: string | null;
@@ -87,7 +93,7 @@ export class WalletTransactionEntity {
   @Column({ type: 'text' })
   walletId: string;
 
-  @CreateDateColumn()
+  @PrimaryColumn({ default: new Date() })
   createdAt: Date;
 
   @UpdateDateColumn()
