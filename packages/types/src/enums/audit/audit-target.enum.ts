@@ -1,6 +1,5 @@
 export enum AuditTarget {
   USER = 'user',
-  TENANT = 'tenant',
   DOCUMENT = 'document',
   NOTE = 'note',
   WALLET = 'wallet',

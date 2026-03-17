@@ -1,4 +1,4 @@
 export enum AuditActor {
-  TENANT = 'tenant',
+  USER = 'user',
   SYSTEM = 'system',
 }

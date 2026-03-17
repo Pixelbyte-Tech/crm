@@ -17,7 +17,7 @@ import { CompanyEntity } from './company.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
 
-@Entity({ name: 'organisation' })
+@Entity({ name: 'server' })
 @Unique(['name'])
 export class ServerEntity {
   @PrimaryGeneratedColumn('uuid')

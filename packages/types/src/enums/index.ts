@@ -29,8 +29,6 @@ export * from './platform/platform.enum';
 export * from './platform/platform-client-type.enum';
 export * from './platform/trading-account-status.enum';
 
-export * from './tenant/tenant-status.enum';
-
 export * from './trading-event/period.enum';
 export * from './trading-event/potency.enum';
 export * from './trading-event/volatility.enum';
