@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
@@ -42,6 +42,47 @@ import {
 
 import * as Validators from './validators';
 
+const validators = [
+  Validators.AlertIdValidator,
+  Validators.AuditLogIdValidator,
+  Validators.BillingInfoIdValidator,
+  Validators.BooleanValidator,
+  Validators.CompanyIdValidator,
+  Validators.CompanySettingIdValidator,
+  Validators.ExchangeRateIdValidator,
+  Validators.IntegrationIdValidator,
+  Validators.LoyaltyIdValidator,
+  Validators.LoyaltyHistoryIdValidator,
+  Validators.OrganisationIdValidator,
+  Validators.PaymentTransactionIdValidator,
+  Validators.PlatformClientIdValidator,
+  Validators.PasswordValidator,
+  Validators.ServerIdValidator,
+  Validators.TagIdValidator,
+  Validators.TenantIdValidator,
+  Validators.TenantAuthSessionIdValidator,
+  Validators.TenantCompanyIdValidator,
+  Validators.TradingAccountIdValidator,
+  Validators.TradingAccountNoteIdValidator,
+  Validators.TradingAccountTagIdValidator,
+  Validators.TradingAccountTypeIdValidator,
+  Validators.TradingAccountTypeLeverageIdValidator,
+  Validators.TradingEventIdValidator,
+  Validators.UserAuthSessionIdValidator,
+  Validators.UserAvatarIdValidator,
+  Validators.UserDetailIdValidator,
+  Validators.UserDocumentIdValidator,
+  Validators.UserIdValidator,
+  Validators.UserNoteIdValidator,
+  Validators.UserNotificationIdValidator,
+  Validators.UserSettingIdValidator,
+  Validators.WalletIdValidator,
+  Validators.WalletTransactionIdValidator,
+  Validators.WalletTransactionHistoryIdValidator,
+  Validators.WheelSpinIdValidator,
+];
+
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -83,44 +124,7 @@ import * as Validators from './validators';
       WheelSpinEntity,
     ]),
   ],
-  providers: [
-    Validators.AlertIdValidator,
-    Validators.AuditLogIdValidator,
-    Validators.BillingInfoIdValidator,
-    Validators.BooleanValidator,
-    Validators.CompanyIdValidator,
-    Validators.CompanySettingIdValidator,
-    Validators.ExchangeRateIdValidator,
-    Validators.IntegrationIdValidator,
-    Validators.LoyaltyIdValidator,
-    Validators.LoyaltyHistoryIdValidator,
-    Validators.OrganisationIdValidator,
-    Validators.PaymentTransactionIdValidator,
-    Validators.PlatformClientIdValidator,
-    Validators.PasswordValidator,
-    Validators.ServerIdValidator,
-    Validators.TagIdValidator,
-    Validators.TenantIdValidator,
-    Validators.TenantAuthSessionIdValidator,
-    Validators.TenantCompanyIdValidator,
-    Validators.TradingAccountIdValidator,
-    Validators.TradingAccountNoteIdValidator,
-    Validators.TradingAccountTagIdValidator,
-    Validators.TradingAccountTypeIdValidator,
-    Validators.TradingAccountTypeLeverageIdValidator,
-    Validators.TradingEventIdValidator,
-    Validators.UserAuthSessionIdValidator,
-    Validators.UserAvatarIdValidator,
-    Validators.UserDetailIdValidator,
-    Validators.UserDocumentIdValidator,
-    Validators.UserIdValidator,
-    Validators.UserNoteIdValidator,
-    Validators.UserNotificationIdValidator,
-    Validators.UserSettingIdValidator,
-    Validators.WalletIdValidator,
-    Validators.WalletTransactionIdValidator,
-    Validators.WalletTransactionHistoryIdValidator,
-    Validators.WheelSpinIdValidator,
-  ],
+  providers: validators,
+  exports: validators,
 })
 export class ValidationModule {}

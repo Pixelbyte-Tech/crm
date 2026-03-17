@@ -1,7 +1,7 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module, forwardRef } from '@nestjs/common';
 
-import { UserEntity, CompanyEntity } from '@crm/database';
+import { TenantEntity } from '@crm/database';
 
 import { TenantMapper } from './mappers';
 import { TenantService } from './services';
@@ -10,7 +10,7 @@ import { TenantController } from './tenant.controller';
 import { TenantSessionModule } from './modules/session/tenant-session.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), TenantSessionModule, TypeOrmModule.forFeature([CompanyEntity, UserEntity])],
+  imports: [forwardRef(() => AuthModule), TenantSessionModule, TypeOrmModule.forFeature([TenantEntity])],
   providers: [TenantMapper, TenantService],
   controllers: [TenantController],
   exports: [TenantSessionModule, TenantMapper, TenantService],

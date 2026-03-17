@@ -35,7 +35,7 @@ services:
     ports:
       - '4000:4000'
     depends_on:
-      - postgres
+      - crm-postgres
     env_file:
       - './apps/analytics/.env'
     volumes:
@@ -54,10 +54,10 @@ services:
       - '3001:3000'
       - '30001:9229'
     depends_on:
-      - postgres
-      - redis
-      - kafka
-      - gateway
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
     volumes:
       - ./apps/broker:/app/apps/broker
       - ./packages:/app/packages
@@ -74,8 +74,8 @@ services:
     ports:
       - '3002:3000'
     depends_on:
-      - redis
-      - gateway
+      - crm-redis
+      - crm-gateway
     volumes:
       - ./apps/bull-monitor:/app/apps/bull-monitor
       - ./packages:/app/packages
@@ -93,10 +93,10 @@ services:
       - '3003:3000'
       - '30003:9229'
     depends_on:
-      - postgres
-      - redis
-      - kafka
-      - gateway
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
     volumes:
       - ./apps/compliance:/app/apps/compliance
       - ./packages:/app/packages
@@ -141,10 +141,10 @@ services:
       - '3004:3000'
       - '30004:9229'
     depends_on:
-      - postgres
-      - redis
-      - kafka
-      - gateway
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
     volumes:
       - ./apps/payment:/app/apps/payment
       - ./packages:/app/packages
@@ -162,10 +162,10 @@ services:
       - '3005:3000'
       - '30005:9229'
     depends_on:
-      - postgres
-      - redis
-      - kafka
-      - gateway
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
     volumes:
       - ./apps/prop:/app/apps/prop
       - ./packages:/app/packages
@@ -183,17 +183,17 @@ services:
       - '3006:3000'
       - '30006:9229'
     depends_on:
-      - postgres
-      - redis
-      - kafka
-      - gateway
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
     volumes:
       - ./apps/user:/app/apps/user
       - ./packages:/app/packages
 
   ## Infrastructure Containers            ##
   ##########################################
-  postgres:
+  crm-postgres:
     profiles: [ 'dev', 'tools' ]
     image: postgres:17.0-alpine
     ports:
@@ -205,13 +205,13 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: crm_db
   ############################
-  redis:
+  crm-redis:
     profiles: [ 'dev' ]
     image: redis:7-alpine
     ports:
       - '6379:6379'
   ############################
-  kafka:
+  crm-kafka:
     profiles: [ 'dev' ]
     image: bitnamilegacy/kafka:3.5.1
     healthcheck:
@@ -221,15 +221,15 @@ services:
       retries: 500
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=crm-zookeeper:2181
     ports:
       - '9092:9092'
       - '9093:9093'
     depends_on:
-      - zookeeper
-      - ui-kafka
+      - crm-zookeeper
+      - crm-ui-kafka
   ############################
-  gateway:
+  crm-gateway:
     profiles: ['dev']
     image: devopsfaith/krakend:2.9.2-watch
     stop_grace_period: 1s
@@ -246,7 +246,7 @@ services:
       - PORT=8080
     command: ['run', '-dc', '/etc/krakend/krakend.tmpl']
   ############################
-  zookeeper:
+  crm-zookeeper:
     profiles: [ 'dev' ]
     image: bitnamilegacy/zookeeper:3.9.0
     environment:
@@ -254,11 +254,11 @@ services:
     ports:
       - '2181:2181'
   ############################
-  ui-kafka:
+  crm-ui-kafka:
     profiles: [ 'dev' ]
     image: provectuslabs/kafka-ui:latest
     environment:
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=crm-kafka:9092
     ports:
       - '9080:8080'
   ############################
@@ -282,7 +282,7 @@ services:
     volumes:
       - ./:/app
     depends_on:
-      - postgres
+      - crm-postgres
 
 volumes:
   crm-postgres-db:

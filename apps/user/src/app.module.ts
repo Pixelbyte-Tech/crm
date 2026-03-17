@@ -8,12 +8,16 @@ import { ValidationModule } from '@crm/validation';
 import appConfig from './config/app/app.config';
 import databaseConfig from './config/database/database.config';
 
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
+import { TenantModule } from './tenant/tenant.module';
 import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig],
@@ -43,6 +47,8 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     HealthModule,
     SwaggerModule,
+    TenantModule,
+    UserModule,
     ValidationModule,
   ],
 })
