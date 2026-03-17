@@ -40,6 +40,8 @@ services:
       - './apps/analytics/.env'
     volumes:
       - ./apps/analytics:/app/apps/analytics
+    networks:
+      - crm-network
   ############################
   broker:
     profiles: [ 'dev' ]
@@ -61,6 +63,8 @@ services:
     volumes:
       - ./apps/broker:/app/apps/broker
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   bull-monitor:
     profiles: [ 'dev' ]
@@ -79,6 +83,8 @@ services:
     volumes:
       - ./apps/bull-monitor:/app/apps/bull-monitor
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   compliance:
     profiles: [ 'dev' ]
@@ -100,6 +106,8 @@ services:
     volumes:
       - ./apps/compliance:/app/apps/compliance
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   docs:
     profiles: [ 'dev' ]
@@ -113,6 +121,8 @@ services:
     volumes:
       - ./apps/docs:/app/apps/docs
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   frontend:
     profiles: [ 'dev' ]
@@ -127,6 +137,8 @@ services:
       - '3000:3000'
     volumes:
       - ./apps/frontend:/app/apps/frontend
+    networks:
+      - crm-network
   ############################
   payment:
     profiles: [ 'dev' ]
@@ -148,6 +160,8 @@ services:
     volumes:
       - ./apps/payment:/app/apps/payment
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   prop:
     profiles: [ 'dev' ]
@@ -169,6 +183,8 @@ services:
     volumes:
       - ./apps/prop:/app/apps/prop
       - ./packages:/app/packages
+    networks:
+      - crm-network
   ############################
   user:
     profiles: [ 'dev' ]
@@ -190,6 +206,8 @@ services:
     volumes:
       - ./apps/user:/app/apps/user
       - ./packages:/app/packages
+    networks:
+      - crm-network
 
   ## Infrastructure Containers            ##
   ##########################################
@@ -204,12 +222,16 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: crm_db
+    networks:
+      - crm-network
   ############################
   crm-redis:
     profiles: [ 'dev' ]
     image: redis:7-alpine
     ports:
       - '6379:6379'
+    networks:
+      - crm-network
   ############################
   crm-kafka:
     profiles: [ 'dev' ]
@@ -228,6 +250,8 @@ services:
     depends_on:
       - crm-zookeeper
       - crm-ui-kafka
+    networks:
+      - crm-network
   ############################
   crm-gateway:
     profiles: ['dev']
@@ -245,6 +269,8 @@ services:
       - FC_OUT=krakend.json
       - PORT=8080
     command: ['run', '-dc', '/etc/krakend/krakend.tmpl']
+    networks:
+      - crm-network
   ############################
   crm-zookeeper:
     profiles: [ 'dev' ]
@@ -253,6 +279,8 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     ports:
       - '2181:2181'
+    networks:
+      - crm-network
   ############################
   crm-ui-kafka:
     profiles: [ 'dev' ]
@@ -261,6 +289,8 @@ services:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=crm-kafka:9092
     ports:
       - '9080:8080'
+    networks:
+      - crm-network
   ############################
   maildev:
     profiles: [ 'dev' ]
@@ -268,6 +298,8 @@ services:
     ports:
       - '1025:1025'
       - '1080:1080'
+    networks:
+      - crm-network
   ############################
 
   ## Utils Containers                     ##
@@ -283,6 +315,8 @@ services:
       - ./:/app
     depends_on:
       - crm-postgres
+    networks:
+      - crm-network
 
 volumes:
   crm-postgres-db:

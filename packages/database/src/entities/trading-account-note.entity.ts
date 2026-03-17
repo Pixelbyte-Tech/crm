@@ -29,7 +29,7 @@ export class TradingAccountNoteEntity {
   isPinned: boolean;
 
   /** Many-to-one relations */
-  @ManyToOne(() => UserEntity, (e) => e.tradingAccountNotes, {
+  @ManyToOne(() => UserEntity, (e) => e.tradingAccountAuthoredNotes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

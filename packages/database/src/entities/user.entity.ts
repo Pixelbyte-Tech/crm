@@ -135,10 +135,6 @@ export class UserEntity {
   @JoinColumn()
   auditLogs: AuditLogEntity[];
 
-  @OneToMany(() => UserNoteEntity, (e) => e.author)
-  @JoinColumn()
-  authoredNotes: UserNoteEntity[];
-
   @OneToMany(() => UserAuthSessionEntity, (e) => e.user)
   @JoinColumn()
   authSessions: UserAuthSessionEntity[];
@@ -165,7 +161,7 @@ export class UserEntity {
 
   @OneToMany(() => TradingAccountNoteEntity, (e) => e.author)
   @JoinColumn()
-  tradingAccountNotes: TradingAccountNoteEntity[];
+  tradingAccountAuthoredNotes: TradingAccountNoteEntity[];
 
   @OneToMany(() => TradingAccountTagEntity, (e) => e.taggedByUser)
   @JoinColumn()
@@ -174,6 +170,10 @@ export class UserEntity {
   @OneToMany(() => UserCompanyEntity, (e) => e.user)
   @JoinColumn()
   userCompanies: UserCompanyEntity[];
+
+  @OneToMany(() => UserNoteEntity, (e) => e.author)
+  @JoinColumn()
+  userAuthoredNotes: UserNoteEntity[];
 
   @OneToMany(() => UserNoteEntity, (e) => e.user)
   @JoinColumn()

@@ -28,7 +28,7 @@ export class UserNoteEntity {
   isPinned: boolean;
 
   /** Many-to-one relations */
-  @ManyToOne(() => UserEntity, (e) => e.authoredNotes, {
+  @ManyToOne(() => UserEntity, (e) => e.userAuthoredNotes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
