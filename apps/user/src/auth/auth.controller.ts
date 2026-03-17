@@ -9,7 +9,7 @@ import { User, AuthStrategy } from '@crm/types';
 import { Auth, RefreshReq, AuthenticatedReq } from '@crm/auth';
 
 import { AuthService } from './services';
-import { EmailLoginResDto } from './dto/out';
+import { UserLoginResDto } from './dto/out';
 import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto } from './dto/in';
 
 @ApiTags('Auth')
@@ -35,13 +35,13 @@ export class AuthController {
    * @param req The request object
    * @param response The response object
    */
-  @OpenApi({ type: EmailLoginResDto })
+  @OpenApi({ type: UserLoginResDto })
   @Post('login')
   public async login(
     @Body() dto: EmailLoginDto,
     @Req() req: ExpressRequest,
     @Response({ passthrough: true }) response: ExpressResponse,
-  ): Promise<{ data: EmailLoginResDto }> {
+  ): Promise<{ data: UserLoginResDto }> {
     // Authenticate the user
     const result = await this.authService.authenticate(dto, req.ip, req.get('user-agent'));
 
@@ -69,12 +69,12 @@ export class AuthController {
    * @param response The response object
    */
   @Auth([AuthStrategy.JWT_REFRESH])
-  @OpenApi({ type: EmailLoginResDto })
+  @OpenApi({ type: UserLoginResDto })
   @Post('refresh')
   public async refresh(
     @Req() req: RefreshReq,
     @Response({ passthrough: true }) response: ExpressResponse,
-  ): Promise<{ data: EmailLoginResDto }> {
+  ): Promise<{ data: UserLoginResDto }> {
     // Authenticate the user
     const result = await this.authService.refreshToken({
       sessionId: req.user.sessionId,

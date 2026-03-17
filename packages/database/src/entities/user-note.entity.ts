@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { TenantEntity } from './tenant.entity';
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_note' })
@@ -29,12 +28,12 @@ export class UserNoteEntity {
   isPinned: boolean;
 
   /** Many-to-one relations */
-  @ManyToOne(() => TenantEntity, (e) => e.userNotes, {
+  @ManyToOne(() => UserEntity, (e) => e.authoredNotes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'authorId' })
-  author: TenantEntity;
+  author: UserEntity;
 
   @Index()
   @Column({ type: 'text' })
@@ -51,7 +50,7 @@ export class UserNoteEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => UserEntity, (e) => e.notes, {
+  @ManyToOne(() => UserEntity, (e) => e.userNotes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

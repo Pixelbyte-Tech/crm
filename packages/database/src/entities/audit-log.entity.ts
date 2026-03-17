@@ -11,10 +11,10 @@ import {
 
 import { AuditActor, AuditAction, AuditTarget, AuditResult } from '@crm/types';
 
-import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
-@Index(['tenantId', 'targetType', 'targetId'])
+@Index(['userId', 'targetType', 'targetId'])
 @Entity({ name: 'audit_log' })
 export class AuditLogEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -69,17 +69,17 @@ export class AuditLogEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => TenantEntity, (e) => e.auditLogs, {
+  @ManyToOne(() => UserEntity, (e) => e.auditLogs, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
     nullable: true,
   })
-  @JoinColumn({ name: 'tenantId' })
-  tenant?: TenantEntity | null;
+  @JoinColumn({ name: 'userId' })
+  user?: UserEntity | null;
 
   @Index()
   @Column({ type: 'text', nullable: true })
-  tenantId?: string | null;
+  userId?: string | null;
 
   @PrimaryColumn({ default: new Date() })
   createdAt: Date;

@@ -1,1 +1,1 @@
-export * from './email-login-res.dto';
+export * from './user-login-res.dto';

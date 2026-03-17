@@ -1,6 +1,6 @@
 import { Role } from '@crm/types';
 
-export type JwtPayloadType = {
+export type UserJwtPayloadType = {
   userId: string;
   sessionId: string;
   roles: {

@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 import { TagEntity } from './tag.entity';
-import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 
 @Entity({ name: 'trading_account_tag' })
@@ -43,17 +43,17 @@ export class TradingAccountTagEntity {
   @Column({ type: 'text' })
   tradingAccountId: string;
 
-  @ManyToOne(() => TenantEntity, (e) => e.tradingAccountTags, {
+  @ManyToOne(() => UserEntity, (e) => e.tradingAccountTags, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
     nullable: true,
   })
-  @JoinColumn({ name: 'taggedByTenantId' })
-  taggedByTenant?: TenantEntity | null;
+  @JoinColumn({ name: 'taggedByUserId' })
+  taggedByUser?: UserEntity | null;
 
   @Index()
   @Column({ type: 'text', nullable: true })
-  taggedByTenantId?: string | null;
+  taggedByUserId?: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -12,7 +12,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
-import { TenantModule } from './tenant/tenant.module';
 import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
@@ -47,7 +46,6 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     HealthModule,
     SwaggerModule,
-    TenantModule,
     UserModule,
     ValidationModule,
   ],

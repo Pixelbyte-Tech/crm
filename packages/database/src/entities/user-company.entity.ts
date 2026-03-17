@@ -12,12 +12,12 @@ import {
 
 import { Role } from '@crm/types';
 
-import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'tenant_company' })
-@Unique(['companyId', 'tenantId'])
-export class TenantCompanyEntity {
+@Entity({ name: 'user_company' })
+@Unique(['companyId', 'userId'])
+export class UserCompanyEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,7 +25,7 @@ export class TenantCompanyEntity {
   roles: Role[];
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.tenantCompanies, {
+  @ManyToOne(() => CompanyEntity, (e) => e.userCompanies, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
@@ -36,16 +36,16 @@ export class TenantCompanyEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => TenantEntity, (e) => e.tenantCompanies, {
+  @ManyToOne(() => UserEntity, (e) => e.userCompanies, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'tenantId' })
-  tenant: TenantEntity;
+  @JoinColumn({ name: 'userId' })
+  user: UserEntity;
 
   @Index()
   @Column({ type: 'text' })
-  tenantId: string;
+  userId: string;
 
   @CreateDateColumn()
   createdAt: Date;

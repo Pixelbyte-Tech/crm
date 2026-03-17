@@ -18,7 +18,7 @@ import { JwtRefreshPayloadType } from '@crm/auth';
 
 import { Token } from '../types';
 import { EmailLoginDto } from '../dto/in';
-import { EmailLoginResDto } from '../dto/out';
+import { UserLoginResDto } from '../dto/out';
 import { UserMapper } from '../../user/mappers';
 import { AuthConfig } from '../config/auth-config.type';
 import { UserSessionService } from '../../user/modules/session/services';
@@ -54,7 +54,7 @@ export class AuthService {
    * @param ip The ip address of the user
    * @param userAgent The user agent pf the user
    */
-  async authenticate(dto: EmailLoginDto, ip?: string, userAgent?: string): Promise<EmailLoginResDto> {
+  async authenticate(dto: EmailLoginDto, ip?: string, userAgent?: string): Promise<UserLoginResDto> {
     const msg = `User ${dto.email} attempting to login`;
 
     // Check if the user exists and the password is correct
@@ -93,7 +93,7 @@ export class AuthService {
    * Refreshes JWT tokens using a refresh token payload
    * @param data The refresh token payload
    */
-  async refreshToken(data: Pick<JwtRefreshPayloadType, 'sessionId' | 'hash'>): Promise<EmailLoginResDto> {
+  async refreshToken(data: Pick<JwtRefreshPayloadType, 'sessionId' | 'hash'>): Promise<UserLoginResDto> {
     const msg = `Refreshing session ${data.sessionId}`;
 
     // Fetch the session

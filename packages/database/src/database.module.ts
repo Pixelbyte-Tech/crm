@@ -7,7 +7,6 @@ import { TagEntity } from './entities/tag.entity';
 import { UserEntity } from './entities/user.entity';
 import { AlertEntity } from './entities/alert.entity';
 import { ServerEntity } from './entities/server.entity';
-import { TenantEntity } from './entities/tenant.entity';
 import { WalletEntity } from './entities/wallet.entity';
 import { ChannelEntity } from './entities/channel.entity';
 import { CompanyEntity } from './entities/company.entity';
@@ -20,11 +19,11 @@ import { UserDetailEntity } from './entities/user-detail.entity';
 import { IntegrationEntity } from './entities/integration.entity';
 import { BillingInfoEntity } from './entities/billing-info.entity';
 import { UserSettingEntity } from './entities/user-setting.entity';
+import { UserCompanyEntity } from './entities/user-company.entity';
 import { OrganisationEntity } from './entities/organisation.entity';
 import { ExchangeRateEntity } from './entities/exchange-rate.entity';
 import { TradingEventEntity } from './entities/trading-event.entity';
 import { UserDocumentEntity } from './entities/user-document.entity';
-import { TenantCompanyEntity } from './entities/tenant-company.entity';
 import { CompanySettingEntity } from './entities/company-setting.entity';
 import { PlatformClientEntity } from './entities/platform-client.entity';
 import { TradingAccountEntity } from './entities/trading-account.entity';
@@ -32,7 +31,6 @@ import { LoyaltyHistoryEntity } from './entities/loyalty-history.entity';
 import { UserAuthSessionEntity } from './entities/user-auth-session.entity';
 import { UserNotificationEntity } from './entities/user-notification.entity';
 import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
-import { TenantAuthSessionEntity } from './entities/tenant-auth-session.entity';
 import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
 import { TradingAccountNoteEntity } from './entities/trading-account-note.entity';
@@ -129,9 +127,7 @@ export class DatabaseModule {
         PlatformClientEntity,
         ServerEntity,
         TagEntity,
-        TenantEntity,
-        TenantAuthSessionEntity,
-        TenantCompanyEntity,
+        UserCompanyEntity,
         TradingAccountEntity,
         TradingAccountNoteEntity,
         TradingAccountTagEntity,

@@ -18,17 +18,22 @@ import { WalletEntity } from './wallet.entity';
 import { CompanyEntity } from './company.entity';
 import { LoyaltyEntity } from './loyalty.entity';
 import { UserNoteEntity } from './user-note.entity';
+import { AuditLogEntity } from './audit-log.entity';
 import { WheelSpinEntity } from './wheel-spin.entity';
 import { UserAvatarEntity } from './user-avatar.entity';
 import { UserDetailEntity } from './user-detail.entity';
 import { UserSettingEntity } from './user-setting.entity';
+import { UserCompanyEntity } from './user-company.entity';
+import { OrganisationEntity } from './organisation.entity';
 import { UserDocumentEntity } from './user-document.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
 import { UserNotificationEntity } from './user-notification.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
+import { TradingAccountTagEntity } from './trading-account-tag.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
+import { TradingAccountNoteEntity } from './trading-account-note.entity';
 import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
 @Entity({ name: 'user' })
@@ -126,6 +131,14 @@ export class UserEntity {
   loyalty: LoyaltyEntity[];
 
   /** One-to-many relations */
+  @OneToMany(() => AuditLogEntity, (e) => e.user)
+  @JoinColumn()
+  auditLogs: AuditLogEntity[];
+
+  @OneToMany(() => UserNoteEntity, (e) => e.author)
+  @JoinColumn()
+  authoredNotes: UserNoteEntity[];
+
   @OneToMany(() => UserAuthSessionEntity, (e) => e.user)
   @JoinColumn()
   authSessions: UserAuthSessionEntity[];
@@ -138,10 +151,6 @@ export class UserEntity {
   @JoinColumn()
   loyaltyHistory: LoyaltyHistoryEntity[];
 
-  @OneToMany(() => UserNoteEntity, (e) => e.user)
-  @JoinColumn()
-  notes: UserNoteEntity[];
-
   @OneToMany(() => UserNotificationEntity, (e) => e.user)
   @JoinColumn()
   notifications: UserNotificationEntity[];
@@ -153,6 +162,22 @@ export class UserEntity {
   @OneToMany(() => TradingAccountEntity, (e) => e.user)
   @JoinColumn()
   tradingAccounts: TradingAccountEntity[];
+
+  @OneToMany(() => TradingAccountNoteEntity, (e) => e.author)
+  @JoinColumn()
+  tradingAccountNotes: TradingAccountNoteEntity[];
+
+  @OneToMany(() => TradingAccountTagEntity, (e) => e.taggedByUser)
+  @JoinColumn()
+  tradingAccountTags: TradingAccountTagEntity[];
+
+  @OneToMany(() => UserCompanyEntity, (e) => e.user)
+  @JoinColumn()
+  userCompanies: UserCompanyEntity[];
+
+  @OneToMany(() => UserNoteEntity, (e) => e.user)
+  @JoinColumn()
+  userNotes: UserNoteEntity[];
 
   @OneToMany(() => WalletEntity, (e) => e.user)
   @JoinColumn()
@@ -171,6 +196,17 @@ export class UserEntity {
   wheelSpins: WheelSpinEntity[];
 
   /** Many-to-one relations */
+  @ManyToOne(() => OrganisationEntity, (e) => e.users, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'organisationId' })
+  organisation: OrganisationEntity;
+
+  @Index()
+  @Column({ type: 'text' })
+  organisationId: string;
+
   @ManyToOne(() => CompanyEntity, (e) => e.users, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

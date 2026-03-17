@@ -6,7 +6,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthStrategy } from '@crm/types';
 
 import { AuthModuleOptions } from '../auth.module';
-import { JwtPayloadType } from '../types/jwt-payload.type';
+import { UserJwtPayloadType } from '../types/user-jwt-payload.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, AuthStrategy.JWT) {
@@ -22,8 +22,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, AuthStrategy.JWT) {
 
   // Why we don't check if the user exists in the database:
   // https://github.com/brocoders/nestjs-boilerplate/blob/main/docs/auth.md#about-jwt-strategy
-  public validate(payload: JwtPayloadType): JwtPayloadType | never {
-    if (!payload.userId) {
+  public validate(payload: UserJwtPayloadType): UserJwtPayloadType | never {
+    if (!payload?.userId) {
       throw new UnauthorizedException();
     }
 

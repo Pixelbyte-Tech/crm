@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'organisation' })
@@ -26,9 +26,9 @@ export class OrganisationEntity {
   @JoinColumn()
   companies: CompanyEntity[];
 
-  @OneToMany(() => TenantEntity, (e) => e.organisation)
+  @OneToMany(() => UserEntity, (e) => e.organisation)
   @JoinColumn()
-  tenants: TenantEntity[];
+  users: UserEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

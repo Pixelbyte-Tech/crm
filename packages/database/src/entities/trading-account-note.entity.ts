@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 
@@ -29,12 +29,12 @@ export class TradingAccountNoteEntity {
   isPinned: boolean;
 
   /** Many-to-one relations */
-  @ManyToOne(() => TenantEntity, (e) => e.tradingAccountNotes, {
+  @ManyToOne(() => UserEntity, (e) => e.tradingAccountNotes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'authorId' })
-  author: TenantEntity;
+  author: UserEntity;
 
   @Index()
   @Column({ type: 'text' })

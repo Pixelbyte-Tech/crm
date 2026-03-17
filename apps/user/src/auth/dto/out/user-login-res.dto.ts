@@ -1,6 +1,6 @@
 import { User } from '@crm/types';
 
-export class EmailLoginResDto {
+export class UserLoginResDto {
   /** The authentication and refresh tokens */
   tokens: {
     auth: { token: string; expireMs: number };

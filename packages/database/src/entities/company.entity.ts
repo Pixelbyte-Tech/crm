@@ -29,9 +29,9 @@ import { UserAvatarEntity } from './user-avatar.entity';
 import { IntegrationEntity } from './integration.entity';
 import { BillingInfoEntity } from './billing-info.entity';
 import { UserSettingEntity } from './user-setting.entity';
+import { UserCompanyEntity } from './user-company.entity';
 import { OrganisationEntity } from './organisation.entity';
 import { UserDocumentEntity } from './user-document.entity';
-import { TenantCompanyEntity } from './tenant-company.entity';
 import { CompanySettingEntity } from './company-setting.entity';
 import { PlatformClientEntity } from './platform-client.entity';
 import { TradingAccountEntity } from './trading-account.entity';
@@ -119,9 +119,9 @@ export class CompanyEntity {
   @JoinColumn()
   tags: TagEntity[];
 
-  @OneToMany(() => TenantCompanyEntity, (e) => e.company)
+  @OneToMany(() => UserCompanyEntity, (e) => e.company)
   @JoinColumn()
-  tenantCompanies: TenantCompanyEntity[];
+  userCompanies: UserCompanyEntity[];
 
   @OneToMany(() => TradingAccountEntity, (e) => e.company)
   @JoinColumn()

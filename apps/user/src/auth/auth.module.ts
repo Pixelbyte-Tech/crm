@@ -25,7 +25,7 @@ import { AuthConfig } from './config/auth-config.type';
     TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => UserModule),
   ],
-  providers: [AuthService, ConfigService],
+  providers: [AuthService],
   controllers: [AuthController],
   exports: [AuthService],
 })
