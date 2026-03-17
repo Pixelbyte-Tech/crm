@@ -7,11 +7,12 @@ import { UserMapper } from './mappers';
 import { UserService } from './services';
 import { AuthModule } from '../auth/auth.module';
 import { UserController } from './user.controller';
+import { SessionModule } from './modules/session/session.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), TypeOrmModule.forFeature([CompanyEntity, UserEntity])],
+  imports: [forwardRef(() => AuthModule), SessionModule, TypeOrmModule.forFeature([CompanyEntity, UserEntity])],
   providers: [UserMapper, UserService],
   controllers: [UserController],
-  exports: [UserMapper, UserService],
+  exports: [SessionModule, UserMapper, UserService],
 })
 export class UserModule {}

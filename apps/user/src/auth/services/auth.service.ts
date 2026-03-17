@@ -11,7 +11,6 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
-import { Role } from '@crm/types';
 import { User } from '@crm/types';
 import { Cryptography } from '@crm/utils';
 import { UserEntity } from '@crm/database';
@@ -22,14 +21,14 @@ import { EmailLoginDto } from '../dto/in';
 import { EmailLoginResDto } from '../dto/out';
 import { UserMapper } from '../../user/mappers';
 import { AuthConfig } from '../config/auth-config.type';
+import { UserSessionService } from '../../user/modules/session/services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userMapper: UserMapper,
-    private readonly sessionService: SessionService,
-    private readonly mailService: MailService,
+    private readonly userSessionService: UserSessionService,
     private readonly configService: ConfigService<{ auth: AuthConfig }>,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
@@ -53,8 +52,9 @@ export class AuthService {
    * Authenticates a user using their email and password. If successful, the JWT tokens are returned.
    * @param dto The login dto
    * @param ip The ip address of the user
+   * @param userAgent The user agent pf the user
    */
-  async authenticate(dto: EmailLoginDto, ip?: string): Promise<EmailLoginResDto> {
+  async authenticate(dto: EmailLoginDto, ip?: string, userAgent?: string): Promise<EmailLoginResDto> {
     const msg = `User ${dto.email} attempting to login`;
 
     // Check if the user exists and the password is correct
@@ -73,10 +73,15 @@ export class AuthService {
 
     try {
       // Create a new auth session for the user
-      const authSession = await this.sessionService.create({ userId: user.id, hash: randomHash, ipAddress: ip });
+      const authSession = await this.userSessionService.create({
+        userId: user.id,
+        hash: randomHash,
+        ipAddress: ip,
+        userAgent,
+      });
 
       // Generate JWT tokens for the user
-      const result = await this.#generateTokens(user.id, authSession.id, randomHash, user.role);
+      const result = await this.#generateTokens(user.id, authSession.id, randomHash);
       return { user: this.userMapper.toUser(user), tokens: result };
     } catch (err) {
       this.#logger.error(`${msg} - Failed: generate session and tokens`, err);
@@ -92,7 +97,7 @@ export class AuthService {
     const msg = `Refreshing session ${data.sessionId}`;
 
     // Fetch the session
-    const session = await this.sessionService.get(data.sessionId);
+    const session = await this.userSessionService.get(data.sessionId);
     if (!session || session.hash !== data.hash) {
       throw new UnauthorizedException();
     }
@@ -109,10 +114,10 @@ export class AuthService {
 
     try {
       // Update the auth session for the user
-      await this.sessionService.update(session.id, { hash: randomHash });
+      await this.userSessionService.update(session.id, { hash: randomHash });
 
       // Generate JWT tokens for the user
-      const result = await this.#generateTokens(user.id, session.id, randomHash, user.role);
+      const result = await this.#generateTokens(user.id, session.id, randomHash);
       return { user: this.userMapper.toUser(user), tokens: result };
     } catch (err) {
       this.#logger.error(`${msg} - Failed: generate session and tokens`, err);
@@ -168,14 +173,15 @@ export class AuthService {
     }
 
     const token = await this.generatePasswordResetToken(user.id);
-    await this.mailService.sendResetPassword(user.email, token.token, user.firstName);
+    console.log(token);
+    //todo send password reset email
 
     this.#logger.log(`${msg} - Complete`);
     return true;
   }
 
   /**
-   * Resets the user's email address
+   * Resets the user's password
    * @param token The required email confirmation token
    * @param password The new password to set
    */
@@ -254,14 +260,12 @@ export class AuthService {
    * @param userId The user id
    * @param sessionId The session id
    * @param randomHash A random hash
-   * @param role The user role
    * @returns {Promise<Token>} The generated tokens
    */
   async #generateTokens(
     userId: string,
     sessionId: string,
     randomHash: string,
-    role: Role,
   ): Promise<{ auth: Token; refresh: Token }> {
     const tokenExpiresIn = this.configService.getOrThrow('auth.expires', { infer: true });
     const refreshExpiresIn = this.configService.getOrThrow('auth.refreshExpires', { infer: true });
@@ -274,7 +278,7 @@ export class AuthService {
 
     const [token, refreshToken] = await Promise.all([
       await this.jwtService.signAsync(
-        { userId, sessionId, role },
+        { userId, sessionId },
         {
           secret: this.configService.getOrThrow('auth.secret', { infer: true }),
           expiresIn: Math.round(tokenExpireMs / 1000),

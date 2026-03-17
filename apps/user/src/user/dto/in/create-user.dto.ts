@@ -15,20 +15,18 @@ export class CreateUserDto {
   password: string;
 
   /** The first name of the user */
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+
+  /** The middle name of the user */
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  firstName?: string;
+  middleName?: string;
 
   /** The last name of the user */
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  lastName?: string;
-
-  /** The invitation token for the user */
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  invitationToken?: string;
+  lastName: string;
 }

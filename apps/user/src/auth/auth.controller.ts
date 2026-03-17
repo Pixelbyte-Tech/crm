@@ -43,7 +43,7 @@ export class AuthController {
     @Response({ passthrough: true }) response: ExpressResponse,
   ): Promise<{ data: EmailLoginResDto }> {
     // Authenticate the user
-    const result = await this.authService.authenticate(dto, req.ip);
+    const result = await this.authService.authenticate(dto, req.ip, req.get('user-agent'));
 
     // Set cookies for access token and refresh token
     response.cookie('access-token', result.tokens.auth.token, {

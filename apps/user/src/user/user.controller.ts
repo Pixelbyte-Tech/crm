@@ -1,12 +1,11 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
+import { Get, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
 
-import { Role } from '@crm/types';
+import { Auth } from '@crm/auth';
 import { User } from '@crm/types';
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
-import { Auth, AuthenticatedReq } from '@crm/auth';
-import { UserIdValidator, CompanyIdValidator } from '@crm/validation';
+import { UserIdValidator } from '@crm/validation';
 
 import { UserService } from './services';
 import { NewUserDto, ListUsersDto, CreateUserDto, UpdateUserDto } from './dto';
@@ -33,7 +32,6 @@ export class UserController {
    * Updates a user by id
    * @param userId The user id to update
    * @param dto The dto
-   * @param req The authenticated request
    */
   @Auth()
   @OpenApi({ type: User })
@@ -41,12 +39,9 @@ export class UserController {
   public async update(
     @Param('userId', UserIdValidator) userId: string,
     @Body() dto: UpdateUserDto,
-    @Req() req: AuthenticatedReq,
   ): Promise<{ data: User }> {
     // Only allow admins to update the status of any user
-    if (Role.ADMIN !== req.user.role) {
-      dto.status = undefined;
-    }
+    // todo do not allow users to update their own status
 
     return { data: await this.service.update(userId, dto) };
   }
@@ -81,35 +76,5 @@ export class UserController {
   @Delete(':userId')
   public async delete(@Param('userId', UserIdValidator) userId: string): Promise<void> {
     await this.service.delete(userId);
-  }
-
-  /**
-   * Adds an existing user to an existing company
-   * @param userId The user id
-   * @param companyId The company id
-   */
-  @Auth()
-  @OpenApi()
-  @Post(':userId/company/:companyId')
-  public async addCompany(
-    @Param('userId', UserIdValidator) userId: string,
-    @Param('companyId', CompanyIdValidator) companyId: string,
-  ): Promise<void> {
-    await this.service.assignCompany(userId, companyId);
-  }
-
-  /**
-   * Removes an existing user from an existing company
-   * @param userId The user id
-   * @param companyId The company id
-   */
-  @Auth()
-  @OpenApi()
-  @Delete(':userId/company/:companyId')
-  public async deleteCompany(
-    @Param('userId', UserIdValidator) userId: string,
-    @Param('companyId', CompanyIdValidator) companyId: string,
-  ): Promise<void> {
-    await this.service.removeCompany(userId, companyId);
   }
 }
