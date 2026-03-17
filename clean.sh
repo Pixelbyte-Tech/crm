@@ -49,5 +49,9 @@ find "$WORKSPACE_ROOT" -type d -name ".turbo" -prune -exec rm -rf {} \;
 echo "Deleting dist folders..."
 find "$WORKSPACE_ROOT" -type d -name "dist" -prune -exec rm -rf {} \;
 
+# Delete dist folders
+echo "Deleting dist folders..."
+find "$WORKSPACE_ROOT" -type f -name "tsconfig.tsbuildinfo" -prune -exec rm -rf {} \;
+
 echo ""
 echo -e "${GREEN}✓ Cleanup complete!${NC}"
