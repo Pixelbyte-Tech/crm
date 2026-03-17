@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 
 import { TenantEntity } from './tenant.entity';
-import { CompanyEntity } from './company.entity';
 
 @Unique(['tenantId', 'createdAt'])
 @Entity({ name: 'tenant_auth_session' })
@@ -30,17 +29,6 @@ export class TenantAuthSessionEntity {
   userAgent?: string | null;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.tenantAuthSessions, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => TenantEntity, (e) => e.authSessions, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

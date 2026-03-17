@@ -5,12 +5,12 @@ import { UserAuthSessionEntity } from '@crm/database';
 
 import { UserSessionMapper } from './mappers';
 import { UserSessionService } from './services';
-import { SessionController } from './session.controller';
+import { UserSessionController } from './user-session.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserAuthSessionEntity])],
   providers: [UserSessionMapper, UserSessionService],
-  controllers: [SessionController],
+  controllers: [UserSessionController],
   exports: [UserSessionMapper, UserSessionService],
 })
-export class SessionModule {}
+export class UserSessionModule {}

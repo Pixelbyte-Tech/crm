@@ -1,12 +1,11 @@
-import { IsIP, IsString, Validate, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsIP, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-import { UserIdValidator } from '@crm/validation';
-
-export class CreateUserSessionDto {
+export class UpdateTenantSessionDto {
   /** The unique hash to associate with the session */
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  hash: string;
+  hash?: string | null;
 
   /** The IP address of the session */
   @IsOptional()
@@ -18,8 +17,4 @@ export class CreateUserSessionDto {
   @IsString()
   @IsNotEmpty()
   userAgent?: string | null;
-
-  /** The ID of the user */
-  @Validate(UserIdValidator)
-  userId: string;
 }

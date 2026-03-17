@@ -36,13 +36,13 @@ export class UserService {
    * @param userId The id of the user to fetch
    */
   async get(userId: string): Promise<User> {
-    const msg = `Fetching user ${userId}`;
+    const msg = `Fetching user '${userId}'`;
 
     // Find the user by ID
     const user = await this.userRepo.findOne({ where: { id: userId } });
     if (!user) {
       this.#logger.error(`${msg} - Failed`);
-      throw new NotFoundException(`Failed to find user ${userId}`);
+      throw new NotFoundException(`Failed to find user '${userId}'`);
     }
 
     this.#logger.log(`${msg} - Complete`);
@@ -54,7 +54,7 @@ export class UserService {
    * @param dto The list dto
    */
   async list(dto: ListUsersDto): Promise<PaginatedResDto<User>> {
-    // Find the traders for the company
+    // Find the resources paginated
     const traders = await paginate(
       this.userRepo,
       { limit: dto.limit, page: dto.page },
@@ -71,7 +71,7 @@ export class UserService {
 
   /**
    * Creates a new user in the system.
-   * @param dto The login dto
+   * @param dto The dto with the creation data
    */
   async create(dto: CreateUserDto): Promise<NewUserDto> {
     const msg = `Attempting to create user from email '${dto.email}'`;
@@ -113,7 +113,7 @@ export class UserService {
    * @param dto The update dto
    */
   async update(userId: string, dto: UpdateUserDto): Promise<User> {
-    const msg = `Updating user ${userId}`;
+    const msg = `Updating user '${userId}'`;
 
     // Find the user prior to the update
     const user = await this.userRepo.findOne({ where: { id: userId } });
@@ -141,7 +141,7 @@ export class UserService {
       termsAcceptedAt = null;
     }
 
-    // Find the user by ID
+    // Perform the update
     const result = await this.userRepo.update(userId, {
       ...(dto.email ? { email: dto.email } : {}),
       ...(dto.password ? { password: Cryptography.hash(dto.password) } : {}),

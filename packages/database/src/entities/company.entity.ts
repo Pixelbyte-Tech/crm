@@ -39,7 +39,6 @@ import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
 import { UserNotificationEntity } from './user-notification.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
-import { TenantAuthSessionEntity } from './tenant-auth-session.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
@@ -119,10 +118,6 @@ export class CompanyEntity {
   @OneToMany(() => TagEntity, (e) => e.company)
   @JoinColumn()
   tags: TagEntity[];
-
-  @OneToMany(() => TenantAuthSessionEntity, (e) => e.company)
-  @JoinColumn()
-  tenantAuthSessions: TenantAuthSessionEntity[];
 
   @OneToMany(() => TenantCompanyEntity, (e) => e.company)
   @JoinColumn()

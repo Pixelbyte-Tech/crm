@@ -1,12 +1,8 @@
 import { IsIP, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class UpdateUserSessionDto {
-  /** The unique hash to associate with the session */
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  hash?: string | null;
+import { PaginatedReqDto } from '@crm/http';
 
+export class ListTenantSessionsDto extends PaginatedReqDto {
   /** The IP address of the session */
   @IsOptional()
   @IsIP()

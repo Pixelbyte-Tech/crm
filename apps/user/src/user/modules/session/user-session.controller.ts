@@ -13,7 +13,7 @@ import { UserSessionService } from './services';
 @ApiTags('Session')
 @ApiExtraModels(ListUserSessionsDto)
 @Controller({ path: 'users', version: '1' })
-export class SessionController {
+export class UserSessionController {
   constructor(private readonly service: UserSessionService) {}
 
   /**
