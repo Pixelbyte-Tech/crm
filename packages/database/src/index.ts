@@ -6,6 +6,7 @@ export * from './entities/audit-log.entity';
 export * from './entities/billing-info.entity';
 export * from './entities/channel.entity';
 export * from './entities/company.entity';
+export * from './entities/company-invitation.entity';
 export * from './entities/company-setting.entity';
 export * from './entities/exchange-rate.entity';
 export * from './entities/integration.entity';

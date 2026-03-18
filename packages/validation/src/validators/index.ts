@@ -5,6 +5,7 @@ export * from './entity/alert-id.validator';
 export * from './entity/audit-log-id.validator';
 export * from './entity/billing-info-id.validator';
 export * from './entity/company-id.validator';
+export * from './entity/company-invitation-id.validator';
 export * from './entity/company-setting-id.validator';
 export * from './entity/exchange-rate-id.validator';
 export * from './entity/integration-id.validator';

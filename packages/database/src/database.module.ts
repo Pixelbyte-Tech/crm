@@ -31,6 +31,7 @@ import { LoyaltyHistoryEntity } from './entities/loyalty-history.entity';
 import { UserAuthSessionEntity } from './entities/user-auth-session.entity';
 import { UserNotificationEntity } from './entities/user-notification.entity';
 import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
+import { CompanyInvitationEntity } from './entities/company-invitation.entity';
 import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
 import { TradingAccountNoteEntity } from './entities/trading-account-note.entity';
@@ -117,6 +118,7 @@ export class DatabaseModule {
         BillingInfoEntity,
         ChannelEntity,
         CompanyEntity,
+        CompanyInvitationEntity,
         CompanySettingEntity,
         ExchangeRateEntity,
         IntegrationEntity,

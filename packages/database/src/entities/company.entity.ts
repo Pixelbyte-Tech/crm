@@ -39,6 +39,7 @@ import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
 import { UserNotificationEntity } from './user-notification.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
+import { CompanyInvitationEntity } from './company-invitation.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
@@ -90,6 +91,10 @@ export class CompanyEntity {
   @OneToMany(() => IntegrationEntity, (e) => e.company)
   @JoinColumn()
   integrations: IntegrationEntity[];
+
+  @OneToMany(() => CompanyInvitationEntity, (e) => e.company)
+  @JoinColumn()
+  invitations: CompanyInvitationEntity[];
 
   @OneToMany(() => LoyaltyEntity, (e) => e.company)
   @JoinColumn()

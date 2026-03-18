@@ -16,6 +16,7 @@ export * from './common/document-status.enum';
 export * from './common/document-type.enum';
 export * from './common/integration.enum';
 export * from './common/integration-type.enum';
+export * from './common/invitation-status.enum';
 export * from './common/sort-dir.enum';
 
 export * from './loyalty/loyalty-points-source.enum';

@@ -121,7 +121,7 @@ importers:
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
-        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)
+        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -288,7 +288,7 @@ importers:
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
-        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)
+        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -385,7 +385,7 @@ importers:
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
-        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)
+        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -482,7 +482,7 @@ importers:
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
-        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)
+        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -583,9 +583,12 @@ importers:
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
+      '@nestjs/bull':
+        specifier: ^11.0.4
+        version: 11.0.4(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(bull@4.16.5)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
-        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)
+        version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -616,6 +619,9 @@ importers:
       '@sentry/nestjs':
         specifier: ^9.32.0
         version: 9.47.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)
+      bull:
+        specifier: ^4.16.5
+        version: 4.16.5
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -6866,12 +6872,12 @@ snapshots:
       bull: 4.16.5
       tslib: 2.8.1
 
-  '@nestjs/cache-manager@3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@4.5.4)(rxjs@7.8.2)':
+  '@nestjs/cache-manager@3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)':
     dependencies:
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@11.1.17)(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       cache-manager: 7.2.8
-      keyv: 4.5.4
+      keyv: 5.6.0
       rxjs: 7.8.2
 
   '@nestjs/cli@11.0.16(@types/node@22.19.15)':
@@ -10481,7 +10487,7 @@ snapshots:
       ky: 1.14.3
       registry-auth-token: 5.1.1
       registry-url: 6.0.1
-      semver: 7.6.2
+      semver: 7.7.4
 
   parent-module@1.0.1:
     dependencies:
@@ -10876,7 +10882,7 @@ snapshots:
 
   semver-diff@4.0.0:
     dependencies:
-      semver: 7.6.2
+      semver: 7.7.4
 
   semver@6.3.1: {}
 
