@@ -47,12 +47,12 @@ cp ./apps/user/.env.example ./apps/user/.env
 
 > Ensure to enable eslint and prettier on save in your IDE to maintain code quality and consistency across the codebase.
 
-## Accessing the documentation
+## Running the project
 
-To access the documentation, please run the docs locally by following these steps:
+To run the project locally, you can use Docker Compose to start the necessary services.
 
 ```bash
-docker compose up docs
+docker compose up broker
 ```
 
 Then you can access the documentation at: [http://localhost:5001](http://localhost:5001)
