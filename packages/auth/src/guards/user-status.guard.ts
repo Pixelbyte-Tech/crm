@@ -2,8 +2,8 @@ import { Scope, Injectable, CanActivate, ExecutionContext, ForbiddenException } 
 
 import { UserStatus } from '@crm/types';
 
+import { AuthenticatedReq } from '../types';
 import { AuthHelperService } from '../services';
-import { AuthenticatedReq } from '../types/authenticated-req.type';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserStatusGuard implements CanActivate {

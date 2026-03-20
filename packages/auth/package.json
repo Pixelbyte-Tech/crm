@@ -16,6 +16,7 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
+    "@casl/ability": "^6.8.0",
     "@nestjs/jwt": "11.0.1",
     "@nestjs/passport": "11.0.5",
     "@crm/database": "workspace:^",

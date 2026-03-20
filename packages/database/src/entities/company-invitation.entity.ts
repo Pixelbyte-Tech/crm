@@ -12,6 +12,7 @@ import {
 
 import { Role, InvitationStatus } from '@crm/types';
 
+import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'company_invitation' })
@@ -51,6 +52,17 @@ export class CompanyInvitationEntity {
   @Index()
   @Column({ type: 'text' })
   companyId: string;
+
+  @ManyToOne(() => UserEntity, (e) => e.sentInvitations, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'sentByUserId' })
+  sentByUser: UserEntity;
+
+  @Index()
+  @Column({ type: 'text' })
+  sentByUserId: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -6,6 +6,8 @@ import { User } from '@crm/types';
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
 import { UserIdValidator } from '@crm/validation';
+import { Action } from '@crm/auth/dist/modules/casl/types';
+import { UserSubject } from '@crm/auth/dist/modules/casl/subjects';
 
 import { UserService } from './services';
 import { NewUserDto, ListUsersDto, CreateUserDto, UpdateUserDto } from './dto';
@@ -20,7 +22,7 @@ export class UserController {
    * Get a user by id
    * @param userId The user id to fetch
    */
-  @Auth()
+  @Auth(Action.READ, UserSubject, { in: 'query', param: 'userId' })
   @OpenApi({ type: User })
   @Get(':userId')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: User }> {

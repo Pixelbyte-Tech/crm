@@ -1,4 +1,4 @@
-import { AuthenticatedReq } from '../types/authenticated-req.type';
+import { AuthenticatedReq } from '../types';
 
 export function isAuthenticatedReq(req: unknown): req is AuthenticatedReq {
   return (

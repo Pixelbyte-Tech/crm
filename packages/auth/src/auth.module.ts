@@ -9,6 +9,7 @@ import { UserEntity } from '@crm/database';
 
 import { UserStatusGuard } from './guards';
 import { AuthHelperService } from './services';
+import { CaslModule } from './modules/casl/casl.module';
 import { JwtStrategy, JwtRefreshStrategy } from './strategies';
 
 export interface AuthModuleOptions {
@@ -37,6 +38,7 @@ export class AuthModule {
       module: AuthModule,
       imports: [
         ...(options.imports ?? []),
+        CaslModule,
         JwtModule.register({}),
         PassportModule,
         TypeOrmModule.forFeature([UserEntity]),

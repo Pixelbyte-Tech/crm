@@ -7,7 +7,7 @@ export interface AuthenticatedReq extends Request {
     userId: string;
     sessionId: string;
     roles: {
-      [companyId: string]: Role;
+      [companyId: string]: Role[];
     };
   };
 }

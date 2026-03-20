@@ -7,7 +7,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { UserStatus } from '@crm/types';
 import { UserEntity } from '@crm/database';
 
-import { AuthenticatedReq } from '../types/authenticated-req.type';
+import { AuthenticatedReq } from '../types';
 
 @Injectable()
 export class AuthHelperService implements OnApplicationBootstrap {

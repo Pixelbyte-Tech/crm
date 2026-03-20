@@ -68,7 +68,7 @@ export class AuthController {
    * @param req The request object
    * @param response The response object
    */
-  @Auth([AuthStrategy.JWT_REFRESH])
+  @Auth(undefined, undefined, undefined, [AuthStrategy.JWT_REFRESH])
   @OpenApi({ type: UserLoginResDto })
   @Post('refresh')
   public async refresh(
