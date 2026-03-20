@@ -44,7 +44,13 @@ export class AuthModule {
         TypeOrmModule.forFeature([UserEntity]),
       ],
       providers: [...providers, AuthHelperService, JwtStrategy, JwtRefreshStrategy, UserStatusGuard],
-      exports: ['AUTH_CONFIG_OPTIONS', JwtModule, AuthHelperService, TypeOrmModule.forFeature([UserEntity])],
+      exports: [
+        'AUTH_CONFIG_OPTIONS',
+        CaslModule,
+        JwtModule,
+        AuthHelperService,
+        TypeOrmModule.forFeature([UserEntity]),
+      ],
     };
   }
 

@@ -31,28 +31,11 @@ export class UserController {
   }
 
   /**
-   * Updates a user by id
-   * @param userId The user id to update
-   * @param dto The dto
-   */
-  @Auth()
-  @OpenApi({ type: User })
-  @Patch(':userId')
-  public async update(
-    @Param('userId', UserIdValidator) userId: string,
-    @Body() dto: UpdateUserDto,
-  ): Promise<{ data: User }> {
-    // Only allow admins to update the status of any user
-    // todo do not allow users to update their own status
-
-    return { data: await this.service.update(userId, dto) };
-  }
-
-  /**
    * Lists all users in the system
    * @param dto The dto with options to filter the results by.
    */
-  @Auth()
+  // todo fix
+  @Auth(Action.READ, UserSubject, { in: 'query', param: 'userId' })
   @OpenApi({ type: User, isPaginated: true })
   @Get()
   public async list(@Query() dto: ListUsersDto): Promise<PaginatedResDto<User>> {
@@ -70,10 +53,28 @@ export class UserController {
   }
 
   /**
+   * Updates a user by id
+   * @param userId The user id to update
+   * @param dto The dto
+   */
+  @Auth(Action.UPDATE, UserSubject, { in: 'query', param: 'userId' })
+  @OpenApi({ type: User })
+  @Patch(':userId')
+  public async update(
+    @Param('userId', UserIdValidator) userId: string,
+    @Body() dto: UpdateUserDto,
+  ): Promise<{ data: User }> {
+    // Only allow admins to update the status of any user
+    // todo do not allow users to update their own status
+
+    return { data: await this.service.update(userId, dto) };
+  }
+
+  /**
    * Deletes a user by id
    * @param userId The user id to delete
    */
-  @Auth()
+  @Auth(Action.DELETE, UserSubject, { in: 'query', param: 'userId' })
   @OpenApi()
   @Delete(':userId')
   public async delete(@Param('userId', UserIdValidator) userId: string): Promise<void> {

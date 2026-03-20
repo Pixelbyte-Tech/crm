@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserEntity } from '@crm/database';
-
+import { CanGuard } from './guards';
 import { SubjectFactory, CaslAbilityFactory } from './factories';
 
+@Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  providers: [CaslAbilityFactory, SubjectFactory],
+  imports: [TypeOrmModule.forFeature()],
+  providers: [CanGuard, CaslAbilityFactory, SubjectFactory],
+  exports: [CanGuard, SubjectFactory],
 })
 export class CaslModule {}

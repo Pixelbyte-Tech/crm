@@ -1,10 +1,10 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
 import { Get, Param, Query, Controller } from '@nestjs/common';
 
-import { Auth } from '@crm/auth';
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
 import { UserIdValidator } from '@crm/validation';
+import { Auth, Action, UserAuthSessionSubject } from '@crm/auth';
 
 import { UserSession } from './domain';
 import { ListUserSessionsDto } from './dto';
@@ -20,7 +20,8 @@ export class UserSessionController {
    * Gets the latest session for a user by id
    * @param userId The user id to fetch
    */
-  @Auth()
+  // todo fix
+  @Auth(Action.READ, UserAuthSessionSubject, { in: 'query', param: 'userId' })
   @OpenApi({ type: UserSession })
   @Get(':userId/sessions/latest')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: UserSession }> {
@@ -33,7 +34,8 @@ export class UserSessionController {
    * @param userId The user id to fetch
    * @param dto The dto
    */
-  @Auth()
+  // todo fix
+  @Auth(Action.READ, UserAuthSessionSubject, { in: 'query', param: 'userId' })
   @OpenApi({ type: UserSession, isPaginated: true })
   @Get(':userId/sessions')
   public async list(

@@ -1,9 +1,9 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
 import { Get, Body, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
-import { Auth } from '@crm/auth';
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
+import { Auth, Action, CompanyInvitationSubject } from '@crm/auth';
 import { UserIdValidator, CompanyIdValidator, CompanyInvitationIdValidator } from '@crm/validation';
 
 import { Invitation } from './domain';
@@ -22,7 +22,8 @@ export class InvitationController {
    * @param companyId The company id to invite the user to
    * @param dto The invite user dto
    */
-  @Auth()
+  // todo fix
+  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', param: 'userId' })
   @OpenApi()
   @Post('users/:userId/companies/:companyId/invitations')
   public async inviteUser(
@@ -38,7 +39,8 @@ export class InvitationController {
    * @param companyId The company id to list invitations for
    * @param dto The filter dto
    */
-  @Auth()
+  // todo fix
+  @Auth(Action.READ, CompanyInvitationSubject, { in: 'query', param: 'companyId' })
   @OpenApi({ type: Invitation, isPaginated: true })
   @Get('companies/:companyId/invitations')
   public async list(
@@ -52,7 +54,7 @@ export class InvitationController {
    * Resends a company invitation to a user by email
    * @param invitationId The invitation id to resend
    */
-  @Auth()
+  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', param: 'invitationId' })
   @OpenApi()
   @Patch('companies/:companyId/invitations/:invitationId')
   public async resendInvitation(
@@ -65,7 +67,7 @@ export class InvitationController {
    * Deletes an invitation sent to an email address to join a company
    * @param invitationId The invitation id to delete
    */
-  @Auth()
+  @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'query', param: 'invitationId' })
   @OpenApi()
   @Delete('companies/:companyId/invitations/:invitationId')
   public async deleteUserInvitation(

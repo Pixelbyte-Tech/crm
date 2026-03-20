@@ -6,12 +6,14 @@ import { Role } from '@crm/types';
 import { Action, Subject, CaslUser } from '../types';
 import { UserSubject, AlertSubject, UserAuthSessionSubject, CompanyInvitationSubject } from '../subjects';
 
-export type AppAbility = PureAbility<[Action, Subject]>;
-
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: CaslUser) {
-    const { can, cannot, build } = new AbilityBuilder(PureAbility<[Action, Subject]>);
+  /**
+   * Creates the abilities for a CASL user
+   * @param user The user details
+   */
+  createForUser(user: CaslUser): PureAbility<[Action, Subject]> {
+    const { can, build } = new AbilityBuilder(PureAbility<[Action, Subject]>);
 
     // Iterate over user roles in companies
     for (const [companyId, value] of Object.entries(user.roles)) {

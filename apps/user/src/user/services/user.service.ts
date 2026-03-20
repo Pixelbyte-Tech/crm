@@ -60,7 +60,7 @@ export class UserService {
     const traders = await paginate(
       this.userRepo,
       { limit: dto.limit, page: dto.page },
-      { order: { createdAt: dto.sortDir } },
+      { order: { createdAt: dto.sortDir }, where: { companyId: dto.companyId } },
     );
 
     return {

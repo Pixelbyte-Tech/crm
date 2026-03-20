@@ -5,6 +5,7 @@ import { Type, UseGuards, applyDecorators } from '@nestjs/common';
 import { AuthStrategy } from '@crm/types';
 
 import { UserStatusGuard } from '../guards';
+import { Can } from '../modules/casl/decorators';
 import { CanGuard } from '../modules/casl/guards';
 import { Action, Option, Subject } from '../modules/casl/types';
 
@@ -20,7 +21,8 @@ export function Auth(
 
   // Add CASL ability guard
   if (action && subject && option) {
-    items.push(UseGuards(CanGuard(action, subject, option)));
+    items.push(Can(action, subject, option));
+    items.push(UseGuards(CanGuard));
   }
 
   return applyDecorators(...items, ApiBearerAuth());
