@@ -29,6 +29,7 @@ export * from './entity/user-document-id.validator';
 export * from './entity/user-id.validator';
 export * from './entity/user-note-id.validator';
 export * from './entity/user-notification-id.validator';
+export * from './entity/user-in-app-notification-id.validator';
 export * from './entity/user-setting-id.validator';
 export * from './entity/wallet-id.validator';
 export * from './entity/wallet-transaction-id.validator';

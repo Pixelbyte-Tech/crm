@@ -29,13 +29,13 @@ import {
   PlatformClientEntity,
   TradingAccountEntity,
   UserAuthSessionEntity,
-  UserNotificationEntity,
   CompanyInvitationEntity,
   TradingAccountTagEntity,
   WalletTransactionEntity,
   PaymentTransactionEntity,
   TradingAccountNoteEntity,
   TradingAccountTypeEntity,
+  UserInAppNotificationEntity,
   WalletTransactionHistoryEntity,
   TradingAccountTypeLeverageEntity,
 } from '@crm/database';
@@ -220,7 +220,7 @@ export class SubjectFactory {
 
       case UserNotificationSubject.name:
         params = ['id', 'userId', 'companyId'];
-        return new UserNotificationSubject(await this.#find(UserNotificationEntity, params, option.findBy, value));
+        return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, params, option.findBy, value));
 
       case UserSettingSubject.name:
         params = ['id', 'userId', 'companyId'];

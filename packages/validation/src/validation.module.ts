@@ -35,6 +35,7 @@ import {
   TradingAccountNoteEntity,
   PaymentTransactionEntity,
   TradingAccountTypeEntity,
+  UserInAppNotificationEntity,
   WalletTransactionHistoryEntity,
   TradingAccountTypeLeverageEntity,
 } from '@crm/database';
@@ -70,6 +71,7 @@ const validators = [
   Validators.UserDetailIdValidator,
   Validators.UserDocumentIdValidator,
   Validators.UserIdValidator,
+  Validators.UserInAppNotificationIdValidator,
   Validators.UserNoteIdValidator,
   Validators.UserNotificationIdValidator,
   Validators.UserSettingIdValidator,
@@ -111,6 +113,7 @@ const validators = [
       UserCompanyEntity,
       UserDetailEntity,
       UserDocumentEntity,
+      UserInAppNotificationEntity,
       UserNoteEntity,
       UserNotificationEntity,
       UserSettingEntity,

@@ -140,6 +140,30 @@ services:
     networks:
       - crm-network
   ############################
+  notification:
+    profiles: [ 'dev' ]
+    <<: *nest_service
+    working_dir: /app/apps/notification
+    command: nest start --watch --debug 0.0.0.0:9229
+    build:
+      target: 'development'
+      args:
+        - TARGET_APP=notification
+    ports:
+      - '3004:3000'
+      - '30004:9229'
+    depends_on:
+      - maildev
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
+    volumes:
+      - ./apps/payment:/app/apps/notification
+      - ./packages:/app/packages
+    networks:
+      - crm-network
+  ############################
   payment:
     profiles: [ 'dev' ]
     <<: *nest_service
@@ -150,8 +174,8 @@ services:
       args:
         - TARGET_APP=payment
     ports:
-      - '3004:3000'
-      - '30004:9229'
+      - '3005:3000'
+      - '30005:9229'
     depends_on:
       - crm-postgres
       - crm-redis
@@ -173,8 +197,8 @@ services:
       args:
         - TARGET_APP=prop
     ports:
-      - '3005:3000'
-      - '30005:9229'
+      - '3006:3000'
+      - '30006:9229'
     depends_on:
       - crm-postgres
       - crm-redis
@@ -196,8 +220,8 @@ services:
       args:
         - TARGET_APP=user
     ports:
-      - '3006:3000'
-      - '30006:9229'
+      - '3007:3000'
+      - '30007:9229'
     depends_on:
       - crm-postgres
       - crm-redis

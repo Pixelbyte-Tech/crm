@@ -31,6 +31,7 @@ export * from './entities/user-detail.entity';
 export * from './entities/user-document.entity';
 export * from './entities/user-note.entity';
 export * from './entities/user-notification.entity';
+export * from './entities/user-in-app-notification.entity';
 export * from './entities/user-setting.entity';
 export * from './entities/wallet.entity';
 export * from './entities/wallet-transaction.entity';

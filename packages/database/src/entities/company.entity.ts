@@ -43,6 +43,7 @@ import { CompanyInvitationEntity } from './company-invitation.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
+import { UserInAppNotificationEntity } from './user-in-app-notification.entity';
 import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 import { TradingAccountTypeLeverageEntity } from './trading-account-type-leverage.entity';
 
@@ -167,13 +168,17 @@ export class CompanyEntity {
   @JoinColumn()
   userDocuments: UserDocumentEntity[];
 
-  @OneToMany(() => UserNotificationEntity, (e) => e.company)
+  @OneToMany(() => UserInAppNotificationEntity, (e) => e.company)
   @JoinColumn()
-  userNotifications: UserNotificationEntity[];
+  userInAppNotifications: UserInAppNotificationEntity[];
 
   @OneToMany(() => UserNoteEntity, (e) => e.company)
   @JoinColumn()
   userNotes: UserNoteEntity[];
+
+  @OneToMany(() => UserNotificationEntity, (e) => e.company)
+  @JoinColumn()
+  userNotifications: UserNotificationEntity[];
 
   @OneToMany(() => UserSettingEntity, (e) => e.company)
   @JoinColumn()

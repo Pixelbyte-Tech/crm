@@ -1,7 +1,3 @@
-export * from './alert/alert-level.enum';
-export * from './alert/alert-status.enum';
-export * from './alert/alert-type.enum';
-
 export * from './audit/audit-action.enum';
 export * from './audit/audit-actor.enum';
 export * from './audit/audit-result.enum';
@@ -23,6 +19,12 @@ export * from './common/sort-dir.enum';
 
 export * from './loyalty/loyalty-points-source.enum';
 export * from './loyalty/loyalty-program.enum';
+
+export * from './messaging/alert-level.enum';
+export * from './messaging/alert-status.enum';
+export * from './messaging/alert-type.enum';
+export * from './messaging/notification-status.enum';
+export * from './messaging/notification-template.enum';
 
 export * from './payment/payment-transaction-status.enum';
 export * from './payment/payment-transaction-type.enum';

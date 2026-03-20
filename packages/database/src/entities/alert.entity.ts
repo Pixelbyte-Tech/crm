@@ -26,7 +26,7 @@ export class AlertEntity {
   message: string;
 
   @Index()
-  @Column({ type: 'enum', enum: AlertStatus })
+  @Column({ type: 'enum', enum: AlertStatus, default: AlertStatus.PENDING })
   status: AlertStatus;
 
   @Index()

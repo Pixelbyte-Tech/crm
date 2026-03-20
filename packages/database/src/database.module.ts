@@ -36,6 +36,7 @@ import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
 import { TradingAccountNoteEntity } from './entities/trading-account-note.entity';
 import { TradingAccountTypeEntity } from './entities/trading-account-type.entity';
+import { UserInAppNotificationEntity } from './entities/user-in-app-notification.entity';
 import { WalletTransactionHistoryEntity } from './entities/wallet-transaction-history.entity';
 import { TradingAccountTypeLeverageEntity } from './entities/trading-account-type-leverage.entity';
 
@@ -129,7 +130,6 @@ export class DatabaseModule {
         PlatformClientEntity,
         ServerEntity,
         TagEntity,
-        UserCompanyEntity,
         TradingAccountEntity,
         TradingAccountNoteEntity,
         TradingAccountTagEntity,
@@ -139,10 +139,12 @@ export class DatabaseModule {
         UserEntity,
         UserAuthSessionEntity,
         UserAvatarEntity,
+        UserCompanyEntity,
         UserDetailEntity,
         UserDocumentEntity,
         UserNoteEntity,
         UserNotificationEntity,
+        UserInAppNotificationEntity,
         UserSettingEntity,
         WalletEntity,
         WalletTransactionEntity,

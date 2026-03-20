@@ -35,6 +35,7 @@ import { CompanyInvitationEntity } from './company-invitation.entity';
 import { TradingAccountTagEntity } from './trading-account-tag.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
+import { UserInAppNotificationEntity } from './user-in-app-notification.entity';
 import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
 @Entity({ name: 'user' })
@@ -145,6 +146,10 @@ export class UserEntity {
   @OneToMany(() => UserDocumentEntity, (e) => e.user)
   @JoinColumn()
   documents: UserDocumentEntity[];
+
+  @OneToMany(() => UserInAppNotificationEntity, (e) => e.user)
+  @JoinColumn()
+  inAppNotifications: UserInAppNotificationEntity[];
 
   @OneToMany(() => LoyaltyHistoryEntity, (e) => e.user)
   @JoinColumn()

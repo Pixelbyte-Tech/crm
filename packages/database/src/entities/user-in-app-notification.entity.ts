@@ -9,35 +9,26 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { NotificationStatus, NotificationTemplate } from '@crm/types';
-
 import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'user_notification' })
-export class UserNotificationEntity {
+@Entity({ name: 'user_in_app_notification' })
+export class UserInAppNotificationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index()
-  @Column({ type: 'enum', enum: NotificationTemplate })
-  template: NotificationTemplate;
+  @Column({ type: 'text' })
+  subject: string;
+
+  @Column({ type: 'text' })
+  message: string;
 
   @Index()
-  @Column({ type: 'enum', enum: NotificationStatus, default: NotificationStatus.PENDING })
-  status: NotificationStatus;
-
-  @Column({ type: 'int', default: 0 })
-  deliveryAttempts: number;
-
-  @Column({ type: 'timestamp' })
-  scheduledAt: Date;
-
   @Column({ type: 'timestamp', nullable: true })
-  deliveredAt: Date | null;
+  openedAt?: Date | null;
 
-  /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userNotifications, {
+  /** Many-to-one relations */
+  @ManyToOne(() => CompanyEntity, (e) => e.userInAppNotifications, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
@@ -48,7 +39,7 @@ export class UserNotificationEntity {
   @Column({ type: 'text' })
   companyId: string;
 
-  @ManyToOne(() => UserEntity, (e) => e.notifications, {
+  @ManyToOne(() => UserEntity, (e) => e.inAppNotifications, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

@@ -59,7 +59,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-analytics"
 
-          docker build --file ./apps/analytics/Dockerfile --platform linux/amd64 --target production -t analytics .
+          docker build --platform linux/amd64 --file ./apps/analytics/Dockerfile --target production -t analytics .
           
           docker tag analytics:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -100,7 +100,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-broker"
 
-          docker build --target production --build-arg TARGET_APP=broker -t broker .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=broker -t broker .
           
           docker tag broker:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -141,7 +141,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-bull-monitor"
 
-          docker build --target production --build-arg TARGET_APP=bull-monitor -t bull-monitor .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=bull-monitor -t bull-monitor .
           
           docker tag bull-monitor:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -182,7 +182,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-compliance"
 
-          docker build --target production --build-arg TARGET_APP=compliance -t compliance .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=compliance -t compliance .
           
           docker tag compliance:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -240,6 +240,47 @@ jobs:
           echo "Gateway deployment to Production triggered!"
 
 
+  deploy-notification:
+    name: Deploy Notification
+    needs: check-release
+    if: needs.check-release.outputs.is-release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & Tag
+        env:
+          IMAGE_TAG: ${{ needs.check-release.outputs.tag }}
+        run: |
+          URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-notification"
+
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=notification -t notification .
+          
+          docker tag notification:latest $URI:$IMAGE_TAG
+          docker push $URI:$IMAGE_TAG
+
+          docker tag notification:latest $URI:latest
+          docker push $URI:latest
+
+      - name: Update ECS
+        run: |
+          aws ecs update-service \
+            --cluster crm-cluster \
+            --service notification \
+            --force-new-deployment
+          echo "Notification deployment to Production triggered!"
+
   deploy-payment:
     name: Deploy Payment
     needs: check-release
@@ -265,7 +306,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-payment"
 
-          docker build --target production --build-arg TARGET_APP=payment -t payment .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=payment -t payment .
           
           docker tag payment:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -306,7 +347,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-prop"
 
-          docker build --target production --build-arg TARGET_APP=prop -t prop .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=prop -t prop .
           
           docker tag prop:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
@@ -347,7 +388,7 @@ jobs:
         run: |
           URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/crm-user"
 
-          docker build --target production --build-arg TARGET_APP=user -t user .
+          docker build --platform linux/amd64 --target production --build-arg TARGET_APP=user -t user .
           
           docker tag user:latest $URI:$IMAGE_TAG
           docker push $URI:$IMAGE_TAG
