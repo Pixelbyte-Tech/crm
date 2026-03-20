@@ -10,6 +10,12 @@
     "lint": "eslint \"{src,test}/**/*.ts\""
   },
   "dependencies": {
+    "@crm/database": "workspace:^",
+    "@crm/http": "workspace:^",
+    "@crm/logger": "workspace:^",
+    "@crm/swagger": "workspace:^",
+    "@crm/utils": "workspace:^",
+    "@crm/validation": "workspace:^",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
@@ -20,19 +26,18 @@
     "@nestjs/swagger": "^11.2.3",
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/typeorm": "11.0.0",
-    "@crm/database": "workspace:^",
-    "@crm/http": "workspace:^",
-    "@crm/logger": "workspace:^",
-    "@crm/swagger": "workspace:^",
-    "@crm/utils": "workspace:^",
-    "@crm/validation": "workspace:^",
+    "@react-email/components": "^1.0.10",
+    "@react-email/render": "^2.0.4",
+    "@react-email/tailwind": "^2.0.6",
     "@sentry/nestjs": "^9.32.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
     "luxon": "^3.7.2",
+    "nestjs-i18n": "^10.6.0",
     "nestjs-typeorm-paginate": "^4.1.0",
+    "react": "^19.2.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.28"
@@ -42,7 +47,8 @@
     "@nestjs/testing": "^11.1.10",
     "@types/express": "5.0.6",
     "@types/lodash": "^4.17.21",
-    "@types/luxon": "^3.7.1"
+    "@types/luxon": "^3.7.1",
+    "@types/react": "^19.2.14"
   },
   "jest": {
     "moduleFileExtensions": [

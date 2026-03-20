@@ -8,6 +8,7 @@ import { ValidationModule } from '@crm/validation';
 import appConfig from './config/app/app.config';
 import databaseConfig from './config/database/database.config';
 
+import { MailModule } from './mail/mail.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
 import { DatabaseConfig } from './config/database/database-config.type';
@@ -42,6 +43,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
       }),
     }),
     HealthModule,
+    MailModule,
     SwaggerModule,
     ValidationModule,
   ],

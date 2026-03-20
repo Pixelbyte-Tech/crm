@@ -13,6 +13,9 @@ class ValidationOptions {
   APP_NAME: string;
 
   @IsString()
+  FRONTEND_URL: string;
+
+  @IsString()
   REDIS_HOST: string;
 
   @IsInt()
@@ -28,10 +31,11 @@ export default registerAs<AppConfig>('app', () => {
   validateConfig(process.env, ValidationOptions);
 
   return {
-    nodeEnv: process.env.NODE_ENV,
-    appName: process.env.APP_NAME,
-    redisHost: process.env.REDIS_HOST,
-    redisPort: Number(process.env.REDIS_PORT),
-    kafkaBrokers: process.env.KAFKA_BROKERS,
+    nodeEnv: process.env.NODE_ENV!,
+    appName: process.env.APP_NAME!,
+    frontendUrl: process.env.FRONTEND_URL!,
+    redisHost: process.env.REDIS_HOST!,
+    redisPort: Number(process.env.REDIS_PORT!),
+    kafkaBrokers: process.env.KAFKA_BROKERS!,
   };
 });

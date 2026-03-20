@@ -30,5 +30,5 @@ export class CompanySettingMapper {
    * Returns true if a string is numeric
    * @param v The string to check
    */
-  #isNumeric = (v: unknown) => typeof v === 'string' && v.trim() !== '' && !Number.isNaN(Number(v));
+  #isNumeric = (v: unknown): boolean => typeof v === 'string' && v.trim() !== '' && !Number.isNaN(Number(v));
 }

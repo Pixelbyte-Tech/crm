@@ -35,6 +35,7 @@ services:
     ports:
       - '4000:4000'
     depends_on:
+      - db-migrate
       - crm-postgres
     env_file:
       - './apps/analytics/.env'
@@ -56,6 +57,7 @@ services:
       - '3001:3000'
       - '30001:9229'
     depends_on:
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -99,27 +101,13 @@ services:
       - '3003:3000'
       - '30003:9229'
     depends_on:
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka
       - crm-gateway
     volumes:
       - ./apps/compliance:/app/apps/compliance
-      - ./packages:/app/packages
-    networks:
-      - crm-network
-  ############################
-  docs:
-    profiles: [ 'dev' ]
-    build:
-      dockerfile: ./apps/docs/Dockerfile
-      target: 'docs'
-    working_dir: /app/apps/docs
-    command: pnpm dev
-    ports:
-      - '5001:3000'
-    volumes:
-      - ./apps/docs:/app/apps/docs
       - ./packages:/app/packages
     networks:
       - crm-network
@@ -153,6 +141,7 @@ services:
       - '3004:3000'
       - '30004:9229'
     depends_on:
+      - db-migrate
       - maildev
       - crm-postgres
       - crm-redis
@@ -177,6 +166,7 @@ services:
       - '3005:3000'
       - '30005:9229'
     depends_on:
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -200,6 +190,7 @@ services:
       - '3006:3000'
       - '30006:9229'
     depends_on:
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -223,6 +214,7 @@ services:
       - '3007:3000'
       - '30007:9229'
     depends_on:
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -333,6 +325,19 @@ services:
     build:
       target: 'base'
     command: 'echo ''Specify your command like "pnpm db:migrate:up" in the docker-compose command'''
+    env_file:
+      - apps/broker/.env
+    volumes:
+      - ./:/app
+    depends_on:
+      - crm-postgres
+    networks:
+      - crm-network
+  db-migrate:
+    profiles: [ 'dev' ]
+    build:
+      target: 'base'
+    command: pnpm --filter @crm/database db:migrate:up
     env_file:
       - apps/broker/.env
     volumes:
