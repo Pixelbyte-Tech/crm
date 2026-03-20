@@ -10,11 +10,12 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
-import { User } from '@crm/types';
-import { UserStatus } from '@crm/types';
 import { Cryptography } from '@crm/utils';
-import { UserEntity } from '@crm/database';
 import { PaginatedResDto } from '@crm/http';
+import { UserEntity, UserSettingEntity } from '@crm/database';
+import { User, UserStatus, CompanySettingKey } from '@crm/types';
+
+import { CompanySettingService } from './company-setting.service';
 
 import { UserMapper } from '../mappers';
 import { AuthService } from '../../auth/services';
@@ -25,6 +26,7 @@ export class UserService {
   constructor(
     private readonly authService: AuthService,
     private readonly userMapper: UserMapper,
+    private readonly companySettingService: CompanySettingService,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
   ) {}
@@ -76,8 +78,28 @@ export class UserService {
   async create(dto: CreateUserDto): Promise<NewUserDto> {
     const msg = `Attempting to create user from email '${dto.email}'`;
 
+    // Fetch the default settings for the company
+    const settings = await this.companySettingService.fetch(dto.companyId);
+
+    // Create the user settings
+    const userSettings = new UserSettingEntity();
+    userSettings.canDeposit = Boolean(
+      settings.find((s) => s.key === CompanySettingKey.USER_CAN_DEPOSIT)?.value ?? true,
+    );
+    userSettings.canWithdraw = Boolean(
+      settings.find((s) => s.key === CompanySettingKey.USER_CAN_WITHDRAW)?.value ?? true,
+    );
+    userSettings.canAutoWithdraw = Boolean(
+      settings.find((s) => s.key === CompanySettingKey.USER_CAN_AUTO_WITHDRAW)?.value ?? false,
+    );
+    userSettings.maxAutoWithdrawAmount = Number(
+      settings.find((s) => s.key === CompanySettingKey.USER_MAX_AUTO_WITHDRAW_AMT)?.value ?? 1000,
+    );
+    userSettings.companyId = dto.companyId;
+
     // Create the new user
     const user = await this.userRepo.save({
+      companyId: dto.companyId,
       email: dto.email,
       password: Cryptography.hash(dto.password),
       firstName: dto.firstName,
@@ -85,12 +107,7 @@ export class UserService {
       middleName: dto.middleName,
       securityPin: Math.floor(1000 + Math.random() * 9000).toString(),
       status: UserStatus.ACTIVE,
-      settings: {
-        canDeposit: true,
-        canWithdraw: true,
-        canAutoWithdraw: false,
-        maxAutoWithdrawAmount: 1000,
-      },
+      settings: userSettings,
     });
 
     if (!user) {
@@ -192,4 +209,7 @@ export class UserService {
 
     this.#logger.log(`${msg} - Complete`);
   }
+
+  // todo add endpoints for user details
+  // todo add endpoints for user settings
 }

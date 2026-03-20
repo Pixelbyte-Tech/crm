@@ -1,9 +1,12 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, Validate, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-import { toLowerCase, PasswordValidator } from '@crm/validation';
+import { toLowerCase, PasswordValidator, CompanyIdValidator } from '@crm/validation';
 
 export class CreateUserDto {
+  @Validate(CompanyIdValidator)
+  companyId: string;
+
   /** The email address of the user */
   @Transform(toLowerCase)
   @IsEmail()

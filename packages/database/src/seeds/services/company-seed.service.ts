@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger, Injectable, NotFoundException } from '@nestjs/common';
 
-import { CompanyType, CompanySetting } from '@crm/types';
+import { CompanyType, CompanySettingKey } from '@crm/types';
 
 import { CompanyEntity } from '../../entities/company.entity';
 import { OrganisationEntity } from '../../entities/organisation.entity';
@@ -67,19 +67,19 @@ export class CompanySeedService {
     const settings: CompanySettingEntity[] = [];
 
     const depositSetting = new CompanySettingEntity();
-    depositSetting.key = CompanySetting.USER_CAN_DEPOSIT;
+    depositSetting.key = CompanySettingKey.USER_CAN_DEPOSIT;
     depositSetting.value = '1';
 
     const withdrawSetting = new CompanySettingEntity();
-    withdrawSetting.key = CompanySetting.USER_CAN_WITHDRAW;
+    withdrawSetting.key = CompanySettingKey.USER_CAN_WITHDRAW;
     withdrawSetting.value = '1';
 
     const authWithdrawSetting = new CompanySettingEntity();
-    authWithdrawSetting.key = CompanySetting.USER_CAN_AUTO_WITHDRAW;
+    authWithdrawSetting.key = CompanySettingKey.USER_CAN_AUTO_WITHDRAW;
     authWithdrawSetting.value = '0';
 
     const maxWithdrawSetting = new CompanySettingEntity();
-    maxWithdrawSetting.key = CompanySetting.USER_MAX_AUTO_WITHDRAW_AMT;
+    maxWithdrawSetting.key = CompanySettingKey.USER_MAX_AUTO_WITHDRAW_AMT;
     maxWithdrawSetting.value = '1000';
 
     settings.push(depositSetting);

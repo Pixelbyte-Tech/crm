@@ -134,6 +134,7 @@ export class UserEntity {
 
   /** One-to-many relations */
   @OneToMany(() => AuditLogEntity, (e) => e.user)
+  @JoinColumn()
   auditLogs: AuditLogEntity[];
 
   @OneToMany(() => UserAuthSessionEntity, (e) => e.user)
