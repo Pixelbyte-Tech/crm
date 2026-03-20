@@ -8,6 +8,6 @@ import { SubjectFactory, CaslAbilityFactory } from './factories';
 @Module({
   imports: [TypeOrmModule.forFeature()],
   providers: [CanGuard, CaslAbilityFactory, SubjectFactory],
-  exports: [CanGuard, SubjectFactory],
+  exports: [CanGuard, CaslAbilityFactory, SubjectFactory],
 })
 export class CaslModule {}
