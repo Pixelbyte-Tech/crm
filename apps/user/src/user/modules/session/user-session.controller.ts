@@ -22,7 +22,7 @@ export class UserSessionController {
    */
   @Auth(Action.READ, UserAuthSessionSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: UserSession })
-  @Get(':userId/sessions/latest')
+  @Get(':userId/latest-session')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: UserSession }> {
     const result = await this.service.latest(userId);
     return { data: result };

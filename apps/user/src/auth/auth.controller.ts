@@ -22,8 +22,8 @@ export class AuthController {
    * Returns the authenticated user information
    * @param req The authenticated request object
    */
-  @OpenApi({ type: User })
   @Auth()
+  @OpenApi({ type: User })
   @Get('me')
   async me(@Req() req: AuthenticatedReq): Promise<{ data: User }> {
     return { data: await this.authService.me(req.user.userId) };
@@ -68,7 +68,7 @@ export class AuthController {
    * @param req The request object
    * @param response The response object
    */
-  @Auth(undefined, undefined, undefined, [AuthStrategy.JWT_REFRESH])
+  @Auth([AuthStrategy.JWT_REFRESH])
   @OpenApi({ type: UserLoginResDto })
   @Post('refresh')
   public async refresh(
@@ -110,7 +110,7 @@ export class AuthController {
   }
 
   /**
-   * Sends a password reset email to the user
+   * Sends a password reset option to the email address described in the endpoint
    * @param dto The forgot password dto
    */
   @OpenApi()
@@ -120,11 +120,11 @@ export class AuthController {
   }
 
   /**
-   * Resets the user's password
+   * Resets the user's password using the token sent to their email address and the new password
    * @param dto The password reset dto
    */
   @OpenApi()
-  @Post('reset-password')
+  @Post('forgot-password/reset')
   public async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.password);
   }

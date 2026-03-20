@@ -1,10 +1,10 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Body, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Body, Post, Param, Query, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
-import { Auth, Action, CompanyInvitationSubject } from '@crm/auth';
-import { UserIdValidator, CompanyIdValidator, CompanyInvitationIdValidator } from '@crm/validation';
+import { CompanyIdValidator, CompanyInvitationIdValidator } from '@crm/validation';
+import { Auth, Action, AuthenticatedReq, CompanyInvitationSubject } from '@crm/auth';
 
 import { Invitation } from './domain';
 import { InvitationService } from './services';
@@ -12,25 +12,25 @@ import { InviteUserDto, ListInvitationsDto } from './dto';
 
 @ApiTags('Invitation')
 @ApiExtraModels(InviteUserDto, ListInvitationsDto)
-@Controller({ version: '1' })
+@Controller({ path: 'companies', version: '1' })
 export class InvitationController {
   constructor(private readonly service: InvitationService) {}
 
   /**
    * Sends an invitation to an email address to join a company
-   * @param userId The user id of the inviter
    * @param companyId The company id to invite the user to
    * @param dto The invite user dto
+   * @param req The authenticated request
    */
   @OpenApi()
   @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'params', use: 'companyId', findBy: 'companyId' })
-  @Post('users/:userId/companies/:companyId/invitations')
+  @Post(':companyId/invitations')
   public async inviteUser(
-    @Param('userId', UserIdValidator) userId: string,
     @Param('companyId', CompanyIdValidator) companyId: string,
     @Body() dto: InviteUserDto,
+    @Req() req: AuthenticatedReq,
   ): Promise<void> {
-    await this.service.inviteUser(dto, userId, companyId);
+    await this.service.inviteUser(dto, req.user.userId, companyId);
   }
 
   /**
@@ -40,7 +40,7 @@ export class InvitationController {
    */
   @OpenApi({ type: Invitation, isPaginated: true })
   @Auth(Action.READ, CompanyInvitationSubject, { in: 'params', use: 'companyId', findBy: 'companyId' })
-  @Get('companies/:companyId/invitations')
+  @Get(':companyId/invitations')
   public async list(
     @Param('companyId', CompanyIdValidator) companyId: string,
     @Query() dto: ListInvitationsDto,
@@ -53,8 +53,8 @@ export class InvitationController {
    * @param invitationId The invitation id to resend
    */
   @OpenApi()
-  @Auth(Action.UPDATE, CompanyInvitationSubject, { in: 'params', use: 'invitationId', findBy: 'id' })
-  @Patch('companies/:companyId/invitations/:invitationId')
+  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'params', use: 'invitationId', findBy: 'id' })
+  @Post(':companyId/invitations/:invitationId')
   public async resendInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,
   ): Promise<void> {
@@ -67,7 +67,7 @@ export class InvitationController {
    */
   @OpenApi()
   @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'params', use: 'invitationId', findBy: 'id' })
-  @Delete('companies/:companyId/invitations/:invitationId')
+  @Delete(':companyId/invitations/:invitationId')
   public async deleteUserInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,
   ): Promise<void> {
