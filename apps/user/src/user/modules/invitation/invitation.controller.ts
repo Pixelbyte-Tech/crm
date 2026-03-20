@@ -23,8 +23,8 @@ export class InvitationController {
    * @param dto The invite user dto
    */
   // todo fix
-  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', param: 'userId' })
   @OpenApi()
+  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', use: 'userId', findBy: 'sentByUserId' })
   @Post('users/:userId/companies/:companyId/invitations')
   public async inviteUser(
     @Param('userId', UserIdValidator) userId: string,
@@ -39,9 +39,8 @@ export class InvitationController {
    * @param companyId The company id to list invitations for
    * @param dto The filter dto
    */
-  // todo fix
-  @Auth(Action.READ, CompanyInvitationSubject, { in: 'query', param: 'companyId' })
   @OpenApi({ type: Invitation, isPaginated: true })
+  @Auth(Action.READ, CompanyInvitationSubject, { in: 'query', use: 'companyId', findBy: 'companyId' })
   @Get('companies/:companyId/invitations')
   public async list(
     @Param('companyId', CompanyIdValidator) companyId: string,
@@ -54,8 +53,8 @@ export class InvitationController {
    * Resends a company invitation to a user by email
    * @param invitationId The invitation id to resend
    */
-  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', param: 'invitationId' })
   @OpenApi()
+  @Auth(Action.UPDATE, CompanyInvitationSubject, { in: 'query', use: 'invitationId', findBy: 'id' })
   @Patch('companies/:companyId/invitations/:invitationId')
   public async resendInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,
@@ -67,8 +66,8 @@ export class InvitationController {
    * Deletes an invitation sent to an email address to join a company
    * @param invitationId The invitation id to delete
    */
-  @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'query', param: 'invitationId' })
   @OpenApi()
+  @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'query', use: 'invitationId', findBy: 'id' })
   @Delete('companies/:companyId/invitations/:invitationId')
   public async deleteUserInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,

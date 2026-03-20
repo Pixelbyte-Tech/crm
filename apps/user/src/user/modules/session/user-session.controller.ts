@@ -20,8 +20,7 @@ export class UserSessionController {
    * Gets the latest session for a user by id
    * @param userId The user id to fetch
    */
-  // todo fix
-  @Auth(Action.READ, UserAuthSessionSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.READ, UserAuthSessionSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: UserSession })
   @Get(':userId/sessions/latest')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: UserSession }> {
@@ -34,8 +33,7 @@ export class UserSessionController {
    * @param userId The user id to fetch
    * @param dto The dto
    */
-  // todo fix
-  @Auth(Action.READ, UserAuthSessionSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.READ, UserAuthSessionSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: UserSession, isPaginated: true })
   @Get(':userId/sessions')
   public async list(

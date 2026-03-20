@@ -12,7 +12,7 @@ export const CAN_METADATA_KEY = 'casl:can';
  * defined by the @Can decorator
  * @param action The action to check
  * @param subject The subject making the action
- * @param option The instructions on how to find the subject in the request
+ * @param option The instructions on how to find the subject from the request context
  */
 @Injectable()
 export class CanGuard implements CanActivate {
@@ -52,7 +52,7 @@ export class CanGuard implements CanActivate {
     const ability = this.caslAbilityFactory.createForUser(req.user);
     return ability.can(
       canMetadata.action,
-      await this.subjectFactory.create(canMetadata.subject, req[canMetadata.option.in][canMetadata.option.param]),
+      await this.subjectFactory.create(canMetadata.subject, canMetadata.option, req),
     );
   }
 }

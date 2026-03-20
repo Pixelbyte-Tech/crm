@@ -22,7 +22,7 @@ export class UserController {
    * Get a user by id
    * @param userId The user id to fetch
    */
-  @Auth(Action.READ, UserSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.READ, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
   @Get(':userId')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: User }> {
@@ -34,8 +34,7 @@ export class UserController {
    * Lists all users in the system
    * @param dto The dto with options to filter the results by.
    */
-  // todo fix
-  @Auth(Action.READ, UserSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.READ, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User, isPaginated: true })
   @Get()
   public async list(@Query() dto: ListUsersDto): Promise<PaginatedResDto<User>> {
@@ -57,7 +56,7 @@ export class UserController {
    * @param userId The user id to update
    * @param dto The dto
    */
-  @Auth(Action.UPDATE, UserSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.UPDATE, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
   @Patch(':userId')
   public async update(
@@ -74,7 +73,7 @@ export class UserController {
    * Deletes a user by id
    * @param userId The user id to delete
    */
-  @Auth(Action.DELETE, UserSubject, { in: 'query', param: 'userId' })
+  @Auth(Action.DELETE, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
   @OpenApi()
   @Delete(':userId')
   public async delete(@Param('userId', UserIdValidator) userId: string): Promise<void> {
