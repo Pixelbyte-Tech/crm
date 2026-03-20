@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PureAbility, AbilityBuilder, ExtractSubjectType } from '@casl/ability';
+import { MongoAbility, AbilityBuilder, ExtractSubjectType, createMongoAbility } from '@casl/ability';
 
 import { Role } from '@crm/types';
 
@@ -44,8 +44,8 @@ export class CaslAbilityFactory {
    * Creates the abilities for a CASL user
    * @param user The user details
    */
-  createForUser(user: CaslUser): PureAbility<[Action, Subject]> {
-    const { can, build } = new AbilityBuilder(PureAbility<[Action, Subject]>);
+  createForUser(user: CaslUser): MongoAbility {
+    const { can, build } = new AbilityBuilder(createMongoAbility);
 
     // Iterate over user roles in companies
     for (const [companyId, value] of Object.entries(user.roles)) {
@@ -103,8 +103,8 @@ export class CaslAbilityFactory {
 
             can(Action.READ, TradingAccountNoteSubject, { companyId });
             can(Action.CREATE, TradingAccountNoteSubject, { companyId });
-            can(Action.UPDATE, TradingAccountNoteSubject, { companyId, authorUserId: user.userId });
-            can(Action.DELETE, TradingAccountNoteSubject, { companyId, authorUserId: user.userId });
+            can(Action.UPDATE, TradingAccountNoteSubject, { companyId, authorId: user.userId });
+            can(Action.DELETE, TradingAccountNoteSubject, { companyId, authorId: user.userId });
 
             can(Action.MANAGE, TradingAccountTagSubject, { companyId });
 

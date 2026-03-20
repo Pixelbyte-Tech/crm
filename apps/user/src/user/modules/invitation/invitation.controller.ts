@@ -22,9 +22,8 @@ export class InvitationController {
    * @param companyId The company id to invite the user to
    * @param dto The invite user dto
    */
-  // todo fix
   @OpenApi()
-  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'query', use: 'userId', findBy: 'sentByUserId' })
+  @Auth(Action.CREATE, CompanyInvitationSubject, { in: 'params', use: 'companyId', findBy: 'companyId' })
   @Post('users/:userId/companies/:companyId/invitations')
   public async inviteUser(
     @Param('userId', UserIdValidator) userId: string,
@@ -40,7 +39,7 @@ export class InvitationController {
    * @param dto The filter dto
    */
   @OpenApi({ type: Invitation, isPaginated: true })
-  @Auth(Action.READ, CompanyInvitationSubject, { in: 'query', use: 'companyId', findBy: 'companyId' })
+  @Auth(Action.READ, CompanyInvitationSubject, { in: 'params', use: 'companyId', findBy: 'companyId' })
   @Get('companies/:companyId/invitations')
   public async list(
     @Param('companyId', CompanyIdValidator) companyId: string,
@@ -54,7 +53,7 @@ export class InvitationController {
    * @param invitationId The invitation id to resend
    */
   @OpenApi()
-  @Auth(Action.UPDATE, CompanyInvitationSubject, { in: 'query', use: 'invitationId', findBy: 'id' })
+  @Auth(Action.UPDATE, CompanyInvitationSubject, { in: 'params', use: 'invitationId', findBy: 'id' })
   @Patch('companies/:companyId/invitations/:invitationId')
   public async resendInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,
@@ -67,7 +66,7 @@ export class InvitationController {
    * @param invitationId The invitation id to delete
    */
   @OpenApi()
-  @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'query', use: 'invitationId', findBy: 'id' })
+  @Auth(Action.DELETE, CompanyInvitationSubject, { in: 'params', use: 'invitationId', findBy: 'id' })
   @Delete('companies/:companyId/invitations/:invitationId')
   public async deleteUserInvitation(
     @Param('invitationId', CompanyInvitationIdValidator) invitationId: string,

@@ -1,11 +1,11 @@
 export class TradingAccountNoteSubject {
   id: string;
-  authorUserId: string;
+  authorId: string;
   companyId: string;
 
   constructor(input: TradingAccountNoteSubject) {
     this.id = input.id;
-    this.authorUserId = input.authorUserId;
+    this.authorId = input.authorId;
     this.companyId = input.companyId;
   }
 }

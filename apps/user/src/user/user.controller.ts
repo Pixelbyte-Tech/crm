@@ -22,19 +22,18 @@ export class UserController {
    * Get a user by id
    * @param userId The user id to fetch
    */
-  @Auth(Action.READ, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
+  @Auth(Action.READ, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
   @Get(':userId')
   public async get(@Param('userId', UserIdValidator) userId: string): Promise<{ data: User }> {
-    const result = await this.service.get(userId);
-    return { data: result };
+    return { data: await this.service.get(userId) };
   }
 
   /**
    * Lists all users in the system
    * @param dto The dto with options to filter the results by.
    */
-  @Auth(Action.READ, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
+  @Auth(Action.READ, UserSubject, { in: 'query', use: 'companyId', findBy: 'companyId' })
   @OpenApi({ type: User, isPaginated: true })
   @Get()
   public async list(@Query() dto: ListUsersDto): Promise<PaginatedResDto<User>> {
@@ -56,7 +55,7 @@ export class UserController {
    * @param userId The user id to update
    * @param dto The dto
    */
-  @Auth(Action.UPDATE, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
+  @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
   @Patch(':userId')
   public async update(
@@ -73,7 +72,7 @@ export class UserController {
    * Deletes a user by id
    * @param userId The user id to delete
    */
-  @Auth(Action.DELETE, UserSubject, { in: 'query', use: 'userId', findBy: 'id' })
+  @Auth(Action.DELETE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi()
   @Delete(':userId')
   public async delete(@Param('userId', UserIdValidator) userId: string): Promise<void> {

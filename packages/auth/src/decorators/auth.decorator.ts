@@ -9,17 +9,17 @@ import { Can } from '../modules/casl/decorators';
 import { CanGuard } from '../modules/casl/guards';
 import { Action, Option, Subject } from '../modules/casl/types';
 
-export function Auth(
+export function Auth<T extends Type<Subject>>(
   action?: Action,
-  subject?: Type<Subject>,
-  option?: Option,
+  subject?: T,
+  option?: Option<T>,
   strategies: AuthStrategy[] = [AuthStrategy.JWT],
 ): ClassDecorator & MethodDecorator {
-  // Apply these guards to the endpoint
+  // Apply base guards
   const items = [UseGuards(AuthGuard(strategies))];
   items.push(UseGuards(UserStatusGuard));
 
-  // Add CASL ability guard
+  // CASL ability guard
   if (action && subject && option) {
     items.push(Can(action, subject, option));
     items.push(UseGuards(CanGuard));

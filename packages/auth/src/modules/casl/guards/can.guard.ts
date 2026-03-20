@@ -1,8 +1,8 @@
 import { Reflector } from '@nestjs/core';
-import { Logger, Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Type, Logger, Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
-import { Action, Option } from '../types';
 import { AuthenticatedReq } from '../../../types';
+import { Action, Option, Subject } from '../types';
 import { SubjectFactory, CaslAbilityFactory } from '../factories';
 
 export const CAN_METADATA_KEY = 'casl:can';
@@ -35,7 +35,7 @@ export class CanGuard implements CanActivate {
     // Get metadata from the handler or class
     const canMetadata = this.reflector.getAllAndOverride<{
       action: Action;
-      subject: any;
+      subject: Type<Subject>;
       option: Option;
     }>(CAN_METADATA_KEY, [contextHandler, contextClass]);
 
@@ -50,9 +50,12 @@ export class CanGuard implements CanActivate {
 
     // Check the ability against CASL
     const ability = this.caslAbilityFactory.createForUser(req.user);
-    return ability.can(
-      canMetadata.action,
-      await this.subjectFactory.create(canMetadata.subject, canMetadata.option, req),
-    );
+    const subject = await this.subjectFactory.create(canMetadata.subject, canMetadata.option, req);
+
+    // Log the check params
+    this.#logger.debug(`Checking action '${canMetadata.action}' on subject '${canMetadata.subject.name}'`, subject);
+
+    // Test the ability against the subject
+    return ability.can(canMetadata.action, subject);
   }
 }
