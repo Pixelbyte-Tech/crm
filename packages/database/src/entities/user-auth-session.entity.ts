@@ -10,6 +10,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { AuthSessionStatus } from '@crm/types';
+
 import { UserEntity } from './user.entity';
 import { CompanyEntity } from './company.entity';
 
@@ -28,6 +30,9 @@ export class UserAuthSessionEntity {
 
   @Column({ type: 'text', nullable: true })
   userAgent?: string | null;
+
+  @Column({ type: 'enum', enum: AuthSessionStatus, default: AuthSessionStatus.ATTEMPTED })
+  status: AuthSessionStatus;
 
   /** Many-to-one relations */
   @ManyToOne(() => CompanyEntity, (e) => e.userAuthSessions, {
@@ -52,7 +57,7 @@ export class UserAuthSessionEntity {
   @Column({ type: 'text' })
   userId: string;
 
-  @PrimaryColumn({ default: new Date() })
+  @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()

@@ -50,7 +50,7 @@ export class UserNotificationEntity {
   @Column({ type: 'text' })
   userId: string;
 
-  @PrimaryColumn({ default: new Date() })
+  @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()

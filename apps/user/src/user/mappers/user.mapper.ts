@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { User, UserDetail, UserSetting } from '@crm/types';
-import { UserEntity, UserDetailEntity } from '@crm/database';
+import { UserEntity, UserDetailEntity, UserSettingEntity } from '@crm/database';
 
 @Injectable()
 export class UserMapper {
@@ -14,7 +14,6 @@ export class UserMapper {
     user.lastName = data.lastName;
 
     user.email = data.email;
-    user.passwordHash = data.passwordHash;
     user.securityPin = data.securityPin;
     user.status = data.status;
 
@@ -75,14 +74,14 @@ export class UserMapper {
     return userDetail;
   }
 
-  #toUserSetting(data: UserSetting): UserSetting {
+  #toUserSetting(data: UserSettingEntity): UserSetting {
     const userSetting = new UserSetting();
     userSetting.id = data.id;
 
     userSetting.canDeposit = data.canDeposit;
     userSetting.canWithdraw = data.canWithdraw;
     userSetting.canAutoWithdraw = data.canAutoWithdraw;
-    userSetting.maxAutoWithdrawAmount = data.maxAutoWithdrawAmount;
+    userSetting.maxAutoWithdrawAmount = data.maxAutoWithdrawAmount ? Number(data.maxAutoWithdrawAmount) : null;
 
     userSetting.createdAt = data.createdAt;
     userSetting.updatedAt = data.updatedAt;

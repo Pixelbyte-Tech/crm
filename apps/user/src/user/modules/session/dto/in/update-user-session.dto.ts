@@ -1,6 +1,13 @@
-import { IsIP, IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsIP, IsEnum, IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
+import { AuthSessionStatus } from '@crm/types';
 
 export class UpdateUserSessionDto {
+  /** The status of the auth session */
+  @IsOptional()
+  @IsEnum(AuthSessionStatus)
+  status?: AuthSessionStatus;
+
   /** The unique hash to associate with the session */
   @IsOptional()
   @IsString()

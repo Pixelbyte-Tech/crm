@@ -81,7 +81,7 @@ export class AuditLogEntity {
   @Column({ type: 'text', nullable: true })
   userId?: string | null;
 
-  @PrimaryColumn({ default: new Date() })
+  @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()

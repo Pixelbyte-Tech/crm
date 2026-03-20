@@ -17,7 +17,7 @@ export class UserSessionController {
   constructor(private readonly service: UserSessionService) {}
 
   /**
-   * Gets the latest session for a user by id
+   * Fetches the latest completed auth session for a user based on the user id provided
    * @param userId The user id to fetch
    */
   @Auth(Action.READ, UserAuthSessionSubject, { in: 'params', use: 'userId', findBy: 'userId' })
@@ -29,7 +29,7 @@ export class UserSessionController {
   }
 
   /**
-   * Lists all sessions for a user by ID
+   * Lists all sessions for a user based on the user id provided
    * @param userId The user id to fetch
    * @param dto The dto
    */

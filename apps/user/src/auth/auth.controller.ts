@@ -10,13 +10,17 @@ import { Auth, RefreshReq, AuthenticatedReq } from '@crm/auth';
 
 import { AuthService } from './services';
 import { UserLoginResDto } from './dto/out';
-import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto } from './dto/in';
+import { InvitationService } from '../user/modules/invitation/services';
+import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto, RejectInvitationDto } from './dto/in';
 
 @ApiTags('Auth')
 @ApiExtraModels(EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto)
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly invitationService: InvitationService,
+  ) {}
 
   /**
    * Returns the authenticated user information
@@ -31,7 +35,7 @@ export class AuthController {
 
   /**
    * Login with email and password
-   * @param dto The login dto
+   * @param dto The dto payload
    * @param req The request object
    * @param response The response object
    */
@@ -101,7 +105,7 @@ export class AuthController {
 
   /**
    * Confirms the user's email address
-   * @param dto The confirm email dto
+   * @param dto The dto payload
    */
   @OpenApi()
   @Post('confirm-email')
@@ -111,7 +115,7 @@ export class AuthController {
 
   /**
    * Sends a password reset option to the email address described in the endpoint
-   * @param dto The forgot password dto
+   * @param dto The dto payload
    */
   @OpenApi()
   @Post('forgot-password')
@@ -121,11 +125,21 @@ export class AuthController {
 
   /**
    * Resets the user's password using the token sent to their email address and the new password
-   * @param dto The password reset dto
+   * @param dto The dto payload
    */
   @OpenApi()
   @Post('forgot-password/reset')
   public async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.password);
+  }
+
+  /**
+   * Rejects an invitation for an email address to join a company
+   * @param dto The dto payload
+   */
+  @OpenApi()
+  @Post('reject-invitation')
+  public async rejectInvitation(@Body() dto: RejectInvitationDto): Promise<void> {
+    await this.invitationService.reject(dto.token);
   }
 }

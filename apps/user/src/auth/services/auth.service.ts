@@ -11,8 +11,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
-import { User } from '@crm/types';
 import { Cryptography } from '@crm/utils';
+import { User, AuthSessionStatus } from '@crm/types';
 import { UserEntity, UserCompanyEntity } from '@crm/database';
 import { UserJwtPayloadType, JwtRefreshPayloadType } from '@crm/auth';
 
@@ -22,12 +22,14 @@ import { UserLoginResDto } from '../dto/out';
 import { UserMapper } from '../../user/mappers';
 import { AuthConfig } from '../config/auth-config.type';
 import { UserSessionService } from '../../user/modules/session/services';
+import { InvitationService } from '../../user/modules/invitation/services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userMapper: UserMapper,
+    private readonly invitationService: InvitationService,
     private readonly userSessionService: UserSessionService,
     private readonly configService: ConfigService<{ auth: AuthConfig }>,
     @InjectRepository(UserEntity)
@@ -61,6 +63,7 @@ export class AuthService {
 
     // Check if the user exists and the password is correct
     const user = await this.userRepo.findOne({
+      relations: { detail: true, settings: true },
       where: { email: dto.email, passwordHash: Cryptography.hash(dto.password) },
     });
 
@@ -73,18 +76,41 @@ export class AuthService {
     const str = `${dto.email}${DateTime.utc().toMillis().toString()}`;
     const randomHash = Cryptography.hash(str);
 
+    // Accept invitation if token provided
+    if (dto.invitationToken) {
+      await this.invitationService.accept(dto.invitationToken);
+    }
+
+    // Find the company id to associate with the session
+    let companyId = user.companyId;
+    if (!companyId) {
+      // Associate with the first company bound to the user (arbitrary)
+      const userCompany = await this.userCompanyRepo.findOne({ where: { userId: user.id } });
+      if (!userCompany) {
+        throw new UnprocessableEntityException(`User not associated with any company`);
+      }
+
+      companyId = userCompany.companyId;
+    }
+
     try {
       // Create a new auth session for the user
-      const authSession = await this.userSessionService.create({
+      const session = await this.userSessionService.create({
         userId: user.id,
+        companyId: companyId,
         hash: randomHash,
         ipAddress: ip,
         userAgent,
       });
 
       // Generate JWT tokens for the user
-      const result = await this.#generateTokens(user.id, authSession.id, randomHash);
-      return { user: this.userMapper.toUser(user), tokens: result };
+      const tokens = await this.#generateTokens(user.id, session.id, randomHash);
+      const result = { user: this.userMapper.toUser(user), tokens };
+
+      // Update the session status
+      await this.userSessionService.update(session.id, { status: AuthSessionStatus.COMPLETE });
+
+      return result;
     } catch (err) {
       this.#logger.error(`${msg} - Failed: generate session and tokens`, err);
       throw err;

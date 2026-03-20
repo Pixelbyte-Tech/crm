@@ -10,11 +10,12 @@ import {
 } from '@nestjs/common';
 
 import { PaginatedResDto } from '@crm/http';
+import { AuthSessionStatus } from '@crm/types';
 import { UserAuthSessionEntity } from '@crm/database';
 
 import { UserSession } from '../domain';
 import { UserSessionMapper } from '../mappers';
-import { ListUserSessionsDto, UpdateUserSessionDto, CreateUserSessionDto } from '../dto';
+import { ListUserSessionsDto, CreateUserSessionDto, UpdateUserSessionDto } from '../dto';
 
 @Injectable()
 export class UserSessionService {
@@ -45,14 +46,17 @@ export class UserSessionService {
   }
 
   /**
-   * Fetches the latest auth session for a user
+   * Fetches the latest completed auth session for a user
    * @param userId The id of the user to fetch
    */
   async latest(userId: string): Promise<UserSession> {
     const msg = `Fetching latest session for user '${userId}'`;
 
     // Find the session
-    const session = await this.userSessionRepo.findOne({ where: { userId }, order: { createdAt: 'DESC' } });
+    const session = await this.userSessionRepo.findOne({
+      where: { userId, status: AuthSessionStatus.COMPLETE },
+      order: { createdAt: 'DESC' },
+    });
     if (!session) {
       this.#logger.error(`${msg} - Failed`);
       throw new NotFoundException(`Failed to find latest session for user '${userId}'`);
@@ -75,6 +79,7 @@ export class UserSessionService {
       {
         where: {
           userId,
+          ...(dto.status ? { status: dto.status } : {}),
           ...(dto.ipAddress ? { ipAddress: dto.ipAddress } : {}),
           ...(dto.userAgent ? { userAgent: dto.userAgent } : {}),
         },
@@ -99,10 +104,11 @@ export class UserSessionService {
 
     // Create and persist the entity
     const session = await this.userSessionRepo.save({
+      userId: dto.userId,
+      companyId: dto.companyId,
       hash: dto.hash,
       ipAddress: dto.ipAddress,
       userAgent: dto.userAgent,
-      userId: dto.userId,
     });
 
     if (!session) {
@@ -123,11 +129,15 @@ export class UserSessionService {
     const msg = `Updating user session '${sessionId}'`;
 
     // Update the session by its id
-    const result = await this.userSessionRepo.update(sessionId, {
-      ...(dto.hash ? { hash: dto.hash } : {}),
-      ...(dto.ipAddress ? { ipAddress: dto.ipAddress } : {}),
-      ...(dto.userAgent ? { userAgent: dto.userAgent } : {}),
-    });
+    const result = await this.userSessionRepo.update(
+      { id: sessionId },
+      {
+        ...(dto.status ? { status: dto.status } : {}),
+        ...(dto.hash ? { hash: dto.hash } : {}),
+        ...(dto.ipAddress ? { ipAddress: dto.ipAddress } : {}),
+        ...(dto.userAgent ? { userAgent: dto.userAgent } : {}),
+      },
+    );
 
     if (result.affected === 0) {
       this.#logger.error(`${msg} - Failed`);

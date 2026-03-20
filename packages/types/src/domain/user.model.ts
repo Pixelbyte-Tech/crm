@@ -9,7 +9,6 @@ export class User {
   middleName?: string | null;
   lastName: string;
   email: string;
-  passwordHash: string;
   securityPin: string;
   status: UserStatus;
   isEmailVerified: boolean;
@@ -36,7 +35,6 @@ export class User {
       this.lastName = data.lastName;
 
       this.email = data.email;
-      this.passwordHash = data.passwordHash;
       this.securityPin = data.securityPin;
       this.status = data.status;
 

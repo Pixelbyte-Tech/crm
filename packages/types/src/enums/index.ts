@@ -7,6 +7,7 @@ export * from './audit/audit-actor.enum';
 export * from './audit/audit-result.enum';
 export * from './audit/audit-target.enum';
 
+export * from './auth/auth-session-status.enum';
 export * from './auth/auth-strategy.enum';
 export * from './auth/role.enum';
 

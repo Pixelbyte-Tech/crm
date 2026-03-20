@@ -19,6 +19,6 @@ import { InvitationModule } from './modules/invitation/invitation.module';
   ],
   providers: [CompanySettingMapper, CompanySettingService, UserMapper, UserService],
   controllers: [UserController],
-  exports: [UserSessionModule, UserMapper, UserService],
+  exports: [InvitationModule, UserSessionModule, UserMapper, UserService],
 })
 export class UserModule {}

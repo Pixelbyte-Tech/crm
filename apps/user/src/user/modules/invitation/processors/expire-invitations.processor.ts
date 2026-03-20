@@ -45,7 +45,7 @@ export class ExpireInvitationsProcessor {
               if (DateTime.now() >= expirationDate) {
                 invitation.status = InvitationStatus.EXPIRED;
                 await this.invitationRepo.save(invitation);
-                this.logger.log(`Expired invitation ID: ${invitation.id}, Email: ${invitation.email}`);
+                this.logger.log(`Expired invitation '${invitation.id}' for email '${invitation.email}'`);
               }
             }
 

@@ -93,7 +93,7 @@ export class WalletTransactionEntity {
   @Column({ type: 'text' })
   walletId: string;
 
-  @PrimaryColumn({ default: new Date() })
+  @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()

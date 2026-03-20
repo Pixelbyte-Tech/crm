@@ -1,8 +1,12 @@
 import { IsIP, IsString, Validate, IsNotEmpty, IsOptional } from 'class-validator';
 
-import { UserIdValidator } from '@crm/validation';
+import { UserIdValidator, CompanyIdValidator } from '@crm/validation';
 
 export class CreateUserSessionDto {
+  /** The companyId being signed into */
+  @Validate(CompanyIdValidator)
+  companyId: string;
+
   /** The unique hash to associate with the session */
   @IsString()
   @IsNotEmpty()

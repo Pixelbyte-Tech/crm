@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
@@ -23,10 +24,10 @@ export class InvitationService {
     private readonly invitationMapper: InvitationMapper,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(CompanyInvitationEntity)
-    private readonly invitationRepo: Repository<CompanyInvitationEntity>,
     @InjectRepository(UserCompanyEntity)
     private readonly userCompanyRepo: Repository<UserCompanyEntity>,
+    @InjectRepository(CompanyInvitationEntity)
+    private readonly invitationRepo: Repository<CompanyInvitationEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -38,7 +39,7 @@ export class InvitationService {
    * @param toCompanyId The id of the company to invite the user to
    */
   async inviteUser(dto: InviteUserDto, fromUserId: string, toCompanyId: string): Promise<boolean> {
-    const msg = `Inviting ${dto.email} by user ${fromUserId}`;
+    const msg = `Inviting '${dto.email}' by user '${fromUserId}'`;
     this.#logger.log(`${msg} - Start`);
 
     // Fetch the user sending the invite
@@ -107,7 +108,7 @@ export class InvitationService {
    * @param invitationId The id of the invitation to resend
    */
   async resendInvitation(invitationId: string): Promise<boolean> {
-    const msg = `Resending invitation ${invitationId} email`;
+    const msg = `Resending invitation '${invitationId}' email`;
     this.#logger.log(`${msg} - Start`);
 
     // Find the invitation
@@ -139,7 +140,7 @@ export class InvitationService {
    * @param invitationId The id of the invitation to delete
    */
   async deleteInvitation(invitationId: string): Promise<boolean> {
-    const msg = `Deleting invitation ${invitationId}`;
+    const msg = `Deleting invitation '${invitationId}'`;
     this.#logger.log(`${msg} - Start`);
 
     // Find the invitation
@@ -171,7 +172,7 @@ export class InvitationService {
    * @param token The token of the invitation to accept
    */
   async accept(token: string): Promise<boolean> {
-    const msg = `Accepting invitation from token ${token}`;
+    const msg = `Accepting invitation from token '${token}'`;
 
     // Find the invitation by token
     const invitation = await this.invitationRepo.findOne({
@@ -193,7 +194,10 @@ export class InvitationService {
 
     try {
       // Assign the user to the company
-      await this.userCompanyRepo.save({ userId: user.id, companyId: invitation.companyId });
+      await this.userCompanyRepo.upsert(
+        { userId: user.id, companyId: invitation.companyId },
+        { conflictPaths: ['userId', 'companyId'] },
+      );
 
       // Update the invitation status to 'accepted'
       const res = await this.invitationRepo.update({ token: token }, { status: InvitationStatus.ACCEPTED });
@@ -215,7 +219,7 @@ export class InvitationService {
    * @param token The token of the invitation to reject
    */
   async reject(token: string): Promise<boolean> {
-    const msg = `Rejecting invitation from token ${token}`;
+    const msg = `Rejecting invitation from token '${token}'`;
 
     // Find the invitation by token
     const invitation = await this.invitationRepo.findOne({
@@ -228,7 +232,7 @@ export class InvitationService {
     }
 
     // Update the invitation status to rejected
-    const res = await this.invitationRepo.update({ token: token }, { status: InvitationStatus.REJECTED });
+    const res = await this.invitationRepo.update({ token }, { status: InvitationStatus.REJECTED });
     if (res.affected && res.affected > 0) {
       this.#logger.log(`${msg} - Complete`);
       return true;
@@ -243,14 +247,17 @@ export class InvitationService {
    * @param invitationId The id of the invitation to mark as sent
    */
   async #markInvitationSent(invitationId: string): Promise<void> {
-    await this.invitationRepo.update(
+    const result = await this.invitationRepo.update(
       { id: invitationId, firstSentAt: IsNull(), status: InvitationStatus.PENDING },
-      { firstSentAt: new Date() },
+      { firstSentAt: DateTime.utc().toJSDate() },
     );
-    await this.invitationRepo.update(
-      { id: invitationId, status: InvitationStatus.PENDING },
-      { lastSentAt: new Date() },
-    );
+
+    if (!result.affected || result.affected === 0) {
+      await this.invitationRepo.update(
+        { id: invitationId, status: InvitationStatus.PENDING },
+        { lastSentAt: DateTime.utc().toJSDate() },
+      );
+    }
   }
 
   /**

@@ -83,7 +83,7 @@ export class PaymentTransactionEntity {
   @Column({ type: 'text' })
   integrationId: string;
 
-  @PrimaryColumn({ default: new Date() })
+  @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()
