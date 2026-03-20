@@ -39,6 +39,7 @@ cp ./apps/analytics/.env.example ./apps/analytics/.env
 cp ./apps/broker/.env.example ./apps/broker/.env
 cp ./apps/bull-monitor/.env.example ./apps/bull-monitor/.env
 cp ./apps/compliance/.env.example ./apps/compliance/.env
+cp ./apps/notification/.env.example ./apps/notification/.env
 cp ./apps/payment/.env.example ./apps/payment/.env
 cp ./apps/prop/.env.example ./apps/prop/.env
 cp ./apps/user/.env.example ./apps/user/.env

@@ -159,7 +159,7 @@ services:
       - crm-kafka
       - crm-gateway
     volumes:
-      - ./apps/payment:/app/apps/notification
+      - ./apps/notification:/app/apps/notification
       - ./packages:/app/packages
     networks:
       - crm-network
