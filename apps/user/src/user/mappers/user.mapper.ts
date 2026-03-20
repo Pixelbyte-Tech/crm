@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserEntity } from '@crm/database';
 import { User, UserDetail, UserSetting } from '@crm/types';
-import { UserDetailEntity } from '@crm/database/dist/entities/user-detail.entity';
+import { UserEntity, UserDetailEntity } from '@crm/database';
 
 @Injectable()
 export class UserMapper {

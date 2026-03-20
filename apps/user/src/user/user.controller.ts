@@ -1,13 +1,11 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
 import { Get, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
 
-import { Auth } from '@crm/auth';
 import { User } from '@crm/types';
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
 import { UserIdValidator } from '@crm/validation';
-import { Action } from '@crm/auth/dist/modules/casl/types';
-import { UserSubject } from '@crm/auth/dist/modules/casl/subjects';
+import { Auth, Action, UserSubject } from '@crm/auth';
 
 import { UserService } from './services';
 import { NewUserDto, ListUsersDto, CreateUserDto, UpdateUserDto } from './dto';
