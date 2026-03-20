@@ -4,7 +4,7 @@ export type UserJwtPayloadType = {
   userId: string;
   sessionId: string;
   roles: {
-    [companyId: string]: Role;
+    [companyId: string]: Role[];
   };
   iat: number;
   exp: number;

@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  OneToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column, OneToOne, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CompanyEntity } from './company.entity';
 
@@ -41,7 +33,6 @@ export class BillingInfoEntity {
 
   /** One-to-one relations */
   @OneToOne(() => CompanyEntity, (e) => e.billingInfo)
-  @JoinColumn()
   company: CompanyEntity;
 
   @CreateDateColumn()

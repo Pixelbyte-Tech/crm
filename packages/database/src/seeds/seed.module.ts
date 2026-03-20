@@ -2,8 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserSeedService } from './services/user-seed.service';
+import { CompanySeedService } from './services/company-seed.service';
+import { OrganisationSeedService } from './services/organisation-seed.service';
 
 import { UserEntity } from '../entities/user.entity';
+import { CompanyEntity } from '../entities/company.entity';
+import { UserCompanyEntity } from '../entities/user-company.entity';
+import { OrganisationEntity } from '../entities/organisation.entity';
 
 @Module({
   imports: [
@@ -18,8 +23,8 @@ import { UserEntity } from '../entities/user.entity';
         entities: [__dirname + '/../entities/**/*.entity{.ts,.js}'],
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([CompanyEntity, OrganisationEntity, UserCompanyEntity, UserEntity]),
   ],
-  providers: [UserEntity, UserSeedService],
+  providers: [CompanySeedService, OrganisationSeedService, UserSeedService],
 })
 export class SeedModule {}

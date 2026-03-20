@@ -87,7 +87,6 @@ export class UserDetailEntity {
 
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.detail)
-  @JoinColumn()
   user: UserEntity;
 
   /** Many-to-one relations */

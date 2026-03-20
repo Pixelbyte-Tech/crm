@@ -2,8 +2,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { UserEntity } from '@crm/database';
 import { AuthModule as CommonAuthModule } from '@crm/auth';
+import { UserEntity, UserCompanyEntity } from '@crm/database';
 
 import authConfig from './config/auth.config';
 
@@ -22,7 +22,7 @@ import { AuthConfig } from './config/auth-config.type';
       }),
     }),
     ConfigModule.forFeature(authConfig),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserCompanyEntity, UserEntity]),
     forwardRef(() => UserModule),
   ],
   providers: [AuthService],

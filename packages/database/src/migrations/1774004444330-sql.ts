@@ -1,6 +1,6 @@
 import { QueryRunner, MigrationInterface } from 'typeorm';
 
-export class Sql1773841353251 implements MigrationInterface {
+export class Sql1774004444330 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE "trading_account_type_leverage" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "leverages" integer array NOT NULL, "countries" character varying(3) array NOT NULL, "companyId" uuid NOT NULL, "tradingAccountTypeId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_debf2553a55dba41fef779c8efa" UNIQUE ("tradingAccountTypeId", "leverages", "countries"), CONSTRAINT "PK_b1adc4cadcc63e5bd2d14c52fd4" PRIMARY KEY ("id"))`,
@@ -33,7 +33,7 @@ export class Sql1773841353251 implements MigrationInterface {
       `CREATE TYPE "public"."wallet_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "wallet_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" character varying, "type" "public"."wallet_transaction_type_enum" NOT NULL, "status" "public"."wallet_transaction_status_enum" NOT NULL, "amount" numeric NOT NULL, "balanceBefore" numeric NOT NULL, "balanceAfter" numeric NOT NULL, "ipAddress" character varying, "comment" text, "companyId" uuid NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.564Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b0aeefba240d7685fe37832df67" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "wallet_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" character varying, "type" "public"."wallet_transaction_type_enum" NOT NULL, "status" "public"."wallet_transaction_status_enum" NOT NULL, "amount" numeric NOT NULL, "balanceBefore" numeric NOT NULL, "balanceAfter" numeric NOT NULL, "ipAddress" character varying, "comment" text, "companyId" uuid NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:45.947Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b0aeefba240d7685fe37832df67" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_060e96e8f43c47d27653d757fc" ON "wallet_transaction" ("type") `);
     await queryRunner.query(`CREATE INDEX "IDX_c73c76a0e033bed04036835fce" ON "wallet_transaction" ("status") `);
@@ -56,7 +56,7 @@ export class Sql1773841353251 implements MigrationInterface {
       `CREATE TYPE "public"."wallet_transaction_history_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "wallet_transaction_history" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."wallet_transaction_history_status_enum" NOT NULL, "comment" text, "occurredAt" TIMESTAMP NOT NULL, "companyId" uuid NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.578Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_98b95e87a53f283021718a150d6" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "wallet_transaction_history" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."wallet_transaction_history_status_enum" NOT NULL, "comment" text, "occurredAt" TIMESTAMP NOT NULL, "companyId" uuid NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:45.966Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_98b95e87a53f283021718a150d6" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_4e343762e1fab760d9248dda1d" ON "wallet_transaction_history" ("status") `,
@@ -111,7 +111,7 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE TYPE "public"."alert_level_enum" AS ENUM('warning', 'delivered', 'critical')`);
     await queryRunner.query(`CREATE TYPE "public"."alert_type_enum" AS ENUM('payments', 'kyc', 'other')`);
     await queryRunner.query(
-      `CREATE TABLE "alert" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "subject" text NOT NULL, "message" text NOT NULL, "status" "public"."alert_status_enum" NOT NULL, "level" "public"."alert_level_enum" NOT NULL, "type" "public"."alert_type_enum" NOT NULL, "deliveryAttempts" integer NOT NULL DEFAULT '0', "scheduledAt" TIMESTAMP NOT NULL, "deliveredAt" TIMESTAMP, "channelId" uuid NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.587Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_e20fa49cf4f5f9a48ddfaefd5e8" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "alert" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "subject" text NOT NULL, "message" text NOT NULL, "status" "public"."alert_status_enum" NOT NULL, "level" "public"."alert_level_enum" NOT NULL, "type" "public"."alert_type_enum" NOT NULL, "deliveryAttempts" integer NOT NULL DEFAULT '0', "scheduledAt" TIMESTAMP NOT NULL, "deliveredAt" TIMESTAMP, "channelId" uuid NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:45.978Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_e20fa49cf4f5f9a48ddfaefd5e8" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_0eaee3b3fe61eb74723fe719ce" ON "alert" ("status") `);
     await queryRunner.query(`CREATE INDEX "IDX_5a112a234c18bbd8df5f24d248" ON "alert" ("level") `);
@@ -144,7 +144,7 @@ export class Sql1773841353251 implements MigrationInterface {
     );
     await queryRunner.query(`CREATE TYPE "public"."audit_log_result_enum" AS ENUM('success', 'failure')`);
     await queryRunner.query(
-      `CREATE TABLE "audit_log" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "actor" "public"."audit_log_actor_enum" NOT NULL, "targetAction" "public"."audit_log_targetaction_enum" NOT NULL, "targetType" "public"."audit_log_targettype_enum" NOT NULL DEFAULT 'other', "targetId" uuid NOT NULL, "result" "public"."audit_log_result_enum" NOT NULL DEFAULT 'success', "failureReason" text, "ipAddress" inet NOT NULL, "userAgent" text, "requestId" text, "metadata" jsonb, "companyId" uuid NOT NULL, "userId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.605Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_0a5cdb588008e852bb876b8810c" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "audit_log" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "actor" "public"."audit_log_actor_enum" NOT NULL, "targetAction" "public"."audit_log_targetaction_enum" NOT NULL, "targetType" "public"."audit_log_targettype_enum" NOT NULL DEFAULT 'other', "targetId" uuid NOT NULL, "result" "public"."audit_log_result_enum" NOT NULL DEFAULT 'success', "failureReason" text, "ipAddress" inet NOT NULL, "userAgent" text, "requestId" text, "metadata" jsonb, "companyId" uuid NOT NULL, "userId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:45.998Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_0a5cdb588008e852bb876b8810c" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_0d76b9269d1a17f43c0f38a4fa" ON "audit_log" ("targetAction") `);
     await queryRunner.query(`CREATE INDEX "IDX_8ae954f53cbae392e68fe3181e" ON "audit_log" ("targetType") `);
@@ -168,7 +168,7 @@ export class Sql1773841353251 implements MigrationInterface {
       `CREATE TYPE "public"."user_detail_experience_enum" AS ENUM('cfds', 'derivatives', 'securities', 'cryptos')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user_detail" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "birthday" date, "phone" text, "addressLine1" text, "addressLine2" text, "city" text, "postcode" text, "state" text, "country" character varying(3), "taxId" text, "isPoaVerified" boolean NOT NULL DEFAULT false, "isPoiVerified" boolean NOT NULL DEFAULT false, "isPowVerified" boolean NOT NULL DEFAULT false, "isPoliticallyExposed" boolean NOT NULL DEFAULT false, "netCapitalUsd" double precision, "annualIncomeUsd" double precision, "approxAnnualInvestmentVolumeUsd" double precision, "occupation" text, "employmentStatus" "public"."user_detail_employmentstatus_enum", "sourceOfFunds" text, "experience" "public"."user_detail_experience_enum" array, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, CONSTRAINT "REL_455dfebe9344ffecf1c8e8e054" UNIQUE ("userId"), CONSTRAINT "PK_673613c95633d9058a44041794d" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user_detail" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "birthday" date, "phone" text, "addressLine1" text, "addressLine2" text, "city" text, "postcode" text, "state" text, "country" character varying(3), "taxId" text, "isPoaVerified" boolean NOT NULL DEFAULT false, "isPoiVerified" boolean NOT NULL DEFAULT false, "isPowVerified" boolean NOT NULL DEFAULT false, "isPoliticallyExposed" boolean NOT NULL DEFAULT false, "netCapitalUsd" double precision, "annualIncomeUsd" double precision, "approxAnnualInvestmentVolumeUsd" double precision, "occupation" text, "employmentStatus" "public"."user_detail_employmentstatus_enum", "sourceOfFunds" text, "experience" "public"."user_detail_experience_enum" array, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_673613c95633d9058a44041794d" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_bc453b92c48945a858b75520ca" ON "user_detail" ("country") `);
     await queryRunner.query(`CREATE INDEX "IDX_dc36ec4a3b5edeffd1a34c71e3" ON "user_detail" ("isPoaVerified") `);
@@ -177,7 +177,7 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_dc34f6987501fb5e9fd0c670cb" ON "user_detail" ("isPoliticallyExposed") `);
     await queryRunner.query(`CREATE INDEX "IDX_fe9164e1be350624ce92bb890a" ON "user_detail" ("companyId") `);
     await queryRunner.query(
-      `CREATE TABLE "user_avatar" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "originalFilename" text NOT NULL, "contentType" text, "fileExtension" text, "storageBucket" text NOT NULL, "storageKey" text NOT NULL, "uploadedAt" TIMESTAMP NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, CONSTRAINT "REL_bcc94c717ab29b1bfb17f28bfa" UNIQUE ("userId"), CONSTRAINT "PK_b777e56620c3f1ac0308514fc4c" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user_avatar" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "originalFilename" text NOT NULL, "contentType" text, "fileExtension" text, "storageBucket" text NOT NULL, "storageKey" text NOT NULL, "uploadedAt" TIMESTAMP NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b777e56620c3f1ac0308514fc4c" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_9a10e58e007af2e00bb285973a" ON "user_avatar" ("companyId") `);
     await queryRunner.query(`CREATE TYPE "public"."payment_transaction_type_enum" AS ENUM('deposit', 'withdrawal')`);
@@ -185,7 +185,7 @@ export class Sql1773841353251 implements MigrationInterface {
       `CREATE TYPE "public"."payment_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'refunded')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "payment_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" text, "amount" numeric NOT NULL, "paidAmount" numeric NOT NULL, "currency" character varying(3) NOT NULL, "type" "public"."payment_transaction_type_enum" NOT NULL, "status" "public"."payment_transaction_status_enum" NOT NULL, "comment" text, "metadata" jsonb, "processedAt" TIMESTAMP, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.628Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e7b6f0a7f06d29d6ff522aa4a4c" UNIQUE ("externalId", "integrationId", "createdAt"), CONSTRAINT "PK_60f71bf3d278b326e8323b6d696" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "payment_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" text, "amount" numeric NOT NULL, "paidAmount" numeric NOT NULL, "currency" character varying(3) NOT NULL, "type" "public"."payment_transaction_type_enum" NOT NULL, "status" "public"."payment_transaction_status_enum" NOT NULL, "comment" text, "metadata" jsonb, "processedAt" TIMESTAMP, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:46.032Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e7b6f0a7f06d29d6ff522aa4a4c" UNIQUE ("externalId", "integrationId", "createdAt"), CONSTRAINT "PK_60f71bf3d278b326e8323b6d696" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_2bc1262f3d4104c9356f1f9d00" ON "payment_transaction" ("companyId") `);
     await queryRunner.query(`CREATE INDEX "IDX_c30515be97af9ab6316b00ddeb" ON "payment_transaction" ("userId") `);
@@ -205,10 +205,10 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_e2780d4d78095ea3fd05e080bb" ON "integration" ("priority") `);
     await queryRunner.query(`CREATE INDEX "IDX_e211dd1b85824ca957df6b6965" ON "integration" ("companyId") `);
     await queryRunner.query(
-      `CREATE TABLE "billing_info" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "addressLine1" text NOT NULL, "addressLine2" text, "city" text NOT NULL, "postcode" text NOT NULL, "state" text, "country" character varying(3) NOT NULL, "taxId" text, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "companyId" uuid, CONSTRAINT "REL_de25cc8c0427f2c97fb136d3de" UNIQUE ("companyId"), CONSTRAINT "PK_952a2147abd690ffb470c53bb70" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "billing_info" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "addressLine1" text NOT NULL, "addressLine2" text, "city" text NOT NULL, "postcode" text NOT NULL, "state" text, "country" character varying(3) NOT NULL, "taxId" text, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_952a2147abd690ffb470c53bb70" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user_setting" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "canDeposit" boolean NOT NULL DEFAULT true, "canWithdraw" boolean NOT NULL DEFAULT true, "canAutoWithdraw" boolean NOT NULL DEFAULT true, "maxAutoWithdrawAmount" numeric, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, CONSTRAINT "REL_4b46d4a3adec99377740b0bafa" UNIQUE ("userId"), CONSTRAINT "PK_f3791d237cf4cc8e4524f22a535" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user_setting" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "canDeposit" boolean NOT NULL DEFAULT true, "canWithdraw" boolean NOT NULL DEFAULT true, "canAutoWithdraw" boolean NOT NULL DEFAULT true, "maxAutoWithdrawAmount" numeric, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_f3791d237cf4cc8e4524f22a535" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_316fd7ae613909398cdad41d0e" ON "user_setting" ("canDeposit") `);
     await queryRunner.query(`CREATE INDEX "IDX_5d819472349f207d3f522661a2" ON "user_setting" ("canWithdraw") `);
@@ -239,7 +239,10 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_d6eefea39a358860e191d747b0" ON "user_document" ("companyId") `);
     await queryRunner.query(`CREATE INDEX "IDX_bea6ff5b6ea0d461a438a2e837" ON "user_document" ("userId") `);
     await queryRunner.query(
-      `CREATE TABLE "company_setting" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "key" text NOT NULL, "value" text NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_1ff87e6af7925c0e15d84656468" UNIQUE ("companyId", "key"), CONSTRAINT "PK_caf3f9f8d882d0eb985444edc2d" PRIMARY KEY ("id"))`,
+      `CREATE TYPE "public"."company_setting_key_enum" AS ENUM('user_can_deposit', 'user_can_withdraw', 'user_can_auto_withdraw', 'user_max_auto_withdraw_amt')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "company_setting" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "key" "public"."company_setting_key_enum" NOT NULL, "value" text NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_1ff87e6af7925c0e15d84656468" UNIQUE ("companyId", "key"), CONSTRAINT "PK_caf3f9f8d882d0eb985444edc2d" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_d255e397ebe3ec28ce749f9904" ON "company_setting" ("key") `);
     await queryRunner.query(`CREATE INDEX "IDX_10dd13dea3cc3f564941d44699" ON "company_setting" ("value") `);
@@ -255,13 +258,13 @@ export class Sql1773841353251 implements MigrationInterface {
     );
     await queryRunner.query(`CREATE INDEX "IDX_4abfd633fb056a5a8b480c9d49" ON "platform_client" ("companyId") `);
     await queryRunner.query(
-      `CREATE TABLE "user_auth_session" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hash" text NOT NULL, "ipAddress" text, "userAgent" text, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.654Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_9305f2fa3d30c97cbe46de91477" UNIQUE ("userId", "createdAt"), CONSTRAINT "PK_be1faadd9b4398947aaa1972980" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "user_auth_session" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hash" text NOT NULL, "ipAddress" text, "userAgent" text, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:46.072Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_9305f2fa3d30c97cbe46de91477" UNIQUE ("userId", "createdAt"), CONSTRAINT "PK_be1faadd9b4398947aaa1972980" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_2ec50c79c575a4384ebc6ac9bf" ON "user_auth_session" ("ipAddress") `);
     await queryRunner.query(`CREATE INDEX "IDX_a0f6226eadd8ba313ba37f55f1" ON "user_auth_session" ("companyId") `);
     await queryRunner.query(`CREATE INDEX "IDX_10c4d5bf21e3f34543db172bc0" ON "user_auth_session" ("userId") `);
     await queryRunner.query(
-      `CREATE TABLE "user_notification" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "subject" text NOT NULL, "message" text NOT NULL, "openedAt" TIMESTAMP, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-18T13:42:34.656Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_7d84fcfff841cd6834f4f886be9" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+      `CREATE TABLE "user_notification" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "subject" text NOT NULL, "message" text NOT NULL, "openedAt" TIMESTAMP, "companyId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT '"2026-03-20T11:00:46.076Z"', "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_7d84fcfff841cd6834f4f886be9" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_d7906ddc809eb7962f45f2336a" ON "user_notification" ("openedAt") `);
     await queryRunner.query(`CREATE INDEX "IDX_d0f8e10261c17d8e87db949fbc" ON "user_notification" ("companyId") `);
@@ -278,7 +281,7 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_74ff2d6744b387bd665e0fb8d6" ON "company_invitation" ("companyId") `);
     await queryRunner.query(`CREATE TYPE "public"."company_type_enum" AS ENUM('prop', 'broker')`);
     await queryRunner.query(
-      `CREATE TABLE "company" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "type" "public"."company_type_enum" NOT NULL, "domain" text NOT NULL, "billingInfoId" uuid NOT NULL, "organisationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d27e4576457d9c4bd9f9b6213c7" UNIQUE ("name", "type"), CONSTRAINT "UQ_012465b03194abeedaf6967caa6" UNIQUE ("domain"), CONSTRAINT "UQ_b482d02785b2d1c8fa7692d0f2c" UNIQUE ("billingInfoId"), CONSTRAINT "REL_b482d02785b2d1c8fa7692d0f2" UNIQUE ("billingInfoId"), CONSTRAINT "PK_056f7854a7afdba7cbd6d45fc20" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "company" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "type" "public"."company_type_enum" NOT NULL, "domain" text NOT NULL, "billingInfoId" uuid, "organisationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d27e4576457d9c4bd9f9b6213c7" UNIQUE ("name", "type"), CONSTRAINT "UQ_012465b03194abeedaf6967caa6" UNIQUE ("domain"), CONSTRAINT "REL_b482d02785b2d1c8fa7692d0f2" UNIQUE ("billingInfoId"), CONSTRAINT "PK_056f7854a7afdba7cbd6d45fc20" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_b482d02785b2d1c8fa7692d0f2" ON "company" ("billingInfoId") `);
     await queryRunner.query(`CREATE INDEX "IDX_4b7e0ff7d2bc8202a9ac53e046" ON "company" ("organisationId") `);
@@ -292,7 +295,7 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_35472b1fe48b6330cd34970956" ON "wallet" ("userId") `);
     await queryRunner.query(`CREATE TYPE "public"."user_status_enum" AS ENUM('active', 'suspended', 'deactivated')`);
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" text, "settingsId" uuid NOT NULL, "organisationId" uuid NOT NULL, "companyId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userDetailId" uuid, "loyaltyId" uuid, CONSTRAINT "UQ_591885ad24a975062b8ce3230bc" UNIQUE ("companyId", "email"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_c515f2c59bd83b80cf07846a96" UNIQUE ("userDetailId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "REL_f006246faa766d1b2d550479f0" UNIQUE ("loyaltyId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" text, "settingsId" uuid NOT NULL, "organisationId" uuid NOT NULL, "companyId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userDetailId" uuid, CONSTRAINT "UQ_591885ad24a975062b8ce3230bc" UNIQUE ("companyId", "email"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_c515f2c59bd83b80cf07846a96" UNIQUE ("userDetailId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_e12875dfb3b1d92d7d7c5377e2" ON "user" ("email") `);
     await queryRunner.query(`CREATE INDEX "IDX_58f5c71eaab331645112cf8cfa" ON "user" ("avatarId") `);
@@ -428,13 +431,7 @@ export class Sql1773841353251 implements MigrationInterface {
       `ALTER TABLE "user_note" ADD CONSTRAINT "FK_236dbd155cee61376a015913576" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
-      `ALTER TABLE "user_detail" ADD CONSTRAINT "FK_455dfebe9344ffecf1c8e8e054d" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
       `ALTER TABLE "user_detail" ADD CONSTRAINT "FK_fe9164e1be350624ce92bb890aa" FOREIGN KEY ("companyId") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_avatar" ADD CONSTRAINT "FK_bcc94c717ab29b1bfb17f28bfa2" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "user_avatar" ADD CONSTRAINT "FK_9a10e58e007af2e00bb285973a5" FOREIGN KEY ("companyId") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -450,12 +447,6 @@ export class Sql1773841353251 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "integration" ADD CONSTRAINT "FK_e211dd1b85824ca957df6b6965e" FOREIGN KEY ("companyId") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "billing_info" ADD CONSTRAINT "FK_de25cc8c0427f2c97fb136d3de1" FOREIGN KEY ("companyId") REFERENCES "company"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_setting" ADD CONSTRAINT "FK_4b46d4a3adec99377740b0bafa0" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "user_setting" ADD CONSTRAINT "FK_5efb9d8642dd8e3574d17f46eaf" FOREIGN KEY ("companyId") REFERENCES "company"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -515,9 +506,6 @@ export class Sql1773841353251 implements MigrationInterface {
       `ALTER TABLE "user" ADD CONSTRAINT "FK_390395c3d8592e3e8d8422ce853" FOREIGN KEY ("settingsId") REFERENCES "user_setting"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
-      `ALTER TABLE "user" ADD CONSTRAINT "FK_f006246faa766d1b2d550479f02" FOREIGN KEY ("loyaltyId") REFERENCES "loyalty"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
       `ALTER TABLE "user" ADD CONSTRAINT "FK_642763a1acbc9672d38429ea62a" FOREIGN KEY ("organisationId") REFERENCES "organisation"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
@@ -536,7 +524,6 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "wheel_spin" DROP CONSTRAINT "FK_a1e64fb56247fd85c41efb85699"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_86586021a26d1180b0968f98502"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_642763a1acbc9672d38429ea62a"`);
-    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_f006246faa766d1b2d550479f02"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_390395c3d8592e3e8d8422ce853"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_c515f2c59bd83b80cf07846a968"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_58f5c71eaab331645112cf8cfa5"`);
@@ -556,16 +543,12 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "user_company" DROP CONSTRAINT "FK_2f89aead53ebdaaf3dca910ed56"`);
     await queryRunner.query(`ALTER TABLE "user_company" DROP CONSTRAINT "FK_9c279d6cf291c858efa8a6b143f"`);
     await queryRunner.query(`ALTER TABLE "user_setting" DROP CONSTRAINT "FK_5efb9d8642dd8e3574d17f46eaf"`);
-    await queryRunner.query(`ALTER TABLE "user_setting" DROP CONSTRAINT "FK_4b46d4a3adec99377740b0bafa0"`);
-    await queryRunner.query(`ALTER TABLE "billing_info" DROP CONSTRAINT "FK_de25cc8c0427f2c97fb136d3de1"`);
     await queryRunner.query(`ALTER TABLE "integration" DROP CONSTRAINT "FK_e211dd1b85824ca957df6b6965e"`);
     await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_23a1634ec0589f208f7577211a3"`);
     await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_c30515be97af9ab6316b00ddeb1"`);
     await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_2bc1262f3d4104c9356f1f9d002"`);
     await queryRunner.query(`ALTER TABLE "user_avatar" DROP CONSTRAINT "FK_9a10e58e007af2e00bb285973a5"`);
-    await queryRunner.query(`ALTER TABLE "user_avatar" DROP CONSTRAINT "FK_bcc94c717ab29b1bfb17f28bfa2"`);
     await queryRunner.query(`ALTER TABLE "user_detail" DROP CONSTRAINT "FK_fe9164e1be350624ce92bb890aa"`);
-    await queryRunner.query(`ALTER TABLE "user_detail" DROP CONSTRAINT "FK_455dfebe9344ffecf1c8e8e054d"`);
     await queryRunner.query(`ALTER TABLE "user_note" DROP CONSTRAINT "FK_236dbd155cee61376a015913576"`);
     await queryRunner.query(`ALTER TABLE "user_note" DROP CONSTRAINT "FK_58587c3887f99d5ee840d0e7260"`);
     await queryRunner.query(`ALTER TABLE "user_note" DROP CONSTRAINT "FK_071db9921110b2fe5d57cb70f9d"`);
@@ -663,6 +646,7 @@ export class Sql1773841353251 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "public"."IDX_10dd13dea3cc3f564941d44699"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_d255e397ebe3ec28ce749f9904"`);
     await queryRunner.query(`DROP TABLE "company_setting"`);
+    await queryRunner.query(`DROP TYPE "public"."company_setting_key_enum"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_bea6ff5b6ea0d461a438a2e837"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_d6eefea39a358860e191d747b0"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_2e2937efbb8460104254560a6b"`);

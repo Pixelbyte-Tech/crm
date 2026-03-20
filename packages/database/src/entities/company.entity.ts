@@ -47,7 +47,6 @@ import { WalletTransactionHistoryEntity } from './wallet-transaction-history.ent
 import { TradingAccountTypeLeverageEntity } from './trading-account-type-leverage.entity';
 
 @Entity({ name: 'company' })
-@Unique(['billingInfoId'])
 @Unique(['domain'])
 @Unique(['name', 'type'])
 export class CompanyEntity {
@@ -67,13 +66,15 @@ export class CompanyEntity {
   @OneToOne(() => BillingInfoEntity, (e) => e.company, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
+    nullable: true,
+    cascade: true, // This allows insert of entity in save()
   })
   @JoinColumn({ name: 'billingInfoId' })
-  billingInfo: BillingInfoEntity;
+  billingInfo?: BillingInfoEntity | null;
 
   @Index()
-  @Column({ type: 'text' })
-  billingInfoId: string;
+  @Column({ type: 'text', nullable: true })
+  billingInfoId?: string | null;
 
   /** One-to-many relations */
   @OneToMany(() => AlertEntity, (e) => e.company)
@@ -116,7 +117,9 @@ export class CompanyEntity {
   @JoinColumn()
   servers: ServerEntity[];
 
-  @OneToMany(() => CompanySettingEntity, (e) => e.company)
+  @OneToMany(() => CompanySettingEntity, (e) => e.company, {
+    cascade: true, // This allows insert of entity in save()
+  })
   @JoinColumn()
   settings: CompanySettingEntity[];
 

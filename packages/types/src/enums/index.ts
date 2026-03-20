@@ -11,6 +11,7 @@ export * from './auth/auth-strategy.enum';
 export * from './auth/role.enum';
 
 export * from './common/channel.enum';
+export * from './common/company-setting.enum';
 export * from './common/company-type.enum';
 export * from './common/document-status.enum';
 export * from './common/document-type.enum';

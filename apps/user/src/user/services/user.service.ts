@@ -85,6 +85,12 @@ export class UserService {
       middleName: dto.middleName,
       securityPin: Math.floor(1000 + Math.random() * 9000).toString(),
       status: UserStatus.ACTIVE,
+      settings: {
+        canDeposit: true,
+        canWithdraw: true,
+        canAutoWithdraw: false,
+        maxAutoWithdrawAmount: 1000,
+      },
     });
 
     if (!user) {

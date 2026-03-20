@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { QueryRunner, MigrationInterface } from 'typeorm';
 
-export class Sql1773980000000 implements MigrationInterface {
+export class Sql1783980000000 implements MigrationInterface {
   #year = 2025;
   #month = 1;
   #tables = [

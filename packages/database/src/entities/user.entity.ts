@@ -95,6 +95,7 @@ export class UserEntity {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
     nullable: true,
+    cascade: true, // This allows insert of entity in save()
   })
   @JoinColumn({ name: 'avatarId' })
   avatar?: UserAvatarEntity | null;
@@ -107,6 +108,7 @@ export class UserEntity {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
     nullable: true,
+    cascade: true, // This allows insert of entity in save()
   })
   @JoinColumn({ name: 'userDetailId' })
   detail?: UserDetailEntity | null;
@@ -118,6 +120,7 @@ export class UserEntity {
   @OneToOne(() => UserSettingEntity, (e) => e.user, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
+    cascade: true, // This allows insert of entity in save()
   })
   @JoinColumn({ name: 'settingsId' })
   settings: UserSettingEntity;
@@ -127,12 +130,10 @@ export class UserEntity {
   settingsId: string;
 
   @OneToOne(() => LoyaltyEntity, (e) => e.user)
-  @JoinColumn()
   loyalty: LoyaltyEntity[];
 
   /** One-to-many relations */
   @OneToMany(() => AuditLogEntity, (e) => e.user)
-  @JoinColumn()
   auditLogs: AuditLogEntity[];
 
   @OneToMany(() => UserAuthSessionEntity, (e) => e.user)
@@ -212,11 +213,11 @@ export class UserEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
+  company?: CompanyEntity | null;
 
   @Index()
-  @Column({ type: 'text' })
-  companyId: string;
+  @Column({ type: 'text', nullable: true })
+  companyId?: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

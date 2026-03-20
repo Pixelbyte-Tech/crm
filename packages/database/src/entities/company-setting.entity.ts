@@ -10,6 +10,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { CompanySetting } from '@crm/types';
+
 import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'company_setting' })
@@ -19,7 +21,7 @@ export class CompanySettingEntity {
   id: string;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'enum', enum: CompanySetting })
   key: string;
 
   @Index()

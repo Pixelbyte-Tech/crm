@@ -11,10 +11,10 @@
     "prepare": "husky",
     "release": "release-it",
     "gateway:broker:gen": "pnpm ts-node ./apps/gateway/scripts/gen.ts broker 3001",
-    "db:migrate:generate": "pnpm --filter @crm/database db:migrate:generate",
-    "db:migrate:up": "pnpm --filter @crm/database db:migrate:up",
-    "db:migrate:down": "pnpm --filter @crm/database db:migrate:down",
-    "db:seed": "pnpm --filter @crm/database db:seed"
+    "db:migrate:generate": "docker compose run --rm utils pnpm --filter @crm/database db:migrate:generate",
+    "db:migrate:up": "docker compose run --rm utils pnpm --filter @crm/database db:migrate:up",
+    "db:migrate:down": "docker compose run --rm utils pnpm --filter @crm/database db:migrate:down",
+    "db:seed": "docker compose run --rm utils pnpm --filter @crm/database db:seed"
   },
   "devDependencies": {
     "@commitlint/cli": "19.5.0",

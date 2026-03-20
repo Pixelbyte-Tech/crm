@@ -35,7 +35,6 @@ export class UserSettingEntity {
 
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.settings)
-  @JoinColumn()
   user: UserEntity;
 
   /** Many-to-one relations */

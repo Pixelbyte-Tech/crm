@@ -38,7 +38,6 @@ export class UserAvatarEntity {
 
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.avatar)
-  @JoinColumn()
   user: UserEntity;
 
   /** Many-to-one relations */

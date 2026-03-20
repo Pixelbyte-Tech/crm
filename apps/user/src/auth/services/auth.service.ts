@@ -13,8 +13,8 @@ import {
 
 import { User } from '@crm/types';
 import { Cryptography } from '@crm/utils';
-import { UserEntity } from '@crm/database';
-import { JwtRefreshPayloadType } from '@crm/auth';
+import { UserEntity, UserCompanyEntity } from '@crm/database';
+import { UserJwtPayloadType, JwtRefreshPayloadType } from '@crm/auth';
 
 import { Token } from '../types';
 import { EmailLoginDto } from '../dto/in';
@@ -32,6 +32,8 @@ export class AuthService {
     private readonly configService: ConfigService<{ auth: AuthConfig }>,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(UserCompanyEntity)
+    private readonly userCompanyRepo: Repository<UserCompanyEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -276,9 +278,16 @@ export class AuthService {
     const refreshExpires = DateTime.utc().plus(Duration.fromISO(refreshExpiresIn));
     const refreshExpireMs = refreshExpires.diff(DateTime.utc()).toMillis();
 
+    // Fetch the user roles in all companies
+    const roles: UserJwtPayloadType['roles'] = {};
+    const records = await this.userCompanyRepo.find({ where: { userId } });
+    for (const record of records) {
+      roles[record.companyId] = record.roles;
+    }
+
     const [token, refreshToken] = await Promise.all([
       await this.jwtService.signAsync(
-        { userId, sessionId },
+        { userId, sessionId, roles },
         {
           secret: this.configService.getOrThrow('auth.secret', { infer: true }),
           expiresIn: Math.round(tokenExpireMs / 1000),
