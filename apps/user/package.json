@@ -13,6 +13,7 @@
     "@crm/auth": "workspace:^",
     "@crm/database": "workspace:^",
     "@crm/http": "workspace:^",
+    "@crm/kafka": "workspace:^",
     "@crm/logger": "workspace:^",
     "@crm/swagger": "workspace:^",
     "@crm/types": "workspace:^",

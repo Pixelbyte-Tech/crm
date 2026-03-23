@@ -692,6 +692,9 @@ importers:
       '@crm/http':
         specifier: workspace:^
         version: link:../../packages/http
+      '@crm/kafka':
+        specifier: workspace:^
+        version: link:../../packages/kafka
       '@crm/logger':
         specifier: workspace:^
         version: link:../../packages/logger

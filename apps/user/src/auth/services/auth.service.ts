@@ -76,15 +76,15 @@ export class AuthService {
     const str = `${dto.email}${DateTime.utc().toMillis().toString()}`;
     const randomHash = Cryptography.hash(str);
 
-    // Accept invitation if token provided
+    // Accept invitation if token provided (also assigns company roles)
     if (dto.invitationToken) {
       await this.invitationService.accept(dto.invitationToken);
     }
 
     // Find the company id to associate with the session
+    // Associate with the first company bound to the user (arbitrary)
     let companyId = user.companyId;
     if (!companyId) {
-      // Associate with the first company bound to the user (arbitrary)
       const userCompany = await this.userCompanyRepo.findOne({ where: { userId: user.id } });
       if (!userCompany) {
         throw new UnprocessableEntityException(`User not associated with any company`);

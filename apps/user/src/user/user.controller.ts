@@ -8,10 +8,17 @@ import { UserIdValidator } from '@crm/validation';
 import { Auth, Action, UserSubject } from '@crm/auth';
 
 import { UserService } from './services';
-import { NewUserDto, ListUsersDto, CreateUserDto, UpdateUserDto } from './dto';
+import {
+  NewUserDto,
+  ListUsersDto,
+  CreateUserDto,
+  UpdateUserDto,
+  UpdateUserDetailsDto,
+  UpdateUserSettingsDto,
+} from './dto';
 
 @ApiTags('User')
-@ApiExtraModels(NewUserDto, CreateUserDto, ListUsersDto, UpdateUserDto)
+@ApiExtraModels(NewUserDto, CreateUserDto, ListUsersDto, UpdateUserDto, UpdateUserDetailsDto, UpdateUserSettingsDto)
 @Controller({ path: 'users', version: '1' })
 export class UserController {
   constructor(private readonly service: UserService) {}
@@ -64,6 +71,36 @@ export class UserController {
     // todo do not allow users to update their own status
 
     return { data: await this.service.update(userId, dto) };
+  }
+
+  /**
+   * Updates a user's settings by user id
+   * @param userId The user id to update
+   * @param dto The dto
+   */
+  @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
+  @OpenApi({ type: User })
+  @Patch(':userId/settings')
+  public async updateSettings(
+    @Param('userId', UserIdValidator) userId: string,
+    @Body() dto: UpdateUserSettingsDto,
+  ): Promise<{ data: User }> {
+    return { data: await this.service.updateSettings(userId, dto) };
+  }
+
+  /**
+   * Updates a user's details by user id
+   * @param userId The user id to update
+   * @param dto The dto
+   */
+  @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
+  @OpenApi({ type: User })
+  @Patch(':userId/details')
+  public async updateDetails(
+    @Param('userId', UserIdValidator) userId: string,
+    @Body() dto: UpdateUserDetailsDto,
+  ): Promise<{ data: User }> {
+    return { data: await this.service.updateDetails(userId, dto) };
   }
 
   /**

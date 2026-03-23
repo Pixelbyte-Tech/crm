@@ -1,9 +1,12 @@
+import { isNil } from 'lodash';
 import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   Logger,
+  Inject,
   Injectable,
   NotFoundException,
   InternalServerErrorException,
@@ -12,14 +15,22 @@ import {
 
 import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
-import { UserEntity, UserSettingEntity } from '@crm/database';
+import { UserCreatedEvent } from '@crm/kafka';
 import { User, UserStatus, CompanySettingKey } from '@crm/types';
+import { UserEntity, UserDetailEntity, UserSettingEntity } from '@crm/database';
 
 import { CompanySettingService } from './company-setting.service';
 
 import { UserMapper } from '../mappers';
 import { AuthService } from '../../auth/services';
-import { NewUserDto, ListUsersDto, CreateUserDto, UpdateUserDto } from '../dto';
+import {
+  NewUserDto,
+  ListUsersDto,
+  CreateUserDto,
+  UpdateUserDto,
+  UpdateUserDetailsDto,
+  UpdateUserSettingsDto,
+} from '../dto';
 
 @Injectable()
 export class UserService {
@@ -27,8 +38,13 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly userMapper: UserMapper,
     private readonly companySettingService: CompanySettingService,
+    @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(UserSettingEntity)
+    private readonly userSettingRepo: Repository<UserSettingEntity>,
+    @InjectRepository(UserDetailEntity)
+    private readonly userDetailRepo: Repository<UserDetailEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -119,7 +135,17 @@ export class UserService {
       // Generate a confirmation token and send the email
       const token = await this.authService.generateEmailConfirmationToken(user.id);
 
-      // todo send email confirm email
+      // Trigger the creation event
+      this.kafka.emit(
+        UserCreatedEvent.type,
+        new UserCreatedEvent({
+          userId: user.id,
+          companyId: user.companyId,
+          email: user.email,
+          confirmEmailToken: token.token,
+          createdAt: DateTime.fromJSDate(user.createdAt).toMillis(),
+        }),
+      );
 
       this.#logger.log(`${msg} - Complete`);
       return { user: this.userMapper.toUser(user), tokens: { confirmEmail: token } };
@@ -132,7 +158,7 @@ export class UserService {
 
   /**
    * Updates a user by their ID.
-   * @param userId The id of the user to fetch
+   * @param userId The id of the user to update
    * @param dto The update dto
    */
   async update(userId: string, dto: UpdateUserDto): Promise<User> {
@@ -186,7 +212,89 @@ export class UserService {
 
     if (result.affected === 0) {
       this.#logger.error(`${msg} - Failed`);
-      throw new UnprocessableEntityException(`Failed to update user ${userId}`);
+      throw new UnprocessableEntityException(`Failed to update user '${userId}'`);
+    }
+
+    this.#logger.log(`${msg} - Complete`);
+    return this.get(userId);
+  }
+
+  /**
+   * Updates a user's details by their ID.
+   * @param userId The id of the user to update
+   * @param dto The update dto
+   */
+  async updateDetails(userId: string, dto: UpdateUserDetailsDto): Promise<User> {
+    const msg = `Updating user '${userId}' details`;
+
+    // Find the user prior to the update
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user) {
+      this.#logger.error(`${msg} - Failed`);
+      throw new UnprocessableEntityException(`Unable to find user '${userId}'`);
+    }
+
+    // Perform the update
+    const result = await this.userDetailRepo.update(userId, {
+      ...(undefined !== dto.birthday ? { birthday: dto.birthday } : {}),
+      ...(undefined !== dto.phone ? { phone: dto.phone } : {}),
+      ...(undefined !== dto.addressLine1 ? { addressLine1: dto.addressLine1 } : {}),
+      ...(undefined !== dto.addressLine2 ? { addressLine2: dto.addressLine2 } : {}),
+      ...(undefined !== dto.city ? { city: dto.city } : {}),
+      ...(undefined !== dto.postcode ? { postcode: dto.postcode } : {}),
+      ...(undefined !== dto.state ? { state: dto.state } : {}),
+      ...(undefined !== dto.country ? { country: dto.country } : {}),
+      ...(undefined !== dto.taxId ? { taxId: dto.taxId } : {}),
+      ...(!isNil(dto.isPoaVerified) ? { isPoaVerified: dto.isPoaVerified } : {}),
+      ...(!isNil(dto.isPoiVerified) ? { isPoiVerified: dto.isPoiVerified } : {}),
+      ...(!isNil(dto.isPowVerified) ? { isPowVerified: dto.isPowVerified } : {}),
+      ...(!isNil(dto.isPoliticallyExposed) ? { isPoliticallyExposed: dto.isPoliticallyExposed } : {}),
+      ...(undefined !== dto.netCapitalUsd ? { netCapitalUsd: dto.netCapitalUsd } : {}),
+      ...(undefined !== dto.annualIncomeUsd ? { annualIncomeUsd: dto.annualIncomeUsd } : {}),
+      ...(undefined !== dto.approxAnnualInvestmentVolumeUsd
+        ? { approxAnnualInvestmentVolumeUsd: dto.approxAnnualInvestmentVolumeUsd }
+        : {}),
+      ...(undefined !== dto.occupation ? { occupation: dto.occupation } : {}),
+      ...(undefined !== dto.employmentStatus ? { employmentStatus: dto.employmentStatus } : {}),
+      ...(undefined !== dto.sourceOfFunds ? { sourceOfFunds: dto.sourceOfFunds } : {}),
+      ...(undefined !== dto.experience ? { experience: dto.experience } : {}),
+    });
+
+    if (result.affected === 0) {
+      this.#logger.error(`${msg} - Failed`);
+      throw new UnprocessableEntityException(`Failed to update user '${userId}' details`);
+    }
+
+    this.#logger.log(`${msg} - Complete`);
+    return this.get(userId);
+  }
+
+  /**
+   * Updates a user's settings by their ID.
+   * @param userId The id of the user to update
+   * @param dto The update dto
+   */
+  async updateSettings(userId: string, dto: UpdateUserSettingsDto): Promise<User> {
+    const msg = `Updating user '${userId}' settings`;
+
+    // Find the user prior to the update
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user) {
+      this.#logger.error(`${msg} - Failed`);
+      throw new UnprocessableEntityException(`Unable to find user '${userId}'`);
+    }
+
+    // Perform the update
+    const result = await this.userSettingRepo.update(userId, {
+      ...(!isNil(dto.canDeposit) ? { canDeposit: dto.canDeposit } : {}),
+      ...(!isNil(dto.canWithdraw) ? { canWithdraw: dto.canWithdraw } : {}),
+      ...(!isNil(dto.canAutoWithdraw) ? { canAutoWithdraw: dto.canAutoWithdraw } : {}),
+      ...(undefined !== dto.maxAutoWithdrawAmount ? { maxAutoWithdrawAmount: dto.maxAutoWithdrawAmount } : {}),
+    });
+
+    if (result.affected === 0) {
+      this.#logger.error(`${msg} - Failed`);
+      throw new UnprocessableEntityException(`Failed to update user '${userId}' settings`);
     }
 
     this.#logger.log(`${msg} - Complete`);
@@ -209,7 +317,4 @@ export class UserService {
 
     this.#logger.log(`${msg} - Complete`);
   }
-
-  // todo add endpoints for user details
-  // todo add endpoints for user settings
 }

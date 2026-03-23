@@ -168,7 +168,8 @@ export class InvitationService {
   }
 
   /**
-   * Accepts a company invitation by their token.
+   * Accepts a company invitation by their token. Applies the roles present in the invitation to the user in the
+   * company the user is accepting the invitation to.
    * @param token The token of the invitation to accept
    */
   async accept(token: string): Promise<boolean> {
@@ -186,7 +187,7 @@ export class InvitationService {
     }
 
     // Find the user by email
-    const user = await this.userRepo.findOne({ where: { email: invitation.email } });
+    const user = await this.userRepo.findOne({ where: { email: invitation.email, companyId: invitation.companyId } });
     if (!user) {
       this.#logger.warn(`${msg}. User linked to invitation not found - Failed`);
       throw new NotFoundException('User linked to invitation not found');
@@ -195,9 +196,12 @@ export class InvitationService {
     try {
       // Assign the user to the company
       await this.userCompanyRepo.upsert(
-        { userId: user.id, companyId: invitation.companyId },
+        { userId: user.id, companyId: invitation.companyId, roles: invitation.roles },
         { conflictPaths: ['userId', 'companyId'] },
       );
+
+      // Remove the user's direct link to the company in the user table
+      await this.userRepo.update({ companyId: IsNull() }, { id: user.id });
 
       // Update the invitation status to 'accepted'
       const res = await this.invitationRepo.update({ token: token }, { status: InvitationStatus.ACCEPTED });
