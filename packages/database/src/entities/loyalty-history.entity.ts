@@ -13,7 +13,6 @@ import {
 import { LoyaltyPointsSource } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 import { LoyaltyEntity } from './loyalty.entity';
 
 @Entity({ name: 'loyalty_history' })
@@ -32,17 +31,6 @@ export class LoyaltyHistoryEntity {
   reason: string;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.loyaltyHistory, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => LoyaltyEntity, (e) => e.history, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

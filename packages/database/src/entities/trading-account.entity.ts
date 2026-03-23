@@ -15,7 +15,6 @@ import { Platform, Monetization, TradingAccountStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
 import { ServerEntity } from './server.entity';
-import { CompanyEntity } from './company.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
 import { TradingAccountTagEntity } from './trading-account-tag.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
@@ -75,17 +74,6 @@ export class TradingAccountEntity {
   walletTransactionHistory: WalletTransactionHistoryEntity[];
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.tradingAccounts, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => ServerEntity, (e) => e.tradingAccounts, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

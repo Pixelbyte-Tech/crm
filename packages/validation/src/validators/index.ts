@@ -3,15 +3,12 @@ export * from './other/password.validator';
 
 export * from './entity/alert-id.validator';
 export * from './entity/audit-log-id.validator';
-export * from './entity/billing-info-id.validator';
-export * from './entity/company-id.validator';
-export * from './entity/company-invitation-id.validator';
-export * from './entity/company-setting-id.validator';
+export * from './entity/invitation-id.validator';
+export * from './entity/global-setting-id.validator';
 export * from './entity/exchange-rate-id.validator';
 export * from './entity/integration-id.validator';
 export * from './entity/loyalty-history-id.validator';
 export * from './entity/loyalty-id.validator';
-export * from './entity/organisation-id.validator';
 export * from './entity/payment-transaction-id.validator';
 export * from './entity/platform-client-id.validator';
 export * from './entity/server-id.validator';

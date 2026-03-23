@@ -4,7 +4,6 @@ import {
   Column,
   Unique,
   OneToMany,
-  ManyToOne,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -14,10 +13,9 @@ import {
 import { Channel } from '@crm/types';
 
 import { AlertEntity } from './alert.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'channel' })
-@Unique(['companyId', 'type'])
+@Unique(['type'])
 export class ChannelEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -36,18 +34,6 @@ export class ChannelEntity {
   @OneToMany(() => AlertEntity, (e) => e.channel)
   @JoinColumn()
   alerts: AlertEntity[];
-
-  /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.channels, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

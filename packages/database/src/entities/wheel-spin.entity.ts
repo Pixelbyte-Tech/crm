@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'wheel_spin' })
 export class WheelSpinEntity {
@@ -27,17 +26,6 @@ export class WheelSpinEntity {
   sector: number;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.wheelSpins, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.wheelSpins, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

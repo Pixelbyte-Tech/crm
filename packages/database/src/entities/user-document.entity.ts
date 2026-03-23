@@ -12,7 +12,6 @@ import {
 import { DocumentType, DocumentStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_document' })
 export class UserDocumentEntity {
@@ -52,17 +51,6 @@ export class UserDocumentEntity {
   actionedAt?: Date | null;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userDocuments, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.documents, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

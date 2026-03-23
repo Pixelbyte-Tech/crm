@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_in_app_notification' })
 export class UserInAppNotificationEntity {
@@ -28,17 +27,6 @@ export class UserInAppNotificationEntity {
   openedAt?: Date | null;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userInAppNotifications, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.inAppNotifications, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

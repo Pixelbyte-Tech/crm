@@ -1,16 +1,16 @@
-import { CompanySettingKey } from '../enums';
+import { UserSettingKey } from '../enums';
 
-export class CompanySetting {
-  /** Company setting unique identifier */
+export class GlobalSettingSubject {
+  /** Global setting unique identifier */
   id: string;
 
-  key: CompanySettingKey;
+  key: UserSettingKey;
   value: string | number | boolean;
 
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(data?: CompanySetting) {
+  constructor(data?: GlobalSettingSubject) {
     if (data) {
       this.id = data.id;
 

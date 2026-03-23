@@ -1,19 +1,8 @@
-import {
-  Index,
-  Entity,
-  Column,
-  OneToOne,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Index, Entity, Column, OneToOne, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserExperience, UserEmploymentStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_detail' })
 export class UserDetailEntity {
@@ -88,18 +77,6 @@ export class UserDetailEntity {
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.detail)
   user: UserEntity;
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userDetails, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

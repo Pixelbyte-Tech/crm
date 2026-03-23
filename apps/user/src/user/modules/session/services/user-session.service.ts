@@ -105,7 +105,6 @@ export class UserSessionService {
     // Create and persist the entity
     const session = await this.userSessionRepo.save({
       userId: dto.userId,
-      companyId: dto.companyId,
       hash: dto.hash,
       ipAddress: dto.ipAddress,
       userAgent: dto.userAgent,

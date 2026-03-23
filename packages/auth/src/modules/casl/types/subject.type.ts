@@ -1,8 +1,5 @@
 import { InferSubjects } from '@casl/ability';
 
-import { CompanySetting } from '@crm/types';
-
-import { UserDetailSubject } from '../subjects/user-detail.subject';
 import {
   TagSubject,
   UserSubject,
@@ -10,26 +7,24 @@ import {
   ServerSubject,
   WalletSubject,
   ChannelSubject,
-  CompanySubject,
   LoyaltySubject,
   AuditLogSubject,
   UserNoteSubject,
   WheelSpinSubject,
   UserAvatarSubject,
-  BillingInfoSubject,
+  InvitationSubject,
+  UserDetailSubject,
   IntegrationSubject,
-  UserCompanySubject,
   UserSettingSubject,
-  OrganisationSubject,
   TradingEventSubject,
   UserDocumentSubject,
   ExchangeRateSubject,
+  GlobalSettingSubject,
   LoyaltyHistorySubject,
   PlatformClientSubject,
   TradingAccountSubject,
   UserAuthSessionSubject,
   UserNotificationSubject,
-  CompanyInvitationSubject,
   TradingAccountTagSubject,
   WalletTransactionSubject,
   PaymentTransactionSubject,
@@ -42,16 +37,13 @@ import {
 export type Subject = InferSubjects<
   | typeof AlertSubject
   | typeof AuditLogSubject
-  | typeof BillingInfoSubject
   | typeof ChannelSubject
-  | typeof CompanySubject
-  | typeof CompanyInvitationSubject
-  | typeof CompanySetting
   | typeof ExchangeRateSubject
+  | typeof GlobalSettingSubject
+  | typeof InvitationSubject
   | typeof IntegrationSubject
   | typeof LoyaltySubject
   | typeof LoyaltyHistorySubject
-  | typeof OrganisationSubject
   | typeof PaymentTransactionSubject
   | typeof PlatformClientSubject
   | typeof ServerSubject
@@ -65,7 +57,6 @@ export type Subject = InferSubjects<
   | typeof UserSubject
   | typeof UserAuthSessionSubject
   | typeof UserAvatarSubject
-  | typeof UserCompanySubject
   | typeof UserDetailSubject
   | typeof UserDocumentSubject
   | typeof UserNoteSubject

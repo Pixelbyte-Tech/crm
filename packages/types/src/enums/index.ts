@@ -8,10 +8,9 @@ export * from './auth/auth-strategy.enum';
 export * from './auth/role.enum';
 
 export * from './common/channel.enum';
-export * from './common/company-setting.enum';
-export * from './common/company-type.enum';
 export * from './common/document-status.enum';
 export * from './common/document-type.enum';
+export * from './common/global-setting-key.enum';
 export * from './common/integration.enum';
 export * from './common/integration-type.enum';
 export * from './common/invitation-status.enum';
@@ -40,6 +39,7 @@ export * from './trading-event/volatility.enum';
 
 export * from './user/user-employment-status.enum';
 export * from './user/user-experience.enum';
+export * from './user/user-setting-key.enum';
 export * from './user/user-status.enum';
 
 export * from './wallet/asset-type.enum';

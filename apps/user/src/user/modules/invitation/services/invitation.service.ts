@@ -12,7 +12,7 @@ import {
 
 import { PaginatedResDto } from '@crm/http';
 import { Role, InvitationStatus } from '@crm/types';
-import { UserEntity, UserCompanyEntity, CompanyInvitationEntity } from '@crm/database';
+import { UserEntity, InvitationEntity } from '@crm/database';
 
 import { Invitation } from '../domain';
 import { InvitationMapper } from '../mappers';
@@ -24,10 +24,8 @@ export class InvitationService {
     private readonly invitationMapper: InvitationMapper,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(UserCompanyEntity)
-    private readonly userCompanyRepo: Repository<UserCompanyEntity>,
-    @InjectRepository(CompanyInvitationEntity)
-    private readonly invitationRepo: Repository<CompanyInvitationEntity>,
+    @InjectRepository(InvitationEntity)
+    private readonly invitationRepo: Repository<InvitationEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -36,9 +34,8 @@ export class InvitationService {
    * Invites a new user to the system. Sends an invitation email to the user.
    * @param dto The invite user dto
    * @param fromUserId The id of the user sending the invite
-   * @param toCompanyId The id of the company to invite the user to
    */
-  async inviteUser(dto: InviteUserDto, fromUserId: string, toCompanyId: string): Promise<boolean> {
+  async inviteUser(dto: InviteUserDto, fromUserId: string): Promise<boolean> {
     const msg = `Inviting '${dto.email}' by user '${fromUserId}'`;
     this.#logger.log(`${msg} - Start`);
 
@@ -49,21 +46,11 @@ export class InvitationService {
       throw new UnprocessableEntityException('Inviting user not found');
     }
 
-    // Ensure the inviting user is part of the company
-    const userCompany = await this.userCompanyRepo.findOne({
-      relations: { company: true },
-      where: { userId: fromUserId, companyId: toCompanyId },
-    });
-    if (!userCompany) {
-      this.#logger.error(`${msg}. Inviting user is not part of the company - Failed`);
-      throw new UnprocessableEntityException('Inviting user is not part of the company');
-    }
-
     let invitation: Invitation;
 
     try {
       // Create the invitation
-      invitation = await this.#createInvitation(dto.email, dto.roles, userCompany.company.id);
+      invitation = await this.#createInvitation(dto.email, dto.roles);
     } catch (err) {
       this.#logger.error(`${msg}. Unable to create the invitation - Failed`, err);
       throw new InternalServerErrorException('Failed to create the invitation');
@@ -84,15 +71,14 @@ export class InvitationService {
 
   /**
    * Lists all invitations for a company.
-   * @param companyId The id of the company
    * @param dto The dto with options to filter the results by.
    */
-  async listInvitations(companyId: string, dto: ListInvitationsDto): Promise<PaginatedResDto<Invitation>> {
+  async listInvitations(dto: ListInvitationsDto): Promise<PaginatedResDto<Invitation>> {
     // Find all invitations for the company
     const invitations = await paginate(
       this.invitationRepo,
       { limit: dto.limit, page: dto.page },
-      { where: { companyId, ...(dto.status ? { status: dto.status } : {}) }, order: { createdAt: dto.sortDir } },
+      { where: { ...(dto.status ? { status: dto.status } : {}) }, order: { createdAt: dto.sortDir } },
     );
 
     return {
@@ -178,7 +164,6 @@ export class InvitationService {
     // Find the invitation by token
     const invitation = await this.invitationRepo.findOne({
       where: { token, status: InvitationStatus.PENDING },
-      relations: { company: true },
     });
 
     if (!invitation) {
@@ -187,21 +172,15 @@ export class InvitationService {
     }
 
     // Find the user by email
-    const user = await this.userRepo.findOne({ where: { email: invitation.email, companyId: invitation.companyId } });
+    const user = await this.userRepo.findOne({ where: { email: invitation.email } });
     if (!user) {
       this.#logger.warn(`${msg}. User linked to invitation not found - Failed`);
       throw new NotFoundException('User linked to invitation not found');
     }
 
     try {
-      // Assign the user to the company
-      await this.userCompanyRepo.upsert(
-        { userId: user.id, companyId: invitation.companyId, roles: invitation.roles },
-        { conflictPaths: ['userId', 'companyId'] },
-      );
-
-      // Remove the user's direct link to the company in the user table
-      await this.userRepo.update({ companyId: IsNull() }, { id: user.id });
+      // Assign the user roles based on the invitation
+      await this.userRepo.update({ id: user.id }, { roles: invitation.roles });
 
       // Update the invitation status to 'accepted'
       const res = await this.invitationRepo.update({ token: token }, { status: InvitationStatus.ACCEPTED });
@@ -226,11 +205,7 @@ export class InvitationService {
     const msg = `Rejecting invitation from token '${token}'`;
 
     // Find the invitation by token
-    const invitation = await this.invitationRepo.findOne({
-      where: { token, status: InvitationStatus.PENDING },
-      relations: { company: true },
-    });
-
+    const invitation = await this.invitationRepo.findOne({ where: { token, status: InvitationStatus.PENDING } });
     if (!invitation) {
       throw new NotFoundException('Invalid or expired invitation token');
     }
@@ -268,12 +243,11 @@ export class InvitationService {
    * Creates a new company invitation.
    * @param email The email of the invited user
    * @param roles The roles to assign to the user
-   * @param companyId The id of the company the user is invited to
    */
-  async #createInvitation(email: string, roles: Role[], companyId: string): Promise<Invitation> {
+  async #createInvitation(email: string, roles: Role[]): Promise<Invitation> {
     // Check if an invitation already exists for the email and company
     const existingInvitation = await this.invitationRepo.findOne({
-      where: { email, companyId, status: InvitationStatus.PENDING },
+      where: { email, status: InvitationStatus.PENDING },
     });
 
     if (existingInvitation) {
@@ -284,10 +258,9 @@ export class InvitationService {
     const token = [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
 
     // Otherwise, create a new invitation
-    const invitation = new CompanyInvitationEntity();
+    const invitation = new InvitationEntity();
     invitation.email = email;
     invitation.roles = roles;
-    invitation.companyId = companyId;
     invitation.token = token;
     invitation.status = InvitationStatus.PENDING;
 

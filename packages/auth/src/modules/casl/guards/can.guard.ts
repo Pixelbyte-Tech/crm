@@ -36,7 +36,7 @@ export class CanGuard implements CanActivate {
     const canMetadata = this.reflector.getAllAndOverride<{
       action: Action;
       subject: Type<Subject>;
-      option: Option;
+      option?: Option;
     }>(CAN_METADATA_KEY, [contextHandler, contextClass]);
 
     // If no metadata, allow access
@@ -50,7 +50,7 @@ export class CanGuard implements CanActivate {
 
     // Check the ability against CASL
     const ability = this.caslAbilityFactory.createForUser(req.user);
-    const subject = await this.subjectFactory.create(canMetadata.subject, canMetadata.option, req);
+    const subject = await this.subjectFactory.create(req, canMetadata.subject, canMetadata.option);
 
     // Log the check params
     this.#logger.debug(`Checking action '${canMetadata.action}' on subject '${canMetadata.subject.name}'`, subject);

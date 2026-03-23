@@ -16,19 +16,18 @@ import {
   AuditLogSubject,
   WheelSpinSubject,
   UserAvatarSubject,
+  InvitationSubject,
   UserSettingSubject,
-  BillingInfoSubject,
   IntegrationSubject,
   UserDocumentSubject,
   TradingEventSubject,
   ExchangeRateSubject,
+  GlobalSettingSubject,
   LoyaltyHistorySubject,
   TradingAccountSubject,
-  CompanySettingSubject,
   PlatformClientSubject,
   UserAuthSessionSubject,
   UserNotificationSubject,
-  CompanyInvitationSubject,
   WalletTransactionSubject,
   TradingAccountTagSubject,
   PaymentTransactionSubject,
@@ -47,95 +46,92 @@ export class CaslAbilityFactory {
   createForUser(user: CaslUser): MongoAbility {
     const { can, build } = new AbilityBuilder(createMongoAbility);
 
-    // Iterate over user roles in companies
-    for (const [companyId, value] of Object.entries(user.roles)) {
-      for (const role of value) {
-        switch (role) {
-          case Role.ADMIN:
-            can(Action.MANAGE, AlertSubject, { companyId });
-            can(Action.READ, AuditLogSubject, { companyId });
-            can(Action.MANAGE, BillingInfoSubject, { companyId });
-            can(Action.MANAGE, ChannelSubject, { companyId });
-            can(Action.MANAGE, CompanyInvitationSubject, { companyId });
-            can(Action.MANAGE, CompanySettingSubject, { companyId });
-            can(Action.READ, ExchangeRateSubject);
-            can(Action.MANAGE, IntegrationSubject, { companyId });
-            can(Action.MANAGE, LoyaltySubject, { companyId });
-            can(Action.READ, LoyaltyHistorySubject, { companyId });
-            can(Action.READ, PaymentTransactionSubject, { companyId });
-            can(Action.MANAGE, PlatformClientSubject, { companyId });
-            can(Action.MANAGE, ServerSubject, { companyId });
-            can(Action.MANAGE, TagSubject, { companyId });
-            can(Action.MANAGE, TradingAccountSubject, { companyId });
-            can(Action.MANAGE, TradingAccountNoteSubject, { companyId });
-            can(Action.MANAGE, TradingAccountTagSubject, { companyId });
-            can(Action.MANAGE, TradingAccountTypeSubject, { companyId });
-            can(Action.MANAGE, TradingAccountTypeLeverageSubject, { companyId });
-            can(Action.READ, TradingEventSubject);
-            can(Action.MANAGE, UserSubject, { companyId });
-            can(Action.READ, UserAuthSessionSubject, { companyId });
-            can(Action.MANAGE, UserAvatarSubject, { companyId });
-            can(Action.MANAGE, UserDetailSubject, { companyId });
-            can(Action.MANAGE, UserDocumentSubject, { companyId });
-            can(Action.MANAGE, UserNotificationSubject, { companyId });
-            can(Action.MANAGE, UserSettingSubject, { companyId });
-            can(Action.READ, WalletSubject, { companyId });
-            can(Action.READ, WalletTransactionSubject, { companyId });
-            can(Action.CREATE, WalletTransactionSubject, { companyId });
-            can(Action.UPDATE, WalletTransactionSubject, { companyId });
-            can(Action.READ, WalletTransactionHistorySubject, { companyId });
-            can(Action.READ, WheelSpinSubject, { companyId });
-            break;
-          case Role.TRADE_SUPPORT:
-            can(Action.READ, AlertSubject, { companyId });
-            can(Action.READ, AuditLogSubject, { companyId, userId: user.userId });
-            can(Action.READ, ExchangeRateSubject);
-            can(Action.READ, LoyaltySubject, { companyId });
-            can(Action.READ, LoyaltyHistorySubject, { companyId });
-            can(Action.READ, PaymentTransactionSubject, { companyId });
-            can(Action.READ, PlatformClientSubject, { companyId });
+    // Iterate over user roles
+    for (const role of Object.values(user.roles)) {
+      switch (role) {
+        case Role.ADMIN:
+          can(Action.MANAGE, AlertSubject);
+          can(Action.READ, AuditLogSubject);
+          can(Action.MANAGE, ChannelSubject);
+          can(Action.MANAGE, InvitationSubject);
+          can(Action.MANAGE, GlobalSettingSubject);
+          can(Action.READ, ExchangeRateSubject);
+          can(Action.MANAGE, IntegrationSubject);
+          can(Action.MANAGE, LoyaltySubject);
+          can(Action.READ, LoyaltyHistorySubject);
+          can(Action.READ, PaymentTransactionSubject);
+          can(Action.MANAGE, PlatformClientSubject);
+          can(Action.MANAGE, ServerSubject);
+          can(Action.MANAGE, TagSubject);
+          can(Action.MANAGE, TradingAccountSubject);
+          can(Action.MANAGE, TradingAccountNoteSubject);
+          can(Action.MANAGE, TradingAccountTagSubject);
+          can(Action.MANAGE, TradingAccountTypeSubject);
+          can(Action.MANAGE, TradingAccountTypeLeverageSubject);
+          can(Action.READ, TradingEventSubject);
+          can(Action.MANAGE, UserSubject);
+          can(Action.READ, UserAuthSessionSubject);
+          can(Action.MANAGE, UserAvatarSubject);
+          can(Action.MANAGE, UserDetailSubject);
+          can(Action.MANAGE, UserDocumentSubject);
+          can(Action.MANAGE, UserNotificationSubject);
+          can(Action.MANAGE, UserSettingSubject);
+          can(Action.READ, WalletSubject);
+          can(Action.READ, WalletTransactionSubject);
+          can(Action.CREATE, WalletTransactionSubject);
+          can(Action.UPDATE, WalletTransactionSubject);
+          can(Action.READ, WalletTransactionHistorySubject);
+          can(Action.READ, WheelSpinSubject);
+          break;
+        case Role.TRADE_SUPPORT:
+          can(Action.READ, AlertSubject);
+          can(Action.READ, AuditLogSubject, { userId: user.userId });
+          can(Action.READ, ExchangeRateSubject);
+          can(Action.READ, LoyaltySubject);
+          can(Action.READ, LoyaltyHistorySubject);
+          can(Action.READ, PaymentTransactionSubject);
+          can(Action.READ, PlatformClientSubject);
 
-            can(Action.MANAGE, TagSubject, { companyId });
+          can(Action.MANAGE, TagSubject);
 
-            can(Action.READ, TradingAccountSubject, { companyId });
-            can(Action.CREATE, TradingAccountSubject, { companyId });
-            can(Action.UPDATE, TradingAccountSubject, { companyId });
+          can(Action.READ, TradingAccountSubject);
+          can(Action.CREATE, TradingAccountSubject);
+          can(Action.UPDATE, TradingAccountSubject);
 
-            can(Action.READ, TradingAccountNoteSubject, { companyId });
-            can(Action.CREATE, TradingAccountNoteSubject, { companyId });
-            can(Action.UPDATE, TradingAccountNoteSubject, { companyId, authorId: user.userId });
-            can(Action.DELETE, TradingAccountNoteSubject, { companyId, authorId: user.userId });
+          can(Action.READ, TradingAccountNoteSubject);
+          can(Action.CREATE, TradingAccountNoteSubject);
+          can(Action.UPDATE, TradingAccountNoteSubject, { authorId: user.userId });
+          can(Action.DELETE, TradingAccountNoteSubject, { authorId: user.userId });
 
-            can(Action.MANAGE, TradingAccountTagSubject, { companyId });
+          can(Action.MANAGE, TradingAccountTagSubject);
 
-            can(Action.READ, TradingAccountTypeSubject, { companyId });
-            can(Action.READ, TradingAccountTypeLeverageSubject, { companyId });
+          can(Action.READ, TradingAccountTypeSubject);
+          can(Action.READ, TradingAccountTypeLeverageSubject);
 
-            can(Action.READ, TradingEventSubject);
+          can(Action.READ, TradingEventSubject);
 
-            can(Action.READ, UserSubject, { companyId });
-            can(Action.CREATE, UserSubject, { companyId });
-            can(Action.UPDATE, UserSubject, { companyId });
+          can(Action.READ, UserSubject);
+          can(Action.CREATE, UserSubject);
+          can(Action.UPDATE, UserSubject);
 
-            can(Action.READ, UserAuthSessionSubject, { companyId });
-            can(Action.READ, UserAvatarSubject, { companyId });
-            can(Action.READ, UserDetailSubject, { companyId });
-            can(Action.READ, UserNotificationSubject, { companyId, userId: user.userId });
-            can(Action.READ, UserSettingSubject, { companyId });
-            can(Action.READ, WalletSubject, { companyId });
-            can(Action.READ, WalletTransactionSubject, { companyId });
-            can(Action.READ, WalletTransactionHistorySubject, { companyId });
-            can(Action.READ, WheelSpinSubject, { companyId });
-            break;
-          case Role.CS_AGENT:
-            can(Action.READ, UserSubject, { companyId });
-            can(Action.READ, UserAuthSessionSubject, { companyId });
-            break;
-          case Role.COMPLIANCE:
-            can(Action.READ, UserSubject, { companyId });
-            can(Action.READ, UserAuthSessionSubject, { companyId });
-            break;
-        }
+          can(Action.READ, UserAuthSessionSubject);
+          can(Action.READ, UserAvatarSubject);
+          can(Action.READ, UserDetailSubject);
+          can(Action.READ, UserNotificationSubject, { userId: user.userId });
+          can(Action.READ, UserSettingSubject);
+          can(Action.READ, WalletSubject);
+          can(Action.READ, WalletTransactionSubject);
+          can(Action.READ, WalletTransactionHistorySubject);
+          can(Action.READ, WheelSpinSubject);
+          break;
+        case Role.CS_AGENT:
+          can(Action.READ, UserSubject);
+          can(Action.READ, UserAuthSessionSubject);
+          break;
+        case Role.COMPLIANCE:
+          can(Action.READ, UserSubject);
+          can(Action.READ, UserAuthSessionSubject);
+          break;
       }
     }
 

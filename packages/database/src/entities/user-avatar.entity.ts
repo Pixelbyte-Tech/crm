@@ -1,17 +1,6 @@
-import {
-  Index,
-  Entity,
-  Column,
-  OneToOne,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column, OneToOne, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_avatar' })
 export class UserAvatarEntity {
@@ -39,18 +28,6 @@ export class UserAvatarEntity {
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.avatar)
   user: UserEntity;
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userAvatars, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

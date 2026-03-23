@@ -1,5 +1,5 @@
-// Company Setting
-export * from './company-setting.model';
+// Global Setting
+export * from './global-setting.model';
 
 // User
 export * from './user.model';

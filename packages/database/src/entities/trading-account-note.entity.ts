@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 
 @Entity({ name: 'trading_account_note' })
@@ -39,17 +38,6 @@ export class TradingAccountNoteEntity {
   @Index()
   @Column({ type: 'text' })
   authorId: string;
-
-  @ManyToOne(() => CompanyEntity, (e) => e.tradingAccountNotes, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @ManyToOne(() => TradingAccountEntity, (e) => e.notes, {
     onUpdate: 'CASCADE',

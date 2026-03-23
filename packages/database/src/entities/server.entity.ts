@@ -3,7 +3,6 @@ import {
   Entity,
   Column,
   Unique,
-  ManyToOne,
   OneToMany,
   JoinColumn,
   CreateDateColumn,
@@ -13,7 +12,6 @@ import {
 
 import { Platform, Monetization } from '@crm/types';
 
-import { CompanyEntity } from './company.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
 
@@ -48,18 +46,6 @@ export class ServerEntity {
   @OneToMany(() => TradingAccountTypeEntity, (e) => e.server)
   @JoinColumn()
   tradingAccountTypes: TradingAccountTypeEntity[];
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.servers, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

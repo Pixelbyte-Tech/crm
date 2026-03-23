@@ -13,7 +13,6 @@ import {
 import { PaymentTransactionType, PaymentTransactionStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 import { IntegrationEntity } from './integration.entity';
 
 @Entity({ name: 'payment_transaction' })
@@ -50,17 +49,6 @@ export class PaymentTransactionEntity {
   processedAt: Date | null;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.paymentTransactions, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.paymentTransactions, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

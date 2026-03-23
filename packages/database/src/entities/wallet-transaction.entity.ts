@@ -13,7 +13,6 @@ import { WalletTransactionType, WalletTransactionStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
 import { WalletEntity } from './wallet.entity';
-import { CompanyEntity } from './company.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 
 @Entity({ name: 'wallet_transaction' })
@@ -48,17 +47,6 @@ export class WalletTransactionEntity {
   comment?: string | null;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.walletTransactions, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => TradingAccountEntity, (e) => e.walletTransactions, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

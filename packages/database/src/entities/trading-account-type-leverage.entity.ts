@@ -10,7 +10,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { CompanyEntity } from './company.entity';
 import { TradingAccountTypeEntity } from './trading-account-type.entity';
 
 @Entity({ name: 'trading_account_type_leverage' })
@@ -26,17 +25,6 @@ export class TradingAccountTypeLeverageEntity {
   countries: string[];
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.tradingAccountTypeLeverages, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => TradingAccountTypeEntity, (e) => e.tradingAccountTypeLeverages, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

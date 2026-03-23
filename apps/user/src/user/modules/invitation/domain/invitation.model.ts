@@ -5,7 +5,6 @@ export class Invitation {
   id: string;
   email: string;
   token: string;
-  companyId: string;
   status: InvitationStatus;
   roles: Role[];
   firstSentAt?: Date | null;
@@ -19,7 +18,6 @@ export class Invitation {
       this.id = data.id;
       this.email = data.email;
       this.token = data.token;
-      this.companyId = data.companyId;
       this.status = data.status;
       this.roles = data.roles;
       this.firstSentAt = data.firstSentAt;

@@ -12,7 +12,6 @@ import {
 import { AuditActor, AuditAction, AuditTarget, AuditResult } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Index(['userId', 'targetType', 'targetId'])
 @Entity({ name: 'audit_log' })
@@ -58,17 +57,6 @@ export class AuditLogEntity {
   metadata?: Record<string, any> | null;
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.auditLogs, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.auditLogs, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

@@ -3,9 +3,7 @@ import { Role } from '@crm/types';
 export type UserJwtPayloadType = {
   userId: string;
   sessionId: string;
-  roles: {
-    [companyId: string]: Role[];
-  };
+  roles: Role[];
   iat: number;
   exp: number;
 };

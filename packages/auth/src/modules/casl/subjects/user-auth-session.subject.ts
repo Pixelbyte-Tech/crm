@@ -1,11 +1,9 @@
 export class UserAuthSessionSubject {
-  id: string;
   userId: string;
-  companyId: string;
 
-  constructor(input: UserAuthSessionSubject) {
-    this.id = input.id;
-    this.userId = input.userId;
-    this.companyId = input.companyId;
+  constructor(input?: UserAuthSessionSubject) {
+    if (input) {
+      this.userId = input.userId;
+    }
   }
 }

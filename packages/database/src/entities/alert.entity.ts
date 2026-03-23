@@ -11,7 +11,6 @@ import {
 
 import { AlertType, AlertLevel, AlertStatus } from '@crm/types';
 
-import { CompanyEntity } from './company.entity';
 import { ChannelEntity } from './channel.entity';
 
 @Entity({ name: 'alert' })
@@ -57,17 +56,6 @@ export class AlertEntity {
   @Index()
   @Column({ type: 'text' })
   channelId: string;
-
-  @ManyToOne(() => CompanyEntity, (e) => e.alerts, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

@@ -16,7 +16,7 @@ export function Auth(strategies?: AuthStrategy[]): ClassDecorator & MethodDecora
 export function Auth<T extends Type<Subject>>(
   action: Action,
   subject: T,
-  option: Option<T>,
+  option?: Option<T>,
   strategies?: AuthStrategy[],
 ): ClassDecorator & MethodDecorator;
 

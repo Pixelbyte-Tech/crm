@@ -13,7 +13,6 @@ import {
 import { AuthSessionStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Unique(['userId', 'createdAt'])
 @Entity({ name: 'user_auth_session' })
@@ -35,17 +34,6 @@ export class UserAuthSessionEntity {
   status: AuthSessionStatus;
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userAuthSessions, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.authSessions, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

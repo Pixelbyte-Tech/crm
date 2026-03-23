@@ -13,11 +13,10 @@ import {
 import { Role, InvitationStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
-@Entity({ name: 'company_invitation' })
-@Unique(['email', 'companyId', 'status'])
-export class CompanyInvitationEntity {
+@Entity({ name: 'invitation' })
+@Unique(['email', 'status'])
+export class InvitationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -41,17 +40,6 @@ export class CompanyInvitationEntity {
 
   @Column({ type: 'integer', default: 30 })
   expiresInDays: number;
-
-  @ManyToOne(() => CompanyEntity, (e) => e.invitations, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @ManyToOne(() => UserEntity, (e) => e.sentInvitations, {
     onUpdate: 'CASCADE',

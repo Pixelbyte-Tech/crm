@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 import { isUUID, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
-import { CompanyEntity } from '@crm/database';
+import { InvitationEntity } from '@crm/database';
 
 @Injectable()
-@ValidatorConstraint({ name: 'companyId', async: true })
-export class CompanyIdValidator implements ValidatorConstraintInterface, PipeTransform {
+@ValidatorConstraint({ name: 'invitationId', async: true })
+export class InvitationIdValidator implements ValidatorConstraintInterface, PipeTransform {
   constructor(
-    @InjectRepository(CompanyEntity)
-    private readonly repo: Repository<CompanyEntity>,
+    @InjectRepository(InvitationEntity)
+    private readonly repo: Repository<InvitationEntity>,
   ) {}
 
   async validate(value: string): Promise<boolean> {
@@ -24,12 +24,12 @@ export class CompanyIdValidator implements ValidatorConstraintInterface, PipeTra
 
   async #exec(value: string): Promise<boolean> {
     if (!isUUID(value)) {
-      throw new BadRequestException('companyId must be a valid uuid');
+      throw new BadRequestException('invitationId must be a valid uuid');
     }
 
     const entity = await this.repo.findOne({ where: { id: value } });
     if (!entity) {
-      throw new BadRequestException(`companyId must reference an existing entity, ${value} provided.`);
+      throw new BadRequestException(`invitationId must reference an existing entity, ${value} provided.`);
     }
 
     return true;

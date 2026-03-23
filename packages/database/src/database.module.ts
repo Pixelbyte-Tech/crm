@@ -9,29 +9,25 @@ import { AlertEntity } from './entities/alert.entity';
 import { ServerEntity } from './entities/server.entity';
 import { WalletEntity } from './entities/wallet.entity';
 import { ChannelEntity } from './entities/channel.entity';
-import { CompanyEntity } from './entities/company.entity';
 import { LoyaltyEntity } from './entities/loyalty.entity';
 import { AuditLogEntity } from './entities/audit-log.entity';
 import { UserNoteEntity } from './entities/user-note.entity';
 import { WheelSpinEntity } from './entities/wheel-spin.entity';
+import { InvitationEntity } from './entities/invitation.entity';
 import { UserAvatarEntity } from './entities/user-avatar.entity';
 import { UserDetailEntity } from './entities/user-detail.entity';
 import { IntegrationEntity } from './entities/integration.entity';
-import { BillingInfoEntity } from './entities/billing-info.entity';
 import { UserSettingEntity } from './entities/user-setting.entity';
-import { UserCompanyEntity } from './entities/user-company.entity';
-import { OrganisationEntity } from './entities/organisation.entity';
 import { ExchangeRateEntity } from './entities/exchange-rate.entity';
 import { TradingEventEntity } from './entities/trading-event.entity';
 import { UserDocumentEntity } from './entities/user-document.entity';
-import { CompanySettingEntity } from './entities/company-setting.entity';
+import { GlobalSettingEntity } from './entities/global-setting.entity';
 import { PlatformClientEntity } from './entities/platform-client.entity';
 import { TradingAccountEntity } from './entities/trading-account.entity';
 import { LoyaltyHistoryEntity } from './entities/loyalty-history.entity';
 import { UserAuthSessionEntity } from './entities/user-auth-session.entity';
 import { UserNotificationEntity } from './entities/user-notification.entity';
 import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
-import { CompanyInvitationEntity } from './entities/company-invitation.entity';
 import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
 import { TradingAccountNoteEntity } from './entities/trading-account-note.entity';
@@ -116,16 +112,13 @@ export class DatabaseModule {
         ...providers,
         AlertEntity,
         AuditLogEntity,
-        BillingInfoEntity,
         ChannelEntity,
-        CompanyEntity,
-        CompanyInvitationEntity,
-        CompanySettingEntity,
+        InvitationEntity,
+        GlobalSettingEntity,
         ExchangeRateEntity,
         IntegrationEntity,
         LoyaltyEntity,
         LoyaltyHistoryEntity,
-        OrganisationEntity,
         PaymentTransactionEntity,
         PlatformClientEntity,
         ServerEntity,
@@ -139,7 +132,6 @@ export class DatabaseModule {
         UserEntity,
         UserAuthSessionEntity,
         UserAvatarEntity,
-        UserCompanyEntity,
         UserDetailEntity,
         UserDocumentEntity,
         UserNoteEntity,

@@ -4,7 +4,6 @@ import {
   Column,
   Unique,
   OneToOne,
-  ManyToOne,
   OneToMany,
   JoinColumn,
   CreateDateColumn,
@@ -15,7 +14,6 @@ import {
 import { LoyaltyProgram } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 
 @Entity({ name: 'loyalty' })
@@ -49,18 +47,6 @@ export class LoyaltyEntity {
   @OneToMany(() => LoyaltyHistoryEntity, (e) => e.loyalty)
   @JoinColumn()
   history: LoyaltyHistoryEntity[];
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.loyalty, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

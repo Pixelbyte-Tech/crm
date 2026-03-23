@@ -134,7 +134,7 @@ export class AuthController {
   }
 
   /**
-   * Rejects an invitation for an email address to join a company
+   * Rejects an invitation for an email address to join
    * @param dto The dto payload
    */
   @OpenApi()

@@ -4,46 +4,31 @@ import { DataSource, ObjectLiteral } from 'typeorm';
 import { EntityTarget } from 'typeorm/common/EntityTarget';
 
 import {
-  TagEntity,
   UserEntity,
-  AlertEntity,
-  ServerEntity,
   WalletEntity,
-  ChannelEntity,
-  CompanyEntity,
   LoyaltyEntity,
   AuditLogEntity,
   UserNoteEntity,
   WheelSpinEntity,
   UserDetailEntity,
   UserAvatarEntity,
-  BillingInfoEntity,
-  IntegrationEntity,
-  UserCompanyEntity,
+  InvitationEntity,
   UserSettingEntity,
-  OrganisationEntity,
-  TradingEventEntity,
   UserDocumentEntity,
-  CompanySettingEntity,
   LoyaltyHistoryEntity,
-  PlatformClientEntity,
   TradingAccountEntity,
   UserAuthSessionEntity,
-  CompanyInvitationEntity,
-  TradingAccountTagEntity,
   WalletTransactionEntity,
   PaymentTransactionEntity,
   TradingAccountNoteEntity,
   TradingAccountTypeEntity,
   UserInAppNotificationEntity,
   WalletTransactionHistoryEntity,
-  TradingAccountTypeLeverageEntity,
 } from '@crm/database';
 
 import { Option, Subject } from '../types';
 import { AuthenticatedReq } from '../../../types';
 import { InvalidSubjectException } from '../exceptions';
-import { UserDetailSubject } from '../subjects/user-detail.subject';
 import {
   TagSubject,
   UserSubject,
@@ -51,27 +36,24 @@ import {
   ServerSubject,
   WalletSubject,
   ChannelSubject,
-  CompanySubject,
   LoyaltySubject,
   AuditLogSubject,
   UserNoteSubject,
   WheelSpinSubject,
+  UserDetailSubject,
   UserAvatarSubject,
-  BillingInfoSubject,
+  InvitationSubject,
   IntegrationSubject,
-  UserCompanySubject,
   UserSettingSubject,
   ExchangeRateSubject,
-  OrganisationSubject,
   TradingEventSubject,
   UserDocumentSubject,
-  CompanySettingSubject,
+  GlobalSettingSubject,
   LoyaltyHistorySubject,
   PlatformClientSubject,
   TradingAccountSubject,
   UserAuthSessionSubject,
   UserNotificationSubject,
-  CompanyInvitationSubject,
   TradingAccountTagSubject,
   WalletTransactionSubject,
   PaymentTransactionSubject,
@@ -90,159 +72,106 @@ export class SubjectFactory {
 
   /**
    * Creates the subject object for the provided subject id
+   * @param req The request context to find the subject from
    * @param subject The type of subject to create
    * @param option The options on how to find the subject from the request context
-   * @param req The request context to find the subject from
    */
-  async create(subject: Type<Subject>, option: Option<typeof subject>, req: AuthenticatedReq): Promise<Subject> {
-    // Extract the value to search by
-    const value = req[option.in][option.use];
-
-    let params: string[] = [];
+  async create(req: AuthenticatedReq, subject: Type<Subject>, option?: Option<typeof subject>): Promise<Subject> {
     switch (subject.name) {
       case AlertSubject.name:
-        params = ['id', 'companyId'];
-        return new AlertSubject(await this.#find(AlertEntity, params, option.findBy, value));
+        return new AlertSubject();
 
       case AuditLogSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new AuditLogSubject(await this.#find(AuditLogEntity, params, option.findBy, value));
-
-      case BillingInfoSubject.name:
-        params = ['id', 'companyId'];
-        return new BillingInfoSubject(await this.#find(BillingInfoEntity, params, option.findBy, value));
+        return new AuditLogSubject(await this.#find(AuditLogEntity, ['userId'], req, option));
 
       case ChannelSubject.name:
-        params = ['id', 'companyId'];
-        return new ChannelSubject(await this.#find(ChannelEntity, params, option.findBy, value));
+        return new ChannelSubject();
 
-      case CompanySubject.name:
-        params = ['id', 'organisationId'];
-        return new CompanySubject(await this.#find(CompanyEntity, params, option.findBy, value));
+      case InvitationSubject.name:
+        return new InvitationSubject(await this.#find(InvitationEntity, ['sentByUserId'], req, option));
 
-      case CompanyInvitationSubject.name:
-        params = ['id', 'sentByUserId', 'companyId'];
-        return new CompanyInvitationSubject(await this.#find(CompanyInvitationEntity, params, option.findBy, value));
-
-      case CompanySettingSubject.name:
-        params = ['id', 'companyId'];
-        return new CompanySettingSubject(await this.#find(CompanySettingEntity, params, option.findBy, value));
+      case GlobalSettingSubject.name:
+        return new GlobalSettingSubject();
 
       case ExchangeRateSubject.name:
-        params = ['id'];
-        return new ExchangeRateSubject(await this.#find(ExchangeRateSubject, params, option.findBy, value));
+        return new ExchangeRateSubject();
 
       case IntegrationSubject.name:
-        params = ['id', 'companyId'];
-        return new IntegrationSubject(await this.#find(IntegrationEntity, params, option.findBy, value));
+        return new IntegrationSubject();
 
       case LoyaltySubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new LoyaltySubject(await this.#find(LoyaltyEntity, params, option.findBy, value));
+        return new LoyaltySubject(await this.#find(LoyaltyEntity, ['userId'], req, option));
 
       case LoyaltyHistorySubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new LoyaltyHistorySubject(await this.#find(LoyaltyHistoryEntity, params, option.findBy, value));
-
-      case OrganisationSubject.name:
-        params = ['id'];
-        return new OrganisationSubject(await this.#find(OrganisationEntity, params, option.findBy, value));
+        return new LoyaltyHistorySubject(await this.#find(LoyaltyHistoryEntity, ['userId'], req, option));
 
       case PaymentTransactionSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new PaymentTransactionSubject(await this.#find(PaymentTransactionEntity, params, option.findBy, value));
+        return new PaymentTransactionSubject(await this.#find(PaymentTransactionEntity, ['userId'], req, option));
 
       case PlatformClientSubject.name:
-        params = ['id', 'companyId'];
-        return new PlatformClientSubject(await this.#find(PlatformClientEntity, params, option.findBy, value));
+        return new PlatformClientSubject();
 
       case ServerSubject.name:
-        params = ['id', 'companyId'];
-        return new ServerSubject(await this.#find(ServerEntity, params, option.findBy, value));
+        return new ServerSubject();
 
       case TagSubject.name:
-        params = ['id', 'companyId'];
-        return new TagSubject(await this.#find(TagEntity, params, option.findBy, value));
+        return new TagSubject();
 
       case TradingAccountSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new TradingAccountSubject(await this.#find(TradingAccountEntity, params, option.findBy, value));
+        return new TradingAccountSubject(await this.#find(TradingAccountEntity, ['userId'], req, option));
 
       case TradingAccountNoteSubject.name:
-        params = ['id', 'authorId', 'companyId'];
-        return new TradingAccountNoteSubject(await this.#find(TradingAccountNoteEntity, params, option.findBy, value));
+        return new TradingAccountNoteSubject(await this.#find(TradingAccountNoteEntity, ['authorId'], req, option));
 
       case TradingAccountTagSubject.name:
-        params = ['id', 'companyId'];
-        return new TradingAccountTagSubject(await this.#find(TradingAccountTagEntity, params, option.findBy, value));
+        return new TradingAccountTagSubject();
 
       case TradingAccountTypeSubject.name:
-        params = ['id', 'companyId'];
-        return new PaymentTransactionSubject(await this.#find(TradingAccountTypeEntity, params, option.findBy, value));
+        return new PaymentTransactionSubject(await this.#find(TradingAccountTypeEntity, ['userId'], req, option));
 
       case TradingAccountTypeLeverageSubject.name:
-        params = ['id', 'companyId'];
-        return new PaymentTransactionSubject(
-          await this.#find(TradingAccountTypeLeverageEntity, params, option.findBy, value),
-        );
+        return new TradingAccountTypeLeverageSubject();
 
       case TradingEventSubject.name:
-        params = ['id'];
-        return new TradingEventSubject(await this.#find(TradingEventEntity, params, option.findBy, value));
+        return new TradingEventSubject();
 
       case UserSubject.name:
-        params = ['id', 'companyId'];
-        return new UserSubject(await this.#find(UserEntity, params, option.findBy, value));
+        return new UserSubject(await this.#find(UserEntity, ['id'], req, option));
 
       case UserAuthSessionSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserAuthSessionSubject(await this.#find(UserAuthSessionEntity, params, option.findBy, value));
+        return new UserAuthSessionSubject(await this.#find(UserAuthSessionEntity, ['userId'], req, option));
 
       case UserAvatarSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserAvatarSubject(await this.#find(UserAvatarEntity, params, option.findBy, value));
-
-      case UserCompanySubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserCompanySubject(await this.#find(UserCompanyEntity, params, option.findBy, value));
+        return new UserAvatarSubject(await this.#find(UserAvatarEntity, ['userId'], req, option));
 
       case UserDetailSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserDetailSubject(await this.#find(UserDetailEntity, params, option.findBy, value));
+        return new UserDetailSubject(await this.#find(UserDetailEntity, ['userId'], req, option));
 
       case UserDocumentSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserDocumentSubject(await this.#find(UserDocumentEntity, params, option.findBy, value));
+        return new UserDocumentSubject(await this.#find(UserDocumentEntity, ['userId'], req, option));
 
       case UserNoteSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserNoteSubject(await this.#find(UserNoteEntity, params, option.findBy, value));
+        return new UserNoteSubject(await this.#find(UserNoteEntity, ['userId'], req, option));
 
       case UserNotificationSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, params, option.findBy, value));
+        return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, ['userId'], req, option));
 
       case UserSettingSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new UserSettingSubject(await this.#find(UserSettingEntity, params, option.findBy, value));
+        return new UserSettingSubject(await this.#find(UserSettingEntity, ['userId'], req, option));
 
       case WalletSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new WalletSubject(await this.#find(WalletEntity, params, option.findBy, value));
+        return new WalletSubject(await this.#find(WalletEntity, ['userId'], req, option));
 
       case WalletTransactionSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new WalletTransactionSubject(await this.#find(WalletTransactionEntity, params, option.findBy, value));
+        return new WalletTransactionSubject(await this.#find(WalletTransactionEntity, ['userId'], req, option));
 
       case WalletTransactionHistorySubject.name:
-        params = ['id', 'userId', 'companyId'];
         return new WalletTransactionHistorySubject(
-          await this.#find(WalletTransactionHistoryEntity, params, option.findBy, value),
+          await this.#find(WalletTransactionHistoryEntity, ['userId'], req, option),
         );
 
       case WheelSpinSubject.name:
-        params = ['id', 'userId', 'companyId'];
-        return new WheelSpinSubject(await this.#find(WheelSpinEntity, params, option.findBy, value));
+        return new WheelSpinSubject(await this.#find(WheelSpinEntity, ['userId'], req, option));
 
       default:
         throw new InvalidSubjectException(subject.name);
@@ -253,25 +182,31 @@ export class SubjectFactory {
    * Returns the construction params for a subject based on a database entity
    * @param target
    * @param select
-   * @param findBy
-   * @param value
+   * @param req
+   * @param option
    * @private
    */
   async #find<T = EntityTarget<ObjectLiteral>>(
     target: EntityTarget<any>,
     select: string[],
-    findBy: string,
-    value: unknown,
-  ): Promise<T> {
+    req: AuthenticatedReq,
+    option?: Option,
+  ): Promise<T | undefined> {
+    if (!option) {
+      return;
+    }
+
+    const value = req[option.in][option.use];
+
     const entity =
       (await this.dataSource
         .createQueryBuilder()
         .from(target, 'e')
         .select(select)
-        .where(`e."${findBy}" = :value`, { value })
+        .where(`e."${option.findBy.toString()}" = :value`, { value })
         .getRawOne()) ?? {};
 
-    entity[findBy] = value;
+    entity[option.findBy] = value;
     return entity;
   }
 }

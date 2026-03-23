@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { CompanySettingEntity } from '@crm/database';
-import { CompanySetting, CompanySettingKey } from '@crm/types';
+import { GlobalSettingEntity } from '@crm/database';
+import { UserSettingKey, GlobalSettingSubject } from '@crm/types';
 
 @Injectable()
-export class CompanySettingMapper {
-  toSetting(data: CompanySettingEntity): CompanySetting {
-    const model = new CompanySetting();
+export class GlobalSettingMapper {
+  toSetting(data: GlobalSettingEntity): GlobalSettingSubject {
+    const model = new GlobalSettingSubject();
     model.id = data.id;
-    model.key = data.key as unknown as CompanySettingKey;
+    model.key = data.key as unknown as UserSettingKey;
 
     // Parse the value type
     if (['1', 'true'].includes(data.value.toLowerCase())) {

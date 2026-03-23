@@ -12,11 +12,10 @@ import {
 } from 'typeorm';
 
 import { ServerEntity } from './server.entity';
-import { CompanyEntity } from './company.entity';
 import { TradingAccountTypeLeverageEntity } from './trading-account-type-leverage.entity';
 
 @Entity({ name: 'trading_account_type' })
-@Unique(['name', 'companyId'])
+@Unique(['name'])
 export class TradingAccountTypeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -66,17 +65,6 @@ export class TradingAccountTypeEntity {
   tradingAccountTypeLeverages: TradingAccountTypeLeverageEntity[];
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.tradingAccountTypes, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => ServerEntity, (e) => e.tradingAccountTypes, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

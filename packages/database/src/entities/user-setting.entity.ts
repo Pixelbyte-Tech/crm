@@ -1,17 +1,6 @@
-import {
-  Index,
-  Entity,
-  Column,
-  OneToOne,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Index, Entity, Column, OneToOne, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_setting' })
 export class UserSettingEntity {
@@ -36,18 +25,6 @@ export class UserSettingEntity {
   /** One-to-one relations */
   @OneToOne(() => UserEntity, (e) => e.settings)
   user: UserEntity;
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userSettings, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

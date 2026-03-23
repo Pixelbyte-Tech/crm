@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 
 import { Cryptography } from '@crm/utils';
-import { User, AuthSessionStatus } from '@crm/types';
-import { UserEntity, UserCompanyEntity } from '@crm/database';
-import { UserJwtPayloadType, JwtRefreshPayloadType } from '@crm/auth';
+import { UserEntity } from '@crm/database';
+import { JwtRefreshPayloadType } from '@crm/auth';
+import { User, Role, AuthSessionStatus } from '@crm/types';
 
 import { Token } from '../types';
 import { EmailLoginDto } from '../dto/in';
@@ -34,8 +34,6 @@ export class AuthService {
     private readonly configService: ConfigService<{ auth: AuthConfig }>,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(UserCompanyEntity)
-    private readonly userCompanyRepo: Repository<UserCompanyEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -76,35 +74,22 @@ export class AuthService {
     const str = `${dto.email}${DateTime.utc().toMillis().toString()}`;
     const randomHash = Cryptography.hash(str);
 
-    // Accept invitation if token provided (also assigns company roles)
+    // Accept invitation if token provided (also assigns roles)
     if (dto.invitationToken) {
       await this.invitationService.accept(dto.invitationToken);
-    }
-
-    // Find the company id to associate with the session
-    // Associate with the first company bound to the user (arbitrary)
-    let companyId = user.companyId;
-    if (!companyId) {
-      const userCompany = await this.userCompanyRepo.findOne({ where: { userId: user.id } });
-      if (!userCompany) {
-        throw new UnprocessableEntityException(`User not associated with any company`);
-      }
-
-      companyId = userCompany.companyId;
     }
 
     try {
       // Create a new auth session for the user
       const session = await this.userSessionService.create({
         userId: user.id,
-        companyId: companyId,
         hash: randomHash,
         ipAddress: ip,
         userAgent,
       });
 
       // Generate JWT tokens for the user
-      const tokens = await this.#generateTokens(user.id, session.id, randomHash);
+      const tokens = await this.#generateTokens(user.id, session.id, randomHash, user.roles);
       const result = { user: this.userMapper.toUser(user), tokens };
 
       // Update the session status
@@ -145,7 +130,7 @@ export class AuthService {
       await this.userSessionService.update(session.id, { hash: randomHash });
 
       // Generate JWT tokens for the user
-      const result = await this.#generateTokens(user.id, session.id, randomHash);
+      const result = await this.#generateTokens(user.id, session.id, randomHash, user.roles);
       return { user: this.userMapper.toUser(user), tokens: result };
     } catch (err) {
       this.#logger.error(`${msg} - Failed: generate session and tokens`, err);
@@ -288,12 +273,14 @@ export class AuthService {
    * @param userId The user id
    * @param sessionId The session id
    * @param randomHash A random hash
+   * @param roles
    * @returns {Promise<Token>} The generated tokens
    */
   async #generateTokens(
     userId: string,
     sessionId: string,
     randomHash: string,
+    roles: Role[],
   ): Promise<{ auth: Token; refresh: Token }> {
     const tokenExpiresIn = this.configService.getOrThrow('auth.expires', { infer: true });
     const refreshExpiresIn = this.configService.getOrThrow('auth.refreshExpires', { infer: true });
@@ -303,13 +290,6 @@ export class AuthService {
 
     const refreshExpires = DateTime.utc().plus(Duration.fromISO(refreshExpiresIn));
     const refreshExpireMs = refreshExpires.diff(DateTime.utc()).toMillis();
-
-    // Fetch the user roles in all companies
-    const roles: UserJwtPayloadType['roles'] = {};
-    const records = await this.userCompanyRepo.find({ where: { userId } });
-    for (const record of records) {
-      roles[record.companyId] = record.roles;
-    }
 
     const [token, refreshToken] = await Promise.all([
       await this.jwtService.signAsync(

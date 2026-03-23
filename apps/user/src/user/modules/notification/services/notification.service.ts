@@ -39,7 +39,6 @@ export class NotificationService {
       const token = await this.authService.generatePasswordResetToken(user.id);
       const result = await this.userNotificationRepo.insert({
         template: NotificationTemplate.USER_FORGOT_PASSWORD,
-        companyId: user.companyId,
         userId: user.id,
         meta: { token: token.token, expireMs: token.expireMs },
       });
@@ -70,7 +69,6 @@ export class NotificationService {
       const token = await this.authService.generateEmailConfirmationToken(user.id);
       const result = await this.userNotificationRepo.insert({
         template: NotificationTemplate.USER_CONFIRM_EMAIL,
-        companyId: user.companyId,
         userId: user.id,
         meta: { token: token.token, expireMs: token.expireMs },
       });

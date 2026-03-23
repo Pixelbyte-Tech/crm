@@ -3,4 +3,5 @@ export enum Role {
   TRADE_SUPPORT = 'trade_support',
   CS_AGENT = 'cs_agent',
   COMPLIANCE = 'compliance',
+  USER = 'user',
 }

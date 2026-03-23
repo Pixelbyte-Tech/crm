@@ -1,51 +1,26 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Logger, Injectable, NotFoundException } from '@nestjs/common';
+import { Logger, Injectable } from '@nestjs/common';
 
-import { Role } from '@crm/types';
 import { Cryptography } from '@crm/utils';
 
 import { UserEntity } from '../../entities/user.entity';
-import { CompanyEntity } from '../../entities/company.entity';
-import { UserCompanyEntity } from '../../entities/user-company.entity';
+import { ADMIN_USER_EMAIL, STANDARD_USER_EMAIL } from '../seed-ids';
 import { UserSettingEntity } from '../../entities/user-setting.entity';
-import { OrganisationEntity } from '../../entities/organisation.entity';
-import { ADMIN_USER_EMAIL, ORGANISATION_NAME, BROKER_COMPANY_NAME, STANDARD_USER_EMAIL } from '../seed-ids';
 
 @Injectable()
 export class UserSeedService {
-  constructor(
-    @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
-    @InjectRepository(CompanyEntity) private companyRepo: Repository<CompanyEntity>,
-    @InjectRepository(OrganisationEntity) private orgRepo: Repository<OrganisationEntity>,
-    @InjectRepository(UserCompanyEntity) private userCompanyRepo: Repository<UserCompanyEntity>,
-  ) {}
+  constructor(@InjectRepository(UserEntity) private userRepo: Repository<UserEntity>) {}
 
   readonly #logger = new Logger(this.constructor.name);
 
   async run() {
     this.#logger.log('Starting users seed');
 
-    // Find the id of the seed company
-    const company = await this.companyRepo.findOne({ where: { name: BROKER_COMPANY_NAME } });
-    if (!company) {
-      this.#logger.error(`Error seeding users, no company found`);
-      throw new NotFoundException('Company not Found');
-    }
-
-    // Find the organisation
-    const org = await this.orgRepo.findOne({ where: { name: ORGANISATION_NAME } });
-    if (!org) {
-      this.#logger.error(`Error seeding users, no organisation found`);
-      throw new NotFoundException('Organisation not Found');
-    }
-
     try {
       const count = await this.userRepo.count({ where: { email: STANDARD_USER_EMAIL } });
       if (count === 0) {
         const user = new UserEntity();
-        user.organisationId = org.id;
-        user.companyId = company.id;
         user.firstName = 'John';
         user.lastName = 'Doe';
         user.email = STANDARD_USER_EMAIL;
@@ -66,7 +41,6 @@ export class UserSeedService {
         userSettings.canDeposit = true;
         userSettings.canWithdraw = true;
         userSettings.maxAutoWithdrawAmount = 1000;
-        userSettings.companyId = company.id;
 
         user.settings = userSettings;
 
@@ -79,7 +53,6 @@ export class UserSeedService {
       const countSuper = await this.userRepo.count({ where: { email: ADMIN_USER_EMAIL } });
       if (countSuper === 0) {
         const user = new UserEntity();
-        user.organisationId = org.id;
         user.firstName = 'John';
         user.lastName = 'Doe (super)';
         user.email = ADMIN_USER_EMAIL;
@@ -100,19 +73,11 @@ export class UserSeedService {
         userSettings.canDeposit = true;
         userSettings.canWithdraw = true;
         userSettings.maxAutoWithdrawAmount = 5000;
-        userSettings.companyId = company.id;
 
         user.settings = userSettings;
 
-        const savedUser = await this.userRepo.save(user);
+        await this.userRepo.save(user);
         this.#logger.log(`Seeded user '${ADMIN_USER_EMAIL}'`);
-
-        // Assign the user to the company
-        await this.userCompanyRepo.save({
-          userId: savedUser.id,
-          companyId: company.id,
-          roles: [Role.ADMIN],
-        });
       }
     } catch (err) {
       this.#logger.error(`Error seeding users`, err);

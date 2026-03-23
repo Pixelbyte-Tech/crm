@@ -3,7 +3,6 @@ import {
   Entity,
   Column,
   Unique,
-  ManyToOne,
   OneToMany,
   JoinColumn,
   CreateDateColumn,
@@ -13,11 +12,10 @@ import {
 
 import { Integration, IntegrationType } from '@crm/types';
 
-import { CompanyEntity } from './company.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 
 @Entity({ name: 'integration' })
-@Unique(['companyId', 'name'])
+@Unique(['name'])
 export class IntegrationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -49,18 +47,6 @@ export class IntegrationEntity {
   @OneToMany(() => PaymentTransactionEntity, (e) => e.integration)
   @JoinColumn()
   paymentTransactions: PaymentTransactionEntity[];
-
-  /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.integrations, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
 
   @CreateDateColumn()
   createdAt: Date;

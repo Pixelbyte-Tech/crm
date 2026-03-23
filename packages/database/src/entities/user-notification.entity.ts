@@ -12,7 +12,6 @@ import {
 import { NotificationStatus, NotificationTemplate } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'user_notification' })
 export class UserNotificationEntity {
@@ -40,17 +39,6 @@ export class UserNotificationEntity {
   deliveredAt: Date | null;
 
   /** Many-to-many relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.userNotifications, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.notifications, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

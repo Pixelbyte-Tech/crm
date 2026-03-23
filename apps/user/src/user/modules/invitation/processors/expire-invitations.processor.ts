@@ -7,15 +7,13 @@ import { Process, Processor } from '@nestjs/bull';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { InvitationStatus } from '@crm/types';
-import { CompanyInvitationEntity } from '@crm/database';
+import { InvitationEntity } from '@crm/database';
 
 import { JobType } from '../types';
 
 @Processor('invitations-queue')
 export class ExpireInvitationsProcessor {
-  constructor(
-    @InjectRepository(CompanyInvitationEntity) private readonly invitationRepo: Repository<CompanyInvitationEntity>,
-  ) {}
+  constructor(@InjectRepository(InvitationEntity) private readonly invitationRepo: Repository<InvitationEntity>) {}
 
   private readonly logger = new Logger(this.constructor.name);
 
@@ -25,7 +23,7 @@ export class ExpireInvitationsProcessor {
    */
   @Process(JobType.EXPIRE_INVITATIONS)
   async handle(job: Job) {
-    const { companyId, integrationId } = job.data;
+    const { integrationId } = job.data;
 
     return Sentry.startNewTrace(async () => {
       return Sentry.startSpan(
@@ -56,7 +54,6 @@ export class ExpireInvitationsProcessor {
               tags: {
                 component: ExpireInvitationsProcessor.name,
                 process: JobType.EXPIRE_INVITATIONS,
-                companyId: companyId,
                 integrationId: integrationId,
               },
             });

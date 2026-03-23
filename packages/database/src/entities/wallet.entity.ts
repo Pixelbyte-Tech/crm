@@ -14,7 +14,6 @@ import {
 import { AssetType } from '@crm/types';
 
 import { UserEntity } from './user.entity';
-import { CompanyEntity } from './company.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
 import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
@@ -48,17 +47,6 @@ export class WalletEntity {
   transactionHistory: WalletTransactionHistoryEntity[];
 
   /** Many-to-one relations */
-  @ManyToOne(() => CompanyEntity, (e) => e.wallets, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company: CompanyEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  companyId: string;
-
   @ManyToOne(() => UserEntity, (e) => e.wallets, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

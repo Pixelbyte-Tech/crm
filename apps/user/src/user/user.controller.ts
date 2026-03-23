@@ -38,7 +38,7 @@ export class UserController {
    * Lists all users in the system
    * @param dto The dto with options to filter the results by.
    */
-  @Auth(Action.READ, UserSubject, { in: 'query', use: 'companyId', findBy: 'companyId' })
+  @Auth(Action.READ, UserSubject)
   @OpenApi({ type: User, isPaginated: true })
   @Get()
   public async list(@Query() dto: ListUsersDto): Promise<PaginatedResDto<User>> {

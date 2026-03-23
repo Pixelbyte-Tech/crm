@@ -4,7 +4,6 @@ import {
   Column,
   Unique,
   OneToOne,
-  ManyToOne,
   OneToMany,
   JoinColumn,
   CreateDateColumn,
@@ -12,26 +11,23 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { UserStatus } from '@crm/types';
+import { Role, UserStatus } from '@crm/types';
 
 import { WalletEntity } from './wallet.entity';
-import { CompanyEntity } from './company.entity';
 import { LoyaltyEntity } from './loyalty.entity';
 import { UserNoteEntity } from './user-note.entity';
 import { AuditLogEntity } from './audit-log.entity';
 import { WheelSpinEntity } from './wheel-spin.entity';
+import { InvitationEntity } from './invitation.entity';
 import { UserAvatarEntity } from './user-avatar.entity';
 import { UserDetailEntity } from './user-detail.entity';
 import { UserSettingEntity } from './user-setting.entity';
-import { UserCompanyEntity } from './user-company.entity';
-import { OrganisationEntity } from './organisation.entity';
 import { UserDocumentEntity } from './user-document.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 import { LoyaltyHistoryEntity } from './loyalty-history.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
 import { UserNotificationEntity } from './user-notification.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
-import { CompanyInvitationEntity } from './company-invitation.entity';
 import { TradingAccountTagEntity } from './trading-account-tag.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
@@ -41,7 +37,7 @@ import { WalletTransactionHistoryEntity } from './wallet-transaction-history.ent
 @Entity({ name: 'user' })
 @Unique(['detailId'])
 @Unique(['settingsId'])
-@Unique(['companyId', 'email'])
+@Unique(['email'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -67,6 +63,9 @@ export class UserEntity {
 
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
   status: UserStatus;
+
+  @Column({ type: 'enum', enum: Role, array: true })
+  roles: Role[];
 
   @Column({ type: 'bool', default: false })
   isEmailVerified: boolean;
@@ -163,9 +162,9 @@ export class UserEntity {
   @JoinColumn()
   paymentTransactions: PaymentTransactionEntity[];
 
-  @OneToMany(() => CompanyInvitationEntity, (e) => e.sentByUser)
+  @OneToMany(() => InvitationEntity, (e) => e.sentByUser)
   @JoinColumn()
-  sentInvitations: CompanyInvitationEntity[];
+  sentInvitations: InvitationEntity[];
 
   @OneToMany(() => TradingAccountEntity, (e) => e.user)
   @JoinColumn()
@@ -178,10 +177,6 @@ export class UserEntity {
   @OneToMany(() => TradingAccountTagEntity, (e) => e.taggedByUser)
   @JoinColumn()
   tradingAccountTags: TradingAccountTagEntity[];
-
-  @OneToMany(() => UserCompanyEntity, (e) => e.user)
-  @JoinColumn()
-  userCompanies: UserCompanyEntity[];
 
   @OneToMany(() => UserNoteEntity, (e) => e.author)
   @JoinColumn()
@@ -206,29 +201,6 @@ export class UserEntity {
   @OneToMany(() => WheelSpinEntity, (e) => e.user)
   @JoinColumn()
   wheelSpins: WheelSpinEntity[];
-
-  /** Many-to-one relations */
-  @ManyToOne(() => OrganisationEntity, (e) => e.users, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'organisationId' })
-  organisation: OrganisationEntity;
-
-  @Index()
-  @Column({ type: 'text' })
-  organisationId: string;
-
-  @ManyToOne(() => CompanyEntity, (e) => e.users, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'companyId' })
-  company?: CompanyEntity | null;
-
-  @Index()
-  @Column({ type: 'text', nullable: true })
-  companyId?: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
