@@ -10,7 +10,7 @@ import { GlobalSettingMapper } from '../mappers';
 @Injectable()
 export class GlobalSettingService {
   constructor(
-    private readonly companySettingMapper: GlobalSettingMapper,
+    private readonly globalSettingMapper: GlobalSettingMapper,
     @InjectRepository(GlobalSettingEntity)
     private readonly repo: Repository<GlobalSettingEntity>,
   ) {}
@@ -22,7 +22,7 @@ export class GlobalSettingService {
   async fetchOne(key: UserSettingKey): Promise<undefined | GlobalSettingSubject> {
     const record = await this.repo.findOne({ where: { key } });
     if (record) {
-      return this.companySettingMapper.toSetting(record);
+      return this.globalSettingMapper.toSetting(record);
     }
   }
 
@@ -34,7 +34,7 @@ export class GlobalSettingService {
 
     const results: GlobalSettingSubject[] = [];
     for (const record of records) {
-      results.push(this.companySettingMapper.toSetting(record));
+      results.push(this.globalSettingMapper.toSetting(record));
     }
 
     return results;

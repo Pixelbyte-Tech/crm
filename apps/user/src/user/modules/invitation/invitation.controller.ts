@@ -17,7 +17,7 @@ export class InvitationController {
   constructor(private readonly service: InvitationService) {}
 
   /**
-   * Sends an invitation to an email address to join a company
+   * Sends an invitation to an email address to join
    * @param dto The invite user dto
    * @param req The authenticated request
    */
@@ -29,7 +29,7 @@ export class InvitationController {
   }
 
   /**
-   * Lists all invitations for a company
+   * Lists all invitations
    * @param dto The filter dto
    */
   @OpenApi({ type: Invitation, isPaginated: true })
@@ -40,7 +40,7 @@ export class InvitationController {
   }
 
   /**
-   * Resends a company invitation to a user by email
+   * Resends an invitation to a user by email
    * @param invitationId The invitation id to resend
    */
   @OpenApi()
@@ -51,7 +51,7 @@ export class InvitationController {
   }
 
   /**
-   * Deletes an invitation sent to an email address to join a company
+   * Deletes an invitation sent to an email address to join
    * @param invitationId The invitation id to delete
    */
   @OpenApi()

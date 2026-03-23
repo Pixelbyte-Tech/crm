@@ -70,11 +70,11 @@ export class InvitationService {
   }
 
   /**
-   * Lists all invitations for a company.
+   * Lists all invitations
    * @param dto The dto with options to filter the results by.
    */
   async listInvitations(dto: ListInvitationsDto): Promise<PaginatedResDto<Invitation>> {
-    // Find all invitations for the company
+    // Find all invitations
     const invitations = await paginate(
       this.invitationRepo,
       { limit: dto.limit, page: dto.page },
@@ -90,7 +90,7 @@ export class InvitationService {
   }
 
   /**
-   * Resends a company invitation to a user.
+   * Resends an invitation to a user.
    * @param invitationId The id of the invitation to resend
    */
   async resendInvitation(invitationId: string): Promise<boolean> {
@@ -122,7 +122,7 @@ export class InvitationService {
   }
 
   /**
-   * Deletes a company invitation to a user.
+   * Deletes an existing invitation.
    * @param invitationId The id of the invitation to delete
    */
   async deleteInvitation(invitationId: string): Promise<boolean> {
@@ -154,8 +154,8 @@ export class InvitationService {
   }
 
   /**
-   * Accepts a company invitation by their token. Applies the roles present in the invitation to the user in the
-   * company the user is accepting the invitation to.
+   * Accepts an invitation by their token.
+   * Applies the roles present in the invitation to the user being invited.
    * @param token The token of the invitation to accept
    */
   async accept(token: string): Promise<boolean> {
@@ -198,7 +198,7 @@ export class InvitationService {
   }
 
   /**
-   * Rejects a company invitation by their token.
+   * Rejects an invitation by their token.
    * @param token The token of the invitation to reject
    */
   async reject(token: string): Promise<boolean> {
@@ -240,12 +240,12 @@ export class InvitationService {
   }
 
   /**
-   * Creates a new company invitation.
+   * Creates a new invitation.
    * @param email The email of the invited user
    * @param roles The roles to assign to the user
    */
   async #createInvitation(email: string, roles: Role[]): Promise<Invitation> {
-    // Check if an invitation already exists for the email and company
+    // Check if an invitation already exists for the email
     const existingInvitation = await this.invitationRepo.findOne({
       where: { email, status: InvitationStatus.PENDING },
     });

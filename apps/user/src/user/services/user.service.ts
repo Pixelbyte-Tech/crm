@@ -37,7 +37,7 @@ export class UserService {
   constructor(
     private readonly authService: AuthService,
     private readonly userMapper: UserMapper,
-    private readonly companySettingService: GlobalSettingService,
+    private readonly globalSettingService: GlobalSettingService,
     @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
@@ -94,8 +94,8 @@ export class UserService {
   async create(dto: CreateUserDto): Promise<NewUserDto> {
     const msg = `Attempting to create user from email '${dto.email}'`;
 
-    // Fetch the default settings for the company
-    const settings = await this.companySettingService.fetch();
+    // Fetch the default settings
+    const settings = await this.globalSettingService.fetch();
 
     // Create the user settings
     const userSettings = new UserSettingEntity();
