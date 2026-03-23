@@ -27,10 +27,13 @@ export class UserNotificationEntity {
   @Column({ type: 'enum', enum: NotificationStatus, default: NotificationStatus.PENDING })
   status: NotificationStatus;
 
+  @Column({ type: 'json', nullable: true })
+  meta?: Record<string, unknown> | null;
+
   @Column({ type: 'int', default: 0 })
   deliveryAttempts: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   scheduledAt: Date;
 
   @Column({ type: 'timestamp', nullable: true })

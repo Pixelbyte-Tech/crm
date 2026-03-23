@@ -5,7 +5,6 @@ import { I18nModule, QueryResolver } from 'nestjs-i18n';
 
 import { MailService } from './services';
 import { TransportFactory } from './factories';
-import { MailController } from './mail.controller';
 import { SesTransport, SmtpTransport } from './transports';
 
 @Module({
@@ -17,7 +16,6 @@ import { SesTransport, SmtpTransport } from './transports';
     }),
   ],
   providers: [MailService, SesTransport, SmtpTransport, TransportFactory],
-  controllers: [MailController],
   exports: [MailService],
 })
 export class MailModule {}
