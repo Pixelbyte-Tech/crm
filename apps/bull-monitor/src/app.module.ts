@@ -22,7 +22,8 @@ import { HealthModule } from './health/health.module';
         };
       },
     }),
-    BullModule.registerQueue({ name: 'invitations-queue' }),
+    BullModule.registerQueue({ name: 'invitation-queue' }),
+    BullModule.registerQueue({ name: 'notification-queue' }),
     BullBoardModule.forRootAsync({
       useFactory: () => ({
         adapter: ExpressAdapter,
@@ -35,7 +36,11 @@ import { HealthModule } from './health/health.module';
       }),
     }),
     BullBoardModule.forFeature({
-      name: 'invitations-queue',
+      name: 'invitation-queue',
+      adapter: BullAdapter,
+    }),
+    BullBoardModule.forFeature({
+      name: 'notification-queue',
       adapter: BullAdapter,
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),

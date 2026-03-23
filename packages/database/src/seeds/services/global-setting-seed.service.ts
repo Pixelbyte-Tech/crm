@@ -16,6 +16,7 @@ export class GlobalSettingSeedService {
     this.#logger.log('Starting global settings seed');
 
     const settings: Map<GlobalSettingKey, unknown> = new Map();
+    settings.set(GlobalSettingKey.COMPANY_NAME, 'Test Company');
     settings.set(GlobalSettingKey.USER_CAN_DEPOSIT, true);
     settings.set(GlobalSettingKey.USER_CAN_WITHDRAW, true);
     settings.set(GlobalSettingKey.USER_CAN_AUTO_WITHDRAW, false);

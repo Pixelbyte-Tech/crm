@@ -380,6 +380,9 @@ importers:
       '@crm/swagger':
         specifier: workspace:^
         version: link:../../packages/swagger
+      '@crm/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@crm/utils':
         specifier: workspace:^
         version: link:../../packages/utils
@@ -389,6 +392,9 @@ importers:
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.13.6)(rxjs@7.8.2)
+      '@nestjs/bull':
+        specifier: ^11.0.4
+        version: 11.0.4(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(bull@4.16.5)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
         version: 3.1.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(cache-manager@7.2.8)(keyv@5.6.0)(rxjs@7.8.2)
@@ -428,6 +434,9 @@ importers:
       '@sentry/nestjs':
         specifier: ^9.32.0
         version: 9.47.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)
+      bull:
+        specifier: ^4.16.5
+        version: 4.16.5
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1

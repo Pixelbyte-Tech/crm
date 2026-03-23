@@ -23,7 +23,7 @@ import { AppConfig } from '../../../config/app/app-config.type';
       },
     }),
     BullModule.registerQueueAsync({
-      name: 'invitations-queue',
+      name: 'invitation-queue',
       inject: [ConfigService],
       useFactory: (c: ConfigService<{ app: AppConfig }>) => {
         const host = c.getOrThrow('app.redisHost', { infer: true });

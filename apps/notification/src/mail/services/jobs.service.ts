@@ -8,7 +8,7 @@ import { JobType } from '../types';
 
 @Injectable()
 export class JobsService implements OnApplicationBootstrap {
-  constructor(@InjectQueue('invitation-queue') private readonly queue: Queue) {}
+  constructor(@InjectQueue('notification-queue') private readonly queue: Queue) {}
 
   /**
    * Runs on application Bootstrap
@@ -46,7 +46,8 @@ export class JobsService implements OnApplicationBootstrap {
     //////////////////////////////////////////////////////////////
     // Sync Jobs (Scheduled)
 
-    await this.#scheduleJob(JobType.EXPIRE_INVITATIONS, '*/30 * * * *');
+    await this.#scheduleJob(JobType.SEND_INVITATIONS, '*/5 * * * *');
+    await this.#scheduleJob(JobType.SEND_MAIL, '*/5 * * * *');
   }
 
   /**

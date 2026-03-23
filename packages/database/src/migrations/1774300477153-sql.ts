@@ -138,7 +138,7 @@ export class Sql1774300477153 implements MigrationInterface {
       `CREATE INDEX "IDX_789c93161549f4a123834e2ef2" ON "audit_log" ("userId", "targetType", "targetId") `,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."invitation_status_enum" AS ENUM('pending', 'resend_Pending', 'accepted', 'rejected', 'expired')`,
+      `CREATE TYPE "public"."invitation_status_enum" AS ENUM('unsent', 'pending', 'resend_Pending', 'accepted', 'rejected', 'expired')`,
     );
     await queryRunner.query(
       `CREATE TYPE "public"."invitation_roles_enum" AS ENUM('admin', 'trade_support', 'cs_agent', 'compliance', 'user')`,
@@ -265,7 +265,7 @@ export class Sql1774300477153 implements MigrationInterface {
       `CREATE TABLE "platform_client" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "platform" "public"."platform_client_platform_enum" NOT NULL, "type" "public"."platform_client_type_enum" NOT NULL, "link" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_4855805bfc5a9e538b410c4c5d9" UNIQUE ("platform", "type"), CONSTRAINT "PK_1b1eacd5b73803aef3bec878b8e" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."global_setting_key_enum" AS ENUM('user_can_deposit', 'user_can_withdraw', 'user_can_auto_withdraw', 'user_max_auto_withdraw_amt')`,
+      `CREATE TYPE "public"."global_setting_key_enum" AS ENUM('company_name', 'user_can_deposit', 'user_can_withdraw', 'user_can_auto_withdraw', 'user_max_auto_withdraw_amt')`,
     );
     await queryRunner.query(
       `CREATE TABLE "global_setting" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "key" "public"."global_setting_key_enum" NOT NULL, "value" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_5d48351912deefef9e2211e771a" UNIQUE ("key"), CONSTRAINT "PK_927c9cc8b05b293568b6fccc029" PRIMARY KEY ("id"))`,

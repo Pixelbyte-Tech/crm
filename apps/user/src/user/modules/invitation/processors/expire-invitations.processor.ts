@@ -11,7 +11,7 @@ import { InvitationEntity } from '@crm/database';
 
 import { JobType } from '../types';
 
-@Processor('invitations-queue')
+@Processor('invitation-queue')
 export class ExpireInvitationsProcessor {
   constructor(@InjectRepository(InvitationEntity) private readonly invitationRepo: Repository<InvitationEntity>) {}
 

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import {
@@ -97,11 +97,7 @@ export class InvitationService {
 
     try {
       // Resend the invitation email (handled by notification ms)
-      await this.invitationRepo.save({
-        id: invitation.id,
-        status: InvitationStatus.RESEND_PENDING,
-      });
-
+      await this.invitationRepo.save({ id: invitation.id, status: InvitationStatus.RESEND_PENDING });
       this.#logger.log(`${msg} - Complete`);
       return true;
     } catch (err) {
@@ -128,8 +124,9 @@ export class InvitationService {
       throw new NotFoundException('Invitation not found');
     }
 
-    if (InvitationStatus.PENDING !== invitation.status) {
-      throw new UnprocessableEntityException('Invitation must be in pending status to be deleted');
+    const statuses = [InvitationStatus.UNSENT, InvitationStatus.PENDING, InvitationStatus.RESEND_PENDING];
+    if (!statuses.includes(invitation.status)) {
+      throw new UnprocessableEntityException(`Invitation with status '${invitation.status}' cannot be deleted`);
     }
 
     // Delete the invitation
@@ -217,8 +214,9 @@ export class InvitationService {
    */
   async #createInvitation(email: string, roles: Role[]): Promise<Invitation> {
     // Check if an invitation already exists for the email
+    const statuses = [InvitationStatus.UNSENT, InvitationStatus.PENDING, InvitationStatus.RESEND_PENDING];
     const existingInvitation = await this.invitationRepo.findOne({
-      where: { email, status: InvitationStatus.PENDING },
+      where: { email, status: In(statuses) },
     });
     if (existingInvitation) {
       return this.invitationMapper.toInvitation(existingInvitation);
@@ -232,7 +230,7 @@ export class InvitationService {
     invitation.email = email;
     invitation.roles = roles;
     invitation.token = token;
-    invitation.status = InvitationStatus.PENDING;
+    invitation.status = InvitationStatus.UNSENT;
 
     return this.invitationMapper.toInvitation(await this.invitationRepo.save(invitation));
   }

@@ -1,4 +1,5 @@
 export enum GlobalSettingKey {
+  COMPANY_NAME = 'company_name',
   USER_CAN_DEPOSIT = 'user_can_deposit',
   USER_CAN_WITHDRAW = 'user_can_withdraw',
   USER_CAN_AUTO_WITHDRAW = 'user_can_auto_withdraw',
