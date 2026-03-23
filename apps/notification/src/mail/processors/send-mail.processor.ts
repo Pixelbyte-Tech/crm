@@ -23,7 +23,7 @@ export class SendMailProcessor {
   /**
    * Handles the job
    */
-  @Process(JobType.SEND_MAIL)
+  @Process({ name: JobType.SEND_MAIL, concurrency: 1 })
   async handle() {
     return Sentry.startNewTrace(async () => {
       return Sentry.startSpan({ name: JobType.SEND_MAIL, op: 'notification' }, async () => {
@@ -31,25 +31,33 @@ export class SendMailProcessor {
         this.logger.log(`${msg} - Start`);
 
         try {
+          // Fetch all notifications to mail
           const notifications = await this.userNotificationRepo.find({
+            relations: { user: true },
             where: {
               status: NotificationStatus.PENDING,
               scheduledAt: LessThan(new Date()),
               deliveryAttempts: LessThan(50),
             },
+            take: 20,
           });
 
+          // Process them
           for (const notification of notifications) {
             let meta: any;
             const result = false;
 
             switch (notification.template) {
               case NotificationTemplate.USER_CONFIRM_EMAIL:
-                meta = notification.meta as unknown as UserNotificationEntity;
-                await this.mailService.sendConfirmEmail(meta.status, '');
+                meta = notification.meta as unknown as { token: string; expireMs: number };
+                await this.mailService.sendConfirmEmail(notification.user.email, meta.token);
                 break;
               case NotificationTemplate.USER_FORGOT_PASSWORD:
-                await this.mailService.sendResetPassword('meta.', '');
+                meta = notification.meta as unknown as { token: string; expireMs: number };
+                await this.mailService.sendResetPassword(notification.user.email, meta.token);
+                break;
+              default:
+                this.logger.error(`Unknown template '${notification.template}' for notification '${notification.id}'`);
                 break;
             }
 
@@ -60,8 +68,6 @@ export class SendMailProcessor {
             if (result) {
               notification.deliveredAt = DateTime.utc().toJSDate();
               notification.status = NotificationStatus.DELIVERED;
-            } else {
-              notification.status = NotificationStatus.FAILED;
             }
 
             // Persist

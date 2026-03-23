@@ -24,7 +24,7 @@ export class SendInvitationsProcessor {
   /**
    * Handles the job
    */
-  @Process(JobType.SEND_INVITATIONS)
+  @Process({ name: JobType.SEND_INVITATIONS, concurrency: 1 })
   async handle() {
     return Sentry.startNewTrace(async () => {
       return Sentry.startSpan({ name: JobType.SEND_INVITATIONS, op: 'notification' }, async () => {

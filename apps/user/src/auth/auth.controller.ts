@@ -11,10 +11,10 @@ import { Auth, RefreshReq, AuthenticatedReq } from '@crm/auth';
 import { AuthService } from './services';
 import { UserLoginResDto } from './dto/out';
 import { InvitationService } from '../user/modules/invitation/services';
-import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto, RejectInvitationDto } from './dto/in';
+import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, RejectInvitationDto } from './dto/in';
 
 @ApiTags('Auth')
-@ApiExtraModels(EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, ForgotPasswordDto)
+@ApiExtraModels(EmailLoginDto, ConfirmEmailDto, ResetPasswordDto)
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(

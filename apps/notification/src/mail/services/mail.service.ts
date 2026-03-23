@@ -141,7 +141,7 @@ export class MailService {
       const greetingPersonalized = greeting.replace(`{{firstName}}`, to) ?? `Join ${company}`;
       const html = await render(
         InviteEmail({
-          title,
+          title: title.replace(`{{company}}`, company),
           greeting: greetingPersonalized,
           body: body.replace(`{{company}}`, company),
           link: link.toString(),
