@@ -8,7 +8,6 @@ import { OptionalFactoryDependency } from '@nestjs/common/interfaces/modules/opt
 import { UserEntity } from '@crm/database';
 
 import { UserStatusGuard } from './guards';
-import { AuthHelperService } from './services';
 import { CaslModule } from './modules/casl/casl.module';
 import { JwtStrategy, JwtRefreshStrategy } from './strategies';
 
@@ -43,14 +42,8 @@ export class AuthModule {
         PassportModule,
         TypeOrmModule.forFeature([UserEntity]),
       ],
-      providers: [...providers, AuthHelperService, JwtStrategy, JwtRefreshStrategy, UserStatusGuard],
-      exports: [
-        'AUTH_CONFIG_OPTIONS',
-        CaslModule,
-        JwtModule,
-        AuthHelperService,
-        TypeOrmModule.forFeature([UserEntity]),
-      ],
+      providers: [...providers, JwtStrategy, JwtRefreshStrategy, UserStatusGuard],
+      exports: ['AUTH_CONFIG_OPTIONS', CaslModule, JwtModule, TypeOrmModule.forFeature([UserEntity])],
     };
   }
 

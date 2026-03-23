@@ -26,7 +26,7 @@ import {
   WalletTransactionHistoryEntity,
 } from '@crm/database';
 
-import { Option, Subject } from '../types';
+import { Subject, SubjectFilter } from '../types';
 import { AuthenticatedReq } from '../../../types';
 import { InvalidSubjectException } from '../exceptions';
 import {
@@ -74,21 +74,25 @@ export class SubjectFactory {
    * Creates the subject object for the provided subject id
    * @param req The request context to find the subject from
    * @param subject The type of subject to create
-   * @param option The options on how to find the subject from the request context
+   * @param filter The instructions on how to find the subject from the request context
    */
-  async create(req: AuthenticatedReq, subject: Type<Subject>, option?: Option<typeof subject>): Promise<Subject> {
+  async create(
+    req: AuthenticatedReq,
+    subject: Type<Subject>,
+    filter?: SubjectFilter<typeof subject>,
+  ): Promise<Subject> {
     switch (subject.name) {
       case AlertSubject.name:
         return new AlertSubject();
 
       case AuditLogSubject.name:
-        return new AuditLogSubject(await this.#find(AuditLogEntity, ['userId'], req, option));
+        return new AuditLogSubject(await this.#find(AuditLogEntity, ['userId'], req, filter));
 
       case ChannelSubject.name:
         return new ChannelSubject();
 
       case InvitationSubject.name:
-        return new InvitationSubject(await this.#find(InvitationEntity, ['sentByUserId'], req, option));
+        return new InvitationSubject(await this.#find(InvitationEntity, ['sentByUserId'], req, filter));
 
       case GlobalSettingSubject.name:
         return new GlobalSettingSubject();
@@ -100,13 +104,13 @@ export class SubjectFactory {
         return new IntegrationSubject();
 
       case LoyaltySubject.name:
-        return new LoyaltySubject(await this.#find(LoyaltyEntity, ['userId'], req, option));
+        return new LoyaltySubject(await this.#find(LoyaltyEntity, ['userId'], req, filter));
 
       case LoyaltyHistorySubject.name:
-        return new LoyaltyHistorySubject(await this.#find(LoyaltyHistoryEntity, ['userId'], req, option));
+        return new LoyaltyHistorySubject(await this.#find(LoyaltyHistoryEntity, ['userId'], req, filter));
 
       case PaymentTransactionSubject.name:
-        return new PaymentTransactionSubject(await this.#find(PaymentTransactionEntity, ['userId'], req, option));
+        return new PaymentTransactionSubject(await this.#find(PaymentTransactionEntity, ['userId'], req, filter));
 
       case PlatformClientSubject.name:
         return new PlatformClientSubject();
@@ -118,16 +122,16 @@ export class SubjectFactory {
         return new TagSubject();
 
       case TradingAccountSubject.name:
-        return new TradingAccountSubject(await this.#find(TradingAccountEntity, ['userId'], req, option));
+        return new TradingAccountSubject(await this.#find(TradingAccountEntity, ['userId'], req, filter));
 
       case TradingAccountNoteSubject.name:
-        return new TradingAccountNoteSubject(await this.#find(TradingAccountNoteEntity, ['authorId'], req, option));
+        return new TradingAccountNoteSubject(await this.#find(TradingAccountNoteEntity, ['authorId'], req, filter));
 
       case TradingAccountTagSubject.name:
         return new TradingAccountTagSubject();
 
       case TradingAccountTypeSubject.name:
-        return new PaymentTransactionSubject(await this.#find(TradingAccountTypeEntity, ['userId'], req, option));
+        return new PaymentTransactionSubject(await this.#find(TradingAccountTypeEntity, ['userId'], req, filter));
 
       case TradingAccountTypeLeverageSubject.name:
         return new TradingAccountTypeLeverageSubject();
@@ -136,42 +140,42 @@ export class SubjectFactory {
         return new TradingEventSubject();
 
       case UserSubject.name:
-        return new UserSubject(await this.#find(UserEntity, ['id'], req, option));
+        return new UserSubject(await this.#find(UserEntity, ['id'], req, filter));
 
       case UserAuthSessionSubject.name:
-        return new UserAuthSessionSubject(await this.#find(UserAuthSessionEntity, ['userId'], req, option));
+        return new UserAuthSessionSubject(await this.#find(UserAuthSessionEntity, ['userId'], req, filter));
 
       case UserAvatarSubject.name:
-        return new UserAvatarSubject(await this.#find(UserAvatarEntity, ['userId'], req, option));
+        return new UserAvatarSubject(await this.#find(UserAvatarEntity, ['userId'], req, filter));
 
       case UserDetailSubject.name:
-        return new UserDetailSubject(await this.#find(UserDetailEntity, ['userId'], req, option));
+        return new UserDetailSubject(await this.#find(UserDetailEntity, ['userId'], req, filter));
 
       case UserDocumentSubject.name:
-        return new UserDocumentSubject(await this.#find(UserDocumentEntity, ['userId'], req, option));
+        return new UserDocumentSubject(await this.#find(UserDocumentEntity, ['userId'], req, filter));
 
       case UserNoteSubject.name:
-        return new UserNoteSubject(await this.#find(UserNoteEntity, ['userId'], req, option));
+        return new UserNoteSubject(await this.#find(UserNoteEntity, ['userId'], req, filter));
 
       case UserNotificationSubject.name:
-        return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, ['userId'], req, option));
+        return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, ['userId'], req, filter));
 
       case UserSettingSubject.name:
-        return new UserSettingSubject(await this.#find(UserSettingEntity, ['userId'], req, option));
+        return new UserSettingSubject(await this.#find(UserSettingEntity, ['userId'], req, filter));
 
       case WalletSubject.name:
-        return new WalletSubject(await this.#find(WalletEntity, ['userId'], req, option));
+        return new WalletSubject(await this.#find(WalletEntity, ['userId'], req, filter));
 
       case WalletTransactionSubject.name:
-        return new WalletTransactionSubject(await this.#find(WalletTransactionEntity, ['userId'], req, option));
+        return new WalletTransactionSubject(await this.#find(WalletTransactionEntity, ['userId'], req, filter));
 
       case WalletTransactionHistorySubject.name:
         return new WalletTransactionHistorySubject(
-          await this.#find(WalletTransactionHistoryEntity, ['userId'], req, option),
+          await this.#find(WalletTransactionHistoryEntity, ['userId'], req, filter),
         );
 
       case WheelSpinSubject.name:
-        return new WheelSpinSubject(await this.#find(WheelSpinEntity, ['userId'], req, option));
+        return new WheelSpinSubject(await this.#find(WheelSpinEntity, ['userId'], req, filter));
 
       default:
         throw new InvalidSubjectException(subject.name);
@@ -183,30 +187,30 @@ export class SubjectFactory {
    * @param target
    * @param select
    * @param req
-   * @param option
+   * @param filter
    * @private
    */
   async #find<T = EntityTarget<ObjectLiteral>>(
     target: EntityTarget<any>,
     select: string[],
     req: AuthenticatedReq,
-    option?: Option,
+    filter?: SubjectFilter,
   ): Promise<T | undefined> {
-    if (!option) {
+    if (!filter) {
       return;
     }
 
-    const value = req[option.in][option.use];
+    const value = req[filter.in][filter.use];
 
     const entity =
       (await this.dataSource
         .createQueryBuilder()
         .from(target, 'e')
         .select(select)
-        .where(`e."${option.findBy.toString()}" = :value`, { value })
+        .where(`e."${filter.findBy.toString()}" = :value`, { value })
         .getRawOne()) ?? {};
 
-    entity[option.findBy] = value;
+    entity[filter.findBy] = value;
     return entity;
   }
 }

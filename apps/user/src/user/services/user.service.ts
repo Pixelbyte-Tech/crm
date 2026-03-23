@@ -16,8 +16,8 @@ import {
 import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { UserCreatedEvent } from '@crm/kafka';
-import { Role, User, UserStatus, UserSettingKey } from '@crm/types';
 import { UserEntity, UserDetailEntity, UserSettingEntity } from '@crm/database';
+import { Role, User, UserStatus, UserDetail, UserSetting, UserSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
@@ -57,7 +57,7 @@ export class UserService {
     const msg = `Fetching user '${userId}'`;
 
     // Find the user by ID
-    const user = await this.userRepo.findOne({ where: { id: userId } });
+    const user = await this.userRepo.findOne({ relations: { detail: true, settings: true }, where: { id: userId } });
     if (!user) {
       this.#logger.error(`${msg} - Failed`);
       throw new NotFoundException(`Failed to find user '${userId}'`);
@@ -72,12 +72,18 @@ export class UserService {
    * @param dto The list dto
    */
   async list(dto: ListUsersDto): Promise<PaginatedResDto<User>> {
+    const qb = this.userRepo.createQueryBuilder('u').orderBy({ createdAt: dto.sortDir });
+
+    if (dto.incDetail) {
+      qb.leftJoinAndSelect(UserDetail, 'd');
+    }
+
+    if (dto.incSettings) {
+      qb.leftJoinAndSelect(UserSetting, 's');
+    }
+
     // Find the resources paginated
-    const traders = await paginate(
-      this.userRepo,
-      { limit: dto.limit, page: dto.page },
-      { order: { createdAt: dto.sortDir } },
-    );
+    const traders = await paginate(qb, { limit: dto.limit, page: dto.page });
 
     return {
       data: traders.items.map(this.userMapper.toUser),
@@ -89,24 +95,24 @@ export class UserService {
 
   /**
    * Creates a new user in the system.
-   * @param dto The dto with the creation data
+   * @param dto The payload dto with the creation data
    */
   async create(dto: CreateUserDto): Promise<NewUserDto> {
     const msg = `Attempting to create user from email '${dto.email}'`;
 
     // Fetch the default settings
     const settings = await this.globalSettingService.fetch();
+    const canDeposit = settings.find((s) => s.key === UserSettingKey.USER_CAN_DEPOSIT)?.value ?? true;
+    const canWithdraw = settings.find((s) => s.key === UserSettingKey.USER_CAN_WITHDRAW)?.value ?? true;
+    const canAutoWithdraw = settings.find((s) => s.key === UserSettingKey.USER_CAN_AUTO_WITHDRAW)?.value ?? false;
+    const maxAutoWithdrawAmount = settings.find((s) => s.key === UserSettingKey.USER_MAX_AUTO_WITHDRAW_AMT)?.value;
 
     // Create the user settings
     const userSettings = new UserSettingEntity();
-    userSettings.canDeposit = Boolean(settings.find((s) => s.key === UserSettingKey.USER_CAN_DEPOSIT)?.value ?? true);
-    userSettings.canWithdraw = Boolean(settings.find((s) => s.key === UserSettingKey.USER_CAN_WITHDRAW)?.value ?? true);
-    userSettings.canAutoWithdraw = Boolean(
-      settings.find((s) => s.key === UserSettingKey.USER_CAN_AUTO_WITHDRAW)?.value ?? false,
-    );
-    userSettings.maxAutoWithdrawAmount = Number(
-      settings.find((s) => s.key === UserSettingKey.USER_MAX_AUTO_WITHDRAW_AMT)?.value ?? 1000,
-    );
+    userSettings.canDeposit = Boolean(canDeposit);
+    userSettings.canWithdraw = Boolean(canWithdraw);
+    userSettings.canAutoWithdraw = Boolean(canAutoWithdraw);
+    userSettings.maxAutoWithdrawAmount = Number(maxAutoWithdrawAmount ?? 1000);
 
     // Create the new user
     const user = await this.userRepo.save({
@@ -130,19 +136,21 @@ export class UserService {
       // Generate a confirmation token and send the email
       const token = await this.authService.generateEmailConfirmationToken(user.id);
 
+      // Build the domain model
+      const domainUser = this.userMapper.toUser(user);
+
       // Trigger the creation event
       this.kafka.emit(
         UserCreatedEvent.type,
         new UserCreatedEvent({
-          userId: user.id,
-          email: user.email,
+          user: domainUser,
           confirmEmailToken: token.token,
           createdAt: DateTime.fromJSDate(user.createdAt).toMillis(),
         }),
       );
 
       this.#logger.log(`${msg} - Complete`);
-      return { user: this.userMapper.toUser(user), tokens: { confirmEmail: token } };
+      return { user: domainUser, tokens: { confirmEmail: token } };
     } catch (err) {
       await this.delete(user.id);
       this.#logger.error(`${msg} - Failed to send confirmation email`, err);
@@ -228,39 +236,40 @@ export class UserService {
       throw new UnprocessableEntityException(`Unable to find user '${userId}'`);
     }
 
-    // Perform the update
-    const result = await this.userDetailRepo.update(userId, {
-      ...(undefined !== dto.birthday ? { birthday: dto.birthday } : {}),
-      ...(undefined !== dto.phone ? { phone: dto.phone } : {}),
-      ...(undefined !== dto.addressLine1 ? { addressLine1: dto.addressLine1 } : {}),
-      ...(undefined !== dto.addressLine2 ? { addressLine2: dto.addressLine2 } : {}),
-      ...(undefined !== dto.city ? { city: dto.city } : {}),
-      ...(undefined !== dto.postcode ? { postcode: dto.postcode } : {}),
-      ...(undefined !== dto.state ? { state: dto.state } : {}),
-      ...(undefined !== dto.country ? { country: dto.country } : {}),
-      ...(undefined !== dto.taxId ? { taxId: dto.taxId } : {}),
-      ...(!isNil(dto.isPoaVerified) ? { isPoaVerified: dto.isPoaVerified } : {}),
-      ...(!isNil(dto.isPoiVerified) ? { isPoiVerified: dto.isPoiVerified } : {}),
-      ...(!isNil(dto.isPowVerified) ? { isPowVerified: dto.isPowVerified } : {}),
-      ...(!isNil(dto.isPoliticallyExposed) ? { isPoliticallyExposed: dto.isPoliticallyExposed } : {}),
-      ...(undefined !== dto.netCapitalUsd ? { netCapitalUsd: dto.netCapitalUsd } : {}),
-      ...(undefined !== dto.annualIncomeUsd ? { annualIncomeUsd: dto.annualIncomeUsd } : {}),
-      ...(undefined !== dto.approxAnnualInvestmentVolumeUsd
-        ? { approxAnnualInvestmentVolumeUsd: dto.approxAnnualInvestmentVolumeUsd }
-        : {}),
-      ...(undefined !== dto.occupation ? { occupation: dto.occupation } : {}),
-      ...(undefined !== dto.employmentStatus ? { employmentStatus: dto.employmentStatus } : {}),
-      ...(undefined !== dto.sourceOfFunds ? { sourceOfFunds: dto.sourceOfFunds } : {}),
-      ...(undefined !== dto.experience ? { experience: dto.experience } : {}),
-    });
+    try {
+      // Perform the update
+      await this.userDetailRepo.save({
+        ...(user.detailId ? { id: user.detailId } : {}),
+        ...(undefined !== dto.birthday ? { birthday: dto.birthday } : {}),
+        ...(undefined !== dto.phone ? { phone: dto.phone } : {}),
+        ...(undefined !== dto.addressLine1 ? { addressLine1: dto.addressLine1 } : {}),
+        ...(undefined !== dto.addressLine2 ? { addressLine2: dto.addressLine2 } : {}),
+        ...(undefined !== dto.city ? { city: dto.city } : {}),
+        ...(undefined !== dto.postcode ? { postcode: dto.postcode } : {}),
+        ...(undefined !== dto.state ? { state: dto.state } : {}),
+        ...(undefined !== dto.country ? { country: dto.country } : {}),
+        ...(undefined !== dto.taxId ? { taxId: dto.taxId } : {}),
+        ...(!isNil(dto.isPoaVerified) ? { isPoaVerified: dto.isPoaVerified } : {}),
+        ...(!isNil(dto.isPoiVerified) ? { isPoiVerified: dto.isPoiVerified } : {}),
+        ...(!isNil(dto.isPowVerified) ? { isPowVerified: dto.isPowVerified } : {}),
+        ...(!isNil(dto.isPoliticallyExposed) ? { isPoliticallyExposed: dto.isPoliticallyExposed } : {}),
+        ...(undefined !== dto.netCapitalUsd ? { netCapitalUsd: dto.netCapitalUsd } : {}),
+        ...(undefined !== dto.annualIncomeUsd ? { annualIncomeUsd: dto.annualIncomeUsd } : {}),
+        ...(undefined !== dto.approxAnnualInvestmentVolumeUsd
+          ? { approxAnnualInvestmentVolumeUsd: dto.approxAnnualInvestmentVolumeUsd }
+          : {}),
+        ...(undefined !== dto.occupation ? { occupation: dto.occupation } : {}),
+        ...(undefined !== dto.employmentStatus ? { employmentStatus: dto.employmentStatus } : {}),
+        ...(undefined !== dto.sourceOfFunds ? { sourceOfFunds: dto.sourceOfFunds } : {}),
+        ...(undefined !== dto.experience ? { experience: dto.experience } : {}),
+      });
 
-    if (result.affected === 0) {
-      this.#logger.error(`${msg} - Failed`);
-      throw new UnprocessableEntityException(`Failed to update user '${userId}' details`);
+      this.#logger.log(`${msg} - Complete`);
+      return this.get(userId);
+    } catch (err) {
+      this.#logger.error(`${msg} - Failed`, err);
+      throw new UnprocessableEntityException(`Failed to update user '${userId}' details`, { cause: err });
     }
-
-    this.#logger.log(`${msg} - Complete`);
-    return this.get(userId);
   }
 
   /**
@@ -278,21 +287,22 @@ export class UserService {
       throw new UnprocessableEntityException(`Unable to find user '${userId}'`);
     }
 
-    // Perform the update
-    const result = await this.userSettingRepo.update(userId, {
-      ...(!isNil(dto.canDeposit) ? { canDeposit: dto.canDeposit } : {}),
-      ...(!isNil(dto.canWithdraw) ? { canWithdraw: dto.canWithdraw } : {}),
-      ...(!isNil(dto.canAutoWithdraw) ? { canAutoWithdraw: dto.canAutoWithdraw } : {}),
-      ...(undefined !== dto.maxAutoWithdrawAmount ? { maxAutoWithdrawAmount: dto.maxAutoWithdrawAmount } : {}),
-    });
+    try {
+      // Perform the update
+      await this.userSettingRepo.save({
+        ...(user.settingsId ? { id: user.settingsId } : {}),
+        ...(!isNil(dto.canDeposit) ? { canDeposit: dto.canDeposit } : {}),
+        ...(!isNil(dto.canWithdraw) ? { canWithdraw: dto.canWithdraw } : {}),
+        ...(!isNil(dto.canAutoWithdraw) ? { canAutoWithdraw: dto.canAutoWithdraw } : {}),
+        ...(undefined !== dto.maxAutoWithdrawAmount ? { maxAutoWithdrawAmount: dto.maxAutoWithdrawAmount } : {}),
+      });
 
-    if (result.affected === 0) {
-      this.#logger.error(`${msg} - Failed`);
-      throw new UnprocessableEntityException(`Failed to update user '${userId}' settings`);
+      this.#logger.log(`${msg} - Complete`);
+      return this.get(userId);
+    } catch (err) {
+      this.#logger.error(`${msg} - Failed`, err);
+      throw new UnprocessableEntityException(`Failed to update user '${userId}' settings`, { cause: err });
     }
-
-    this.#logger.log(`${msg} - Complete`);
-    return this.get(userId);
   }
 
   /**

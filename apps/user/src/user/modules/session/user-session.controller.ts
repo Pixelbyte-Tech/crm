@@ -31,7 +31,7 @@ export class UserSessionController {
   /**
    * Lists all sessions for a user based on the user id provided
    * @param userId The user id to fetch
-   * @param dto The dto
+   * @param dto The payload dto
    */
   @Auth(Action.READ, UserAuthSessionSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: UserSession, isPaginated: true })

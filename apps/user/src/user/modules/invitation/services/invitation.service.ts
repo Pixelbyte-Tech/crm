@@ -1,13 +1,12 @@
-import { DateTime } from 'luxon';
-import { IsNull, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import {
   Logger,
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
   InternalServerErrorException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 
 import { PaginatedResDto } from '@crm/http';
@@ -46,32 +45,20 @@ export class InvitationService {
       throw new UnprocessableEntityException('Inviting user not found');
     }
 
-    let invitation: Invitation;
-
     try {
-      // Create the invitation
-      invitation = await this.#createInvitation(dto.email, dto.roles);
-    } catch (err) {
-      this.#logger.error(`${msg}. Unable to create the invitation - Failed`, err);
-      throw new InternalServerErrorException('Failed to create the invitation');
-    }
-
-    try {
-      // Send the invitation email and mark as sent
-      // todo send invitation email
-      await this.#markInvitationSent(invitation.id);
-
+      // Create the invitation (sent by notification ms)
+      await this.#createInvitation(dto.email, dto.roles);
       this.#logger.log(`${msg} - Complete`);
       return true;
     } catch (err) {
-      this.#logger.error(`${msg}. Unable to send invitation email - Failed`, err);
-      throw new InternalServerErrorException('Failed to send invitation email');
+      this.#logger.error(`${msg}. Unable to create the invitation - Failed`, err);
+      throw new InternalServerErrorException('Failed to create the invitation');
     }
   }
 
   /**
    * Lists all invitations
-   * @param dto The dto with options to filter the results by.
+   * @param dto The payload dto with options to filter the results by.
    */
   async listInvitations(dto: ListInvitationsDto): Promise<PaginatedResDto<Invitation>> {
     // Find all invitations
@@ -109,9 +96,11 @@ export class InvitationService {
     }
 
     try {
-      // Send the invitation email and mark as sent
-      // todo send invitation email
-      await this.#markInvitationSent(invitation.id);
+      // Resend the invitation email (handled by notification ms)
+      await this.invitationRepo.save({
+        id: invitation.id,
+        status: InvitationStatus.RESEND_PENDING,
+      });
 
       this.#logger.log(`${msg} - Complete`);
       return true;
@@ -222,24 +211,6 @@ export class InvitationService {
   }
 
   /**
-   * Marks an invitation as sent by updating the firstSentAt and lastSentAt timestamps.
-   * @param invitationId The id of the invitation to mark as sent
-   */
-  async #markInvitationSent(invitationId: string): Promise<void> {
-    const result = await this.invitationRepo.update(
-      { id: invitationId, firstSentAt: IsNull(), status: InvitationStatus.PENDING },
-      { firstSentAt: DateTime.utc().toJSDate() },
-    );
-
-    if (!result.affected || result.affected === 0) {
-      await this.invitationRepo.update(
-        { id: invitationId, status: InvitationStatus.PENDING },
-        { lastSentAt: DateTime.utc().toJSDate() },
-      );
-    }
-  }
-
-  /**
    * Creates a new invitation.
    * @param email The email of the invited user
    * @param roles The roles to assign to the user
@@ -249,7 +220,6 @@ export class InvitationService {
     const existingInvitation = await this.invitationRepo.findOne({
       where: { email, status: InvitationStatus.PENDING },
     });
-
     if (existingInvitation) {
       return this.invitationMapper.toInvitation(existingInvitation);
     }

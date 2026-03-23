@@ -1,10 +1,10 @@
+import { User } from '@crm/types';
+
 export interface UserCreatedDto {
-  /** The unique identifier of the user */
-  userId: string;
-  /** The email address of the user */
-  email: string;
+  /** The user */
+  user: User;
   /** The token the user needs to use in order to confirm their email */
   confirmEmailToken: string;
-  /** The date the integration was created (UTC millisecond timestamp) */
+  /** The timestamp in (UTC millisecond timestamp) */
   createdAt: number;
 }

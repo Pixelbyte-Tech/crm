@@ -7,7 +7,7 @@ import { AuthStrategy } from '@crm/types';
 import { UserStatusGuard } from '../guards';
 import { Can } from '../modules/casl/decorators';
 import { CanGuard } from '../modules/casl/guards';
-import { Action, Option, Subject } from '../modules/casl/types';
+import { Action, Subject, SubjectFilter } from '../modules/casl/types';
 
 // Overload 1: Only strategies parameter
 export function Auth(strategies?: AuthStrategy[]): ClassDecorator & MethodDecorator;
@@ -16,7 +16,7 @@ export function Auth(strategies?: AuthStrategy[]): ClassDecorator & MethodDecora
 export function Auth<T extends Type<Subject>>(
   action: Action,
   subject: T,
-  option?: Option<T>,
+  filter?: SubjectFilter<T>,
   strategies?: AuthStrategy[],
 ): ClassDecorator & MethodDecorator;
 
@@ -24,7 +24,7 @@ export function Auth<T extends Type<Subject>>(
 export function Auth<T extends Type<Subject>>(
   actionOrStrategies?: Action | AuthStrategy[],
   subject?: T,
-  option?: Option<T>,
+  filter?: SubjectFilter<T>,
   strategies: AuthStrategy[] = [AuthStrategy.JWT],
 ): ClassDecorator & MethodDecorator {
   let action: Action | undefined;
@@ -46,8 +46,8 @@ export function Auth<T extends Type<Subject>>(
   items.push(UseGuards(UserStatusGuard));
 
   // CASL ability guard
-  if (action && subject && option) {
-    items.push(Can(action, subject, option));
+  if (action && subject) {
+    items.push(Can(action, subject, filter));
     items.push(UseGuards(CanGuard));
   }
 

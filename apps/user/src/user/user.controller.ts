@@ -1,11 +1,11 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
 
-import { User } from '@crm/types';
 import { OpenApi } from '@crm/swagger';
+import { Role, User } from '@crm/types';
 import { PaginatedResDto } from '@crm/http';
 import { UserIdValidator } from '@crm/validation';
-import { Auth, Action, UserSubject } from '@crm/auth';
+import { Auth, Action, UserSubject, AuthenticatedReq } from '@crm/auth';
 
 import { UserService } from './services';
 import {
@@ -36,7 +36,7 @@ export class UserController {
 
   /**
    * Lists all users in the system
-   * @param dto The dto with options to filter the results by.
+   * @param dto The payload dto with options to filter the results by.
    */
   @Auth(Action.READ, UserSubject)
   @OpenApi({ type: User, isPaginated: true })
@@ -47,7 +47,7 @@ export class UserController {
 
   /**
    * Create a new user
-   * @param dto The dto
+   * @param dto The payload dto
    */
   @OpenApi({ type: NewUserDto })
   @Post()
@@ -58,7 +58,8 @@ export class UserController {
   /**
    * Updates a user by id
    * @param userId The user id to update
-   * @param dto The dto
+   * @param dto The payload dto
+   * @param req The authenticated request
    */
   @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
@@ -66,9 +67,12 @@ export class UserController {
   public async update(
     @Param('userId', UserIdValidator) userId: string,
     @Body() dto: UpdateUserDto,
+    @Req() req: AuthenticatedReq,
   ): Promise<{ data: User }> {
     // Only allow admins to update the status of any user
-    // todo do not allow users to update their own status
+    if (req.user.roles[0] === Role.USER) {
+      dto.status = undefined;
+    }
 
     return { data: await this.service.update(userId, dto) };
   }
@@ -76,7 +80,7 @@ export class UserController {
   /**
    * Updates a user's settings by user id
    * @param userId The user id to update
-   * @param dto The dto
+   * @param dto The payload dto
    */
   @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
@@ -91,7 +95,7 @@ export class UserController {
   /**
    * Updates a user's details by user id
    * @param userId The user id to update
-   * @param dto The dto
+   * @param dto The payload dto
    */
   @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })

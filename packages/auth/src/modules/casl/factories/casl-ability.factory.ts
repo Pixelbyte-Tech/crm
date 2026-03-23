@@ -4,7 +4,6 @@ import { MongoAbility, AbilityBuilder, ExtractSubjectType, createMongoAbility } 
 import { Role } from '@crm/types';
 
 import { Action, Subject, CaslUser } from '../types';
-import { UserDetailSubject } from '../subjects/user-detail.subject';
 import {
   TagSubject,
   UserSubject,
@@ -15,6 +14,7 @@ import {
   ChannelSubject,
   AuditLogSubject,
   WheelSpinSubject,
+  UserDetailSubject,
   UserAvatarSubject,
   InvitationSubject,
   UserSettingSubject,
@@ -137,11 +137,12 @@ export class CaslAbilityFactory {
 
     // Standard Users
     can(Action.READ, ExchangeRateSubject);
+    can(Action.READ, TradingEventSubject);
+
     can(Action.READ, LoyaltySubject, { userId: user.userId });
     can(Action.READ, LoyaltyHistorySubject, { userId: user.userId });
     can(Action.READ, PaymentTransactionSubject, { userId: user.userId });
     can(Action.MANAGE, TradingAccountSubject, { userId: user.userId });
-    can(Action.READ, TradingEventSubject);
     can(Action.MANAGE, UserSubject, { id: user.userId });
     can(Action.READ, UserAuthSessionSubject, { userId: user.userId });
     can(Action.MANAGE, UserAvatarSubject, { userId: user.userId });

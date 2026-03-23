@@ -114,21 +114,11 @@ export class AuthController {
   }
 
   /**
-   * Sends a password reset option to the email address described in the endpoint
-   * @param dto The dto payload
-   */
-  @OpenApi()
-  @Post('forgot-password')
-  public async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<void> {
-    await this.authService.forgotPassword(dto.email);
-  }
-
-  /**
    * Resets the user's password using the token sent to their email address and the new password
    * @param dto The dto payload
    */
   @OpenApi()
-  @Post('forgot-password/reset')
+  @Post('reset-password')
   public async resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     await this.authService.resetPassword(dto.token, dto.password);
   }

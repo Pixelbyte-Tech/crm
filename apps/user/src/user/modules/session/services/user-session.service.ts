@@ -50,7 +50,7 @@ export class UserSessionService {
    * @param userId The id of the user to fetch
    */
   async latest(userId: string): Promise<UserSession> {
-    const msg = `Fetching latest session for user '${userId}'`;
+    const msg = `Fetching latest complete session for user '${userId}'`;
 
     // Find the session
     const session = await this.userSessionRepo.findOne({

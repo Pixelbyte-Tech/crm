@@ -25,7 +25,7 @@ export class NotificationService {
    * @param dto Details for sending the notification
    */
   async scheduleForgotPassword(dto: ForgotPasswordDto): Promise<boolean> {
-    const msg = `Scheduling forgot password for '${dto.email}'`;
+    const msg = `Scheduling forgot password notification for '${dto.email}'`;
     this.#logger.log(`${msg} - Start`);
 
     // Find the user by email

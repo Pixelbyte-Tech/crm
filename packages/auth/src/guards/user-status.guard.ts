@@ -1,18 +1,25 @@
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Scope, Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 
 import { UserStatus } from '@crm/types';
+import { UserEntity } from '@crm/database';
 
 import { AuthenticatedReq } from '../types';
-import { AuthHelperService } from '../services';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserStatusGuard implements CanActivate {
-  constructor(private readonly helper: AuthHelperService) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
+  ) {}
 
-  public canActivate(ctx: ExecutionContext): boolean {
+  async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request = ctx.switchToHttp().getRequest<AuthenticatedReq>();
-    if (UserStatus.ACTIVE !== this.helper.userStatus(request.user.userId)) {
-      throw new ForbiddenException(`Unauthorized - user with id '${request.user.userId}' is inactive`);
+
+    const user = await this.userRepo.findOne({ select: { status: true }, where: { id: request.user.userId } });
+    if (UserStatus.ACTIVE !== user?.status) {
+      throw new ForbiddenException(`Unauthorized - user with id '${request.user.userId}' is inactive or suspended`);
     }
 
     return true;

@@ -171,29 +171,6 @@ export class AuthService {
   }
 
   /**
-   * Sends a password reset email to the user
-   * @param email The user's email address
-   */
-  async forgotPassword(email: string): Promise<boolean> {
-    const msg = `Sending forgot password email to ${email}`;
-    this.#logger.log(`${msg} - Start`);
-
-    // Check if the user exists and the password is correct
-    const user = await this.userRepo.findOne({ where: { email } });
-    if (!user) {
-      this.#logger.log(`${msg} - Failed: user not found`);
-      throw new UnprocessableEntityException('Invalid email or password');
-    }
-
-    const token = await this.generatePasswordResetToken(user.id);
-    console.log(token);
-    //todo send password reset email
-
-    this.#logger.log(`${msg} - Complete`);
-    return true;
-  }
-
-  /**
    * Resets the user's password
    * @param token The required email confirmation token
    * @param password The new password to set

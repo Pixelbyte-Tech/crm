@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { Type, Logger, Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
 import { AuthenticatedReq } from '../../../types';
-import { Action, Option, Subject } from '../types';
+import { Action, Subject, SubjectFilter } from '../types';
 import { SubjectFactory, CaslAbilityFactory } from '../factories';
 
 export const CAN_METADATA_KEY = 'casl:can';
@@ -12,7 +12,7 @@ export const CAN_METADATA_KEY = 'casl:can';
  * defined by the @Can decorator
  * @param action The action to check
  * @param subject The subject making the action
- * @param option The instructions on how to find the subject from the request context
+ * @param filter The instructions on how to find the subject from the request context
  */
 @Injectable()
 export class CanGuard implements CanActivate {
@@ -36,7 +36,7 @@ export class CanGuard implements CanActivate {
     const canMetadata = this.reflector.getAllAndOverride<{
       action: Action;
       subject: Type<Subject>;
-      option?: Option;
+      filter?: SubjectFilter;
     }>(CAN_METADATA_KEY, [contextHandler, contextClass]);
 
     // If no metadata, allow access
@@ -50,7 +50,7 @@ export class CanGuard implements CanActivate {
 
     // Check the ability against CASL
     const ability = this.caslAbilityFactory.createForUser(req.user);
-    const subject = await this.subjectFactory.create(req, canMetadata.subject, canMetadata.option);
+    const subject = await this.subjectFactory.create(req, canMetadata.subject, canMetadata.filter);
 
     // Log the check params
     this.#logger.debug(`Checking action '${canMetadata.action}' on subject '${canMetadata.subject.name}'`, subject);
