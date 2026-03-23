@@ -10,6 +10,8 @@
     "lint": "eslint \"{src,test}/**/*.ts\""
   },
   "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.1014.0",
+    "@crm/auth": "workspace:^",
     "@crm/database": "workspace:^",
     "@crm/http": "workspace:^",
     "@crm/logger": "workspace:^",
@@ -37,6 +39,7 @@
     "luxon": "^3.7.2",
     "nestjs-i18n": "^10.6.0",
     "nestjs-typeorm-paginate": "^4.1.0",
+    "nodemailer": "^8.0.3",
     "react": "^19.2.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -48,6 +51,7 @@
     "@types/express": "5.0.6",
     "@types/lodash": "^4.17.21",
     "@types/luxon": "^3.7.1",
+    "@types/nodemailer": "^7.0.11",
     "@types/react": "^19.2.14"
   },
   "jest": {

@@ -15,7 +15,7 @@ export class SesTransport implements TransportService {
   #client: Transporter<SESTransport.SentMessageInfo, SESTransport.Options>;
 
   /**
-   * Bootstrap the SES client if not already initialized
+   * Bootstrap the SES client if not already initialised
    */
   #bootstrapClient(): void {
     if (this.#client) {

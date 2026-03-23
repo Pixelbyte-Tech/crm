@@ -3,4 +3,5 @@ export enum Potency {
   B = 'b',
   M = 'm',
   K = 'k',
+  T = 't',
 }

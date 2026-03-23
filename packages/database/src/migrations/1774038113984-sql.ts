@@ -311,7 +311,7 @@ export class Sql1774038113984 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_4956f7d428afad68fdac972421" ON "wallet" ("companyId") `);
     await queryRunner.query(`CREATE INDEX "IDX_35472b1fe48b6330cd34970956" ON "wallet" ("userId") `);
     await queryRunner.query(`CREATE TYPE "public"."trading_event_volatility_enum" AS ENUM('low', 'medium', 'high')`);
-    await queryRunner.query(`CREATE TYPE "public"."trading_event_potency_enum" AS ENUM('zero', 'b', 'm', 'k')`);
+    await queryRunner.query(`CREATE TYPE "public"."trading_event_potency_enum" AS ENUM('zero', 'b', 'm', 'k', 't')`);
     await queryRunner.query(
       `CREATE TYPE "public"."trading_event_period_enum" AS ENUM('day', 'week', 'month', 'quarter', 'year')`,
     );

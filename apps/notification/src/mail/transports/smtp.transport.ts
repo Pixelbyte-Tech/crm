@@ -14,7 +14,7 @@ export class SmtpTransport implements TransportService {
   #client: Transporter<SMTPTransport.SentMessageInfo, SMTPTransport.Options>;
 
   /**
-   * Bootstrap the SMTP client if not already initialized
+   * Bootstrap the SMTP client if not already initialised
    */
   #bootstrapClient(): void {
     if (this.#client) {

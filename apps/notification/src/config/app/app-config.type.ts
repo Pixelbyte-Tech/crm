@@ -4,4 +4,5 @@ export type AppConfig = {
   frontendUrl: string;
   redisHost: string;
   redisPort: number;
+  kafkaBrokers: string;
 };
