@@ -14,7 +14,7 @@ import { InvitationService } from '../user/modules/invitation/services';
 import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, RejectInvitationDto } from './dto/in';
 
 @ApiTags('Auth')
-@ApiExtraModels(EmailLoginDto, ConfirmEmailDto, ResetPasswordDto)
+@ApiExtraModels(EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, User)
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(
