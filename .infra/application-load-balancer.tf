@@ -105,8 +105,8 @@ resource "aws_lb_target_group" "analytics_tg" {
   }
 }
 
-resource "aws_lb_target_group" "broker_tg" {
-  name        = "crm-${local.env}-broker-tg"
+resource "aws_lb_target_group" "crm_tg" {
+  name        = "crm-${local.env}-crm-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = module.vpc.vpc_id

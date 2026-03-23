@@ -69,7 +69,7 @@ async function bootstrap() {
 
   // Start the application
   await app.listen(3000);
-  Logger.log(`API listening on: http://localhost:3005/docs#/`);
+  Logger.log(`API listening on: http://localhost:3006/docs#/`);
 }
 
 bootstrap().then().catch(console.error);

@@ -24,7 +24,7 @@ resource "aws_service_discovery_service" "analytics" {
   }
 }
 
-resource "aws_service_discovery_service" "broker" {
+resource "aws_service_discovery_service" "crm" {
   name = "broker"
 
   dns_config {

@@ -29,7 +29,7 @@ services:
   ##########################################
   analytics:
     profiles: [ 'dev' ]
-    image: 'cubejs/cube:v1.0.13'
+    image: 'cubejs/cube:latest'
     working_dir: /app/apps/analytics
     platform: linux/amd64
     ports:
@@ -41,30 +41,6 @@ services:
       - './apps/analytics/.env'
     volumes:
       - ./apps/analytics:/app/apps/analytics
-    networks:
-      - crm-network
-  ############################
-  broker:
-    profiles: [ 'dev' ]
-    <<: *nest_service
-    working_dir: /app/apps/broker
-    command: nest start --watch --debug 0.0.0.0:9229
-    build:
-      target: 'development'
-      args:
-        - TARGET_APP=broker
-    ports:
-      - '3001:3000'
-      - '30001:9229'
-    depends_on:
-      - db-migrate
-      - crm-postgres
-      - crm-redis
-      - crm-kafka
-      - crm-gateway
-    volumes:
-      - ./apps/broker:/app/apps/broker
-      - ./packages:/app/packages
     networks:
       - crm-network
   ############################
@@ -112,6 +88,30 @@ services:
     networks:
       - crm-network
   ############################
+  crm:
+    profiles: [ 'dev' ]
+    <<: *nest_service
+    working_dir: /app/apps/crm
+    command: nest start --watch --debug 0.0.0.0:9229
+    build:
+      target: 'development'
+      args:
+        - TARGET_APP=crm
+    ports:
+      - '3004:3000'
+      - '30004:9229'
+    depends_on:
+      - db-migrate
+      - crm-postgres
+      - crm-redis
+      - crm-kafka
+      - crm-gateway
+    volumes:
+      - ./apps/crm:/app/apps/crm
+      - ./packages:/app/packages
+    networks:
+      - crm-network
+  ############################
   frontend:
     profiles: [ 'dev' ]
     <<: *next_service
@@ -138,8 +138,8 @@ services:
       args:
         - TARGET_APP=notification
     ports:
-      - '3004:3000'
-      - '30004:9229'
+      - '3005:3000'
+      - '30005:9229'
     depends_on:
       - db-migrate
       - maildev
@@ -163,8 +163,8 @@ services:
       args:
         - TARGET_APP=payment
     ports:
-      - '3005:3000'
-      - '30005:9229'
+      - '3006:3000'
+      - '30006:9229'
     depends_on:
       - db-migrate
       - crm-postgres
@@ -187,8 +187,8 @@ services:
       args:
         - TARGET_APP=prop
     ports:
-      - '3006:3000'
-      - '30006:9229'
+      - '3007:3000'
+      - '30007:9229'
     depends_on:
       - db-migrate
       - crm-postgres
@@ -211,8 +211,8 @@ services:
       args:
         - TARGET_APP=user
     ports:
-      - '3007:3000'
-      - '30007:9229'
+      - '3008:3000'
+      - '30008:9229'
     depends_on:
       - db-migrate
       - crm-postgres
@@ -326,7 +326,7 @@ services:
       target: 'base'
     command: 'echo ''Specify your command like "pnpm db:migrate:up" in the docker-compose command'''
     env_file:
-      - apps/broker/.env
+      - apps/crm/.env
     volumes:
       - ./:/app
     depends_on:
@@ -339,7 +339,7 @@ services:
       target: 'base'
     command: pnpm --filter @crm/database db:migrate:up
     env_file:
-      - apps/broker/.env
+      - apps/crm/.env
     volumes:
       - ./:/app
     depends_on:

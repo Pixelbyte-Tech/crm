@@ -6,7 +6,7 @@ import { isUUID, ValidatorConstraint, ValidatorConstraintInterface } from 'class
 import { UserNoteEntity } from '@crm/database';
 
 @Injectable()
-@ValidatorConstraint({ name: 'userNoteId', async: true })
+@ValidatorConstraint({ name: 'noteId', async: true })
 export class UserNoteIdValidator implements ValidatorConstraintInterface, PipeTransform {
   constructor(
     @InjectRepository(UserNoteEntity)
@@ -24,12 +24,12 @@ export class UserNoteIdValidator implements ValidatorConstraintInterface, PipeTr
 
   async #exec(value: string): Promise<boolean> {
     if (!isUUID(value)) {
-      throw new BadRequestException('userNoteId must be a valid uuid');
+      throw new BadRequestException('noteId must be a valid uuid');
     }
 
     const entity = await this.repo.findOne({ where: { id: value } });
     if (!entity) {
-      throw new BadRequestException(`userNoteId must reference an existing entity, ${value} provided.`);
+      throw new BadRequestException(`noteId must reference an existing entity, ${value} provided.`);
     }
 
     return true;

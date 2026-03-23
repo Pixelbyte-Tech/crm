@@ -1,0 +1,16 @@
+import { Validate, IsOptional } from 'class-validator';
+
+import { PaginatedReqDto } from '@crm/http';
+import { toBoolean, UserIdValidator } from '@crm/validation';
+
+export class ListNotesDto extends PaginatedReqDto {
+  /** Filter by only pinned notes */
+  @IsOptional()
+  @Validate(toBoolean)
+  pinned?: boolean;
+
+  /** Filter by author */
+  @IsOptional()
+  @Validate(UserIdValidator)
+  authorId?: string;
+}

@@ -13,6 +13,7 @@ import databaseConfig from './config/database/database.config';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { NoteModule } from './note/note.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
 import { AppConfig } from './config/app/app-config.type';
@@ -82,6 +83,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     HealthModule,
     InvitationModule,
+    NoteModule,
     SwaggerModule,
     UserModule,
     UserSessionModule,
