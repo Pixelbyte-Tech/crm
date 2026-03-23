@@ -7,9 +7,9 @@ import { UserEntity, InvitationEntity } from '@crm/database';
 
 import { InvitationMapper } from './mappers';
 import { ExpireInvitationsProcessor } from './processors';
+import { AppConfig } from '../config/app/app-config.type';
 import { JobsService, InvitationService } from './services';
 import { InvitationController } from './invitation.controller';
-import { AppConfig } from '../../../config/app/app-config.type';
 
 @Module({
   imports: [

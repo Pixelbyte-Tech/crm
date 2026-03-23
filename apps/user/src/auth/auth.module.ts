@@ -11,6 +11,8 @@ import { AuthService } from './services';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthConfig } from './config/auth-config.type';
+import { InvitationModule } from '../invitation/invitation.module';
+import { UserSessionModule } from '../session/user-session.module';
 
 @Module({
   imports: [
@@ -22,8 +24,10 @@ import { AuthConfig } from './config/auth-config.type';
       }),
     }),
     ConfigModule.forFeature(authConfig),
-    TypeOrmModule.forFeature([UserEntity]),
+    InvitationModule,
     forwardRef(() => UserModule),
+    UserSessionModule,
+    TypeOrmModule.forFeature([UserEntity]),
   ],
   providers: [AuthService],
   controllers: [AuthController],

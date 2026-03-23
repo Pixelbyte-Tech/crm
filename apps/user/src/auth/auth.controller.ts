@@ -10,7 +10,7 @@ import { Auth, RefreshReq, AuthenticatedReq } from '@crm/auth';
 
 import { AuthService } from './services';
 import { UserLoginResDto } from './dto/out';
-import { InvitationService } from '../user/modules/invitation/services';
+import { InvitationService } from '../invitation/services';
 import { EmailLoginDto, ConfirmEmailDto, ResetPasswordDto, RejectInvitationDto } from './dto/in';
 
 @ApiTags('Auth')

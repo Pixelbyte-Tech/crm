@@ -16,6 +16,8 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
 import { AppConfig } from './config/app/app-config.type';
+import { InvitationModule } from './invitation/invitation.module';
+import { UserSessionModule } from './session/user-session.module';
 import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
@@ -79,8 +81,10 @@ import { DatabaseConfig } from './config/database/database-config.type';
       }),
     }),
     HealthModule,
+    InvitationModule,
     SwaggerModule,
     UserModule,
+    UserSessionModule,
     ValidationModule,
   ],
 })

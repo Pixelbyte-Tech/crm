@@ -5,7 +5,7 @@ import { Logger, Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationTemplate } from '@crm/types';
 import { UserEntity, UserNotificationEntity } from '@crm/database';
 
-import { AuthService } from '../../../../auth/services';
+import { AuthService } from '../../auth/services';
 import { ConfirmEmailDto, ForgotPasswordDto } from '../dto';
 
 @Injectable()

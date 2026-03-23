@@ -21,8 +21,8 @@ import { EmailLoginDto } from '../dto/in';
 import { UserLoginResDto } from '../dto/out';
 import { UserMapper } from '../../user/mappers';
 import { AuthConfig } from '../config/auth-config.type';
-import { UserSessionService } from '../../user/modules/session/services';
-import { InvitationService } from '../../user/modules/invitation/services';
+import { UserSessionService } from '../../session/services';
+import { InvitationService } from '../../invitation/services';
 
 @Injectable()
 export class AuthService {
