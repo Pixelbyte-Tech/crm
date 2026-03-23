@@ -10,7 +10,7 @@ import { UserSettingEntity } from '../../entities/user-setting.entity';
 
 @Injectable()
 export class UserSeedService {
-  constructor(@InjectRepository(UserEntity) private userRepo: Repository<UserEntity>) {}
+  constructor(@InjectRepository(UserEntity) private repo: Repository<UserEntity>) {}
 
   readonly #logger = new Logger(this.constructor.name);
 
@@ -18,7 +18,7 @@ export class UserSeedService {
     this.#logger.log('Starting users seed');
 
     try {
-      const count = await this.userRepo.count({ where: { email: STANDARD_USER_EMAIL } });
+      const count = await this.repo.count({ where: { email: STANDARD_USER_EMAIL } });
       if (count === 0) {
         const user = new UserEntity();
         user.firstName = 'John';
@@ -44,13 +44,13 @@ export class UserSeedService {
 
         user.settings = userSettings;
 
-        await this.userRepo.save(user);
+        await this.repo.save(user);
         this.#logger.log(`Seeded user '${STANDARD_USER_EMAIL}'`);
       } else {
         this.#logger.log('User already seeded, skipping');
       }
 
-      const countSuper = await this.userRepo.count({ where: { email: ADMIN_USER_EMAIL } });
+      const countSuper = await this.repo.count({ where: { email: ADMIN_USER_EMAIL } });
       if (countSuper === 0) {
         const user = new UserEntity();
         user.firstName = 'John';
@@ -76,7 +76,7 @@ export class UserSeedService {
 
         user.settings = userSettings;
 
-        await this.userRepo.save(user);
+        await this.repo.save(user);
         this.#logger.log(`Seeded user '${ADMIN_USER_EMAIL}'`);
       }
     } catch (err) {

@@ -8,6 +8,7 @@ export class Sql1783980000000 implements MigrationInterface {
     'alert',
     'audit_log',
     'user_auth_session',
+    'user_in_app_notification',
     'user_notification',
     'wallet_transaction',
     'wallet_transaction_history',
@@ -15,7 +16,7 @@ export class Sql1783980000000 implements MigrationInterface {
   ];
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    while (this.#year < 2035) {
+    while (this.#year < 2040) {
       while (this.#month < 13) {
         const date = DateTime.now().set({ year: this.#year, month: this.#month });
 

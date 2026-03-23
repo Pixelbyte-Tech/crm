@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserSeedService } from './services/user-seed.service';
+import { GlobalSettingSeedService } from './services/global-setting-seed.service';
 
 import { UserEntity } from '../entities/user.entity';
+import { GlobalSettingEntity } from '../entities/global-setting.entity';
 
 @Module({
   imports: [
@@ -18,8 +20,8 @@ import { UserEntity } from '../entities/user.entity';
         entities: [__dirname + '/../entities/**/*.entity{.ts,.js}'],
       }),
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([GlobalSettingEntity, UserEntity]),
   ],
-  providers: [UserSeedService],
+  providers: [GlobalSettingSeedService, UserSeedService],
 })
 export class SeedModule {}
