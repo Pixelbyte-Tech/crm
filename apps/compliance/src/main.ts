@@ -1,3 +1,5 @@
+import { randomBytes } from 'node:crypto';
+
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
@@ -9,9 +11,9 @@ import { EcsLogger, RestLogInterceptor } from '@crm/logger';
 import { SwaggerModule, SwaggerService } from '@crm/swagger';
 
 import { AppModule } from './app.module';
-import { AppConfig } from './config/app/app-config.type';
 // Initialise Sentry instrumentation
 import './insturment';
+import { AppConfig } from './config/app/app-config.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -48,7 +50,7 @@ async function bootstrap() {
           .getOrThrow('app.kafkaBrokers', { infer: true })
           .split(',')
           .map((i: string) => i.trim()),
-        clientId: config.getOrThrow('app.appName', { infer: true }),
+        clientId: `${config.getOrThrow('app.appName', { infer: true })}-${randomBytes(4).toString('hex')}`,
         retry: { retries: 20 },
       },
       consumer: {

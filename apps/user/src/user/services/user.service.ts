@@ -25,6 +25,7 @@ import { GlobalSettingService } from './global-setting.service';
 
 import { UserMapper } from '../mappers';
 import { AuthService } from '../../auth/services';
+import { NotificationService } from '../../notification/services';
 import {
   NewUserDto,
   ListUsersDto,
@@ -39,6 +40,7 @@ export class UserService {
   constructor(
     private readonly authService: AuthService,
     private readonly userMapper: UserMapper,
+    private readonly notificationService: NotificationService,
     private readonly globalSettingService: GlobalSettingService,
     @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserEntity)
@@ -197,7 +199,7 @@ export class UserService {
 
     // Perform the update
     const result = await this.userRepo.update(userId, {
-      ...(dto.email ? { email: dto.email } : {}),
+      ...(dto.email ? { email: dto.email, isEmailVerified: false, emailVerifiedAt: null } : {}),
       ...(dto.password ? { password: Cryptography.hash(dto.password) } : {}),
       ...(dto.firstName ? { firstName: dto.firstName } : {}),
       ...(dto.middleName ? { middleName: dto.middleName } : {}),
@@ -222,6 +224,11 @@ export class UserService {
 
     // Build the domain user
     const domainUser = await this.get(userId);
+
+    // If the email is changed we need to ask for a confirmation again
+    if (dto.email) {
+      await this.notificationService.scheduleConfirmEmail({ email: dto.email });
+    }
 
     // Trigger the update event
     this.kafka.emit(

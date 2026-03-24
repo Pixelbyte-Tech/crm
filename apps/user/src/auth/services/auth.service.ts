@@ -160,10 +160,10 @@ export class AuthService {
     }
 
     try {
-      await this.userRepo.update(userId, { isEmailVerified: true });
+      const result = await this.userRepo.update(userId, { isEmailVerified: true });
       this.#logger.log(`${msg} - Complete`);
 
-      return true;
+      return (result.affected ?? 0) > 0;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
       throw new InternalServerErrorException('Failed to update user email confirmation status');

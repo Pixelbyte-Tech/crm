@@ -45,7 +45,6 @@ import { DatabaseConfig } from './config/database/database-config.type';
               },
               clientId: `${c.getOrThrow('app.appName', { infer: true })}-${randomBytes(4).toString('hex')}`,
               retry: { retries: 20 },
-              producerOnlyMode: false, // Important: ensure this is false
               consumer: {
                 groupId: c.getOrThrow('app.appName', { infer: true }),
                 allowAutoTopicCreation: true,

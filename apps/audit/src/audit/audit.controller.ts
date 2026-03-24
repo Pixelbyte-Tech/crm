@@ -1,17 +1,20 @@
 import { DateTime } from 'luxon';
-import { Logger, Controller } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Ctx, Payload, EventPattern, KafkaContext } from '@nestjs/microservices';
+import { Logger, Inject, Controller } from '@nestjs/common';
+import { Ctx, Payload, ClientKafka, EventPattern, KafkaContext } from '@nestjs/microservices';
 
 import { AuditAction, AuditResult, AuditTarget } from '@crm/types';
-import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
+import { KafkaDlq, UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
 
 import { AuditService } from './services/audit.service';
 
 @Controller()
 @ApiExcludeController()
 export class AuditController {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(
+    @Inject('KAFKA') private readonly kafka: ClientKafka,
+    private readonly auditService: AuditService,
+  ) {}
 
   /** The logger instance for this class */
   readonly #logger = new Logger(this.constructor.name);
@@ -22,6 +25,8 @@ export class AuditController {
    * @param context The kafka context
    */
   @EventPattern(UserCreatedEvent.type)
+  @EventPattern(`${UserCreatedEvent.type}.retry`)
+  @KafkaDlq({ topic: UserCreatedEvent.type })
   async onUserCreated(@Payload() e: UserCreatedEvent, @Ctx() context: KafkaContext): Promise<void> {
     const msg = `Received ${UserCreatedEvent.name} for '${e.data?.user.id ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
@@ -46,7 +51,8 @@ export class AuditController {
    * @param e The event
    * @param context The kafka context
    */
-  @EventPattern(UserUpdatedEvent.type)
+  @KafkaDlq({ topic: UserUpdatedEvent.type })
+  @EventPattern([UserUpdatedEvent.type, `${UserUpdatedEvent.type}.retry`])
   async onUserUpdated(@Payload() e: UserUpdatedEvent, @Ctx() context: KafkaContext): Promise<void> {
     const msg = `Received ${UserUpdatedEvent.name} for '${e.data?.user.id ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
@@ -72,6 +78,8 @@ export class AuditController {
    * @param context The kafka context
    */
   @EventPattern(UserDeletedEvent.type)
+  @EventPattern(`${UserDeletedEvent.type}.retry`)
+  @KafkaDlq({ topic: UserDeletedEvent.type })
   async onUserDeleted(@Payload() e: UserDeletedEvent, @Ctx() context: KafkaContext): Promise<void> {
     const msg = `Received ${UserDeletedEvent.name} for '${e.data?.userId ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);

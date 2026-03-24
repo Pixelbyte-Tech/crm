@@ -8,3 +8,6 @@ export * from './messages';
 
 // Types
 export * from './events/types';
+
+// DLQ
+export * from './dlq/dlq.decorator';
