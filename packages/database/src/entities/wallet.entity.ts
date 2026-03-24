@@ -55,7 +55,7 @@ export class WalletEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

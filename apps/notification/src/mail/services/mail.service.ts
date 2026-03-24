@@ -1,4 +1,4 @@
-import { I18nContext } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { Injectable } from '@nestjs/common';
 import { render } from '@react-email/render';
 import { ConfigService } from '@nestjs/config';
@@ -15,6 +15,7 @@ import { AppConfig } from '../../config/app/app-config.type';
 export class MailService {
   constructor(
     private readonly factory: TransportFactory,
+    private readonly i18n: I18nService,
     private readonly config: ConfigService<{ mail: MailConfig; app: AppConfig }>,
   ) {}
 
@@ -25,21 +26,19 @@ export class MailService {
    * @param firstname The recipient's first name
    */
   async sendConfirmEmail(to: string, token: string, firstname?: string | null): Promise<boolean> {
-    const i18n = I18nContext.current();
-    if (i18n) {
+    if (this.i18n) {
       // Fetch all necessary translations in parallel
       const [title, greeting, body, buttonText, linkText, farewell] = await Promise.all([
-        i18n.t<string, string>('common.confirm-email.title'),
-        i18n.t<string, string>('common.confirm-email.greeting'),
-        i18n.t<string, string>('common.confirm-email.body'),
-        i18n.t<string, string>('common.confirm-email.buttonText'),
-        i18n.t<string, string>('common.confirm-email.linkText'),
-        i18n.t<string, string>('common.confirm-email.farewell'),
+        this.i18n.t<string, string>('common.confirm-email.title'),
+        this.i18n.t<string, string>('common.confirm-email.greeting'),
+        this.i18n.t<string, string>('common.confirm-email.body'),
+        this.i18n.t<string, string>('common.confirm-email.buttonText'),
+        this.i18n.t<string, string>('common.confirm-email.linkText'),
+        this.i18n.t<string, string>('common.confirm-email.farewell'),
       ]);
 
       // Construct the confirmation link
-      const feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
-      const link = new URL('/auth/confirm-email', feUrl);
+      const link = this.#constructFeUrl('/auth/confirm-email');
       link.searchParams.set('token', token);
 
       const greetingPersonalized = greeting.replace(`{{firstName}}`, firstname ?? to) ?? 'Please confirm your email';
@@ -52,7 +51,7 @@ export class MailService {
           buttonText,
           linkText,
           farewell,
-          baseUrl: this.config.getOrThrow('app.frontendUrl', { infer: true }),
+          baseUrl: link.origin,
         }),
       );
 
@@ -73,21 +72,19 @@ export class MailService {
    * @param firstname The recipient's first name
    */
   async sendResetPassword(to: string, token: string, firstname?: string | null): Promise<boolean> {
-    const i18n = I18nContext.current();
-    if (i18n) {
+    if (this.i18n) {
       // Fetch all necessary translations in parallel
       const [title, greeting, body, buttonText, linkText, farewell] = await Promise.all([
-        i18n.t<string, string>('common.reset-password.title'),
-        i18n.t<string, string>('common.reset-password.greeting'),
-        i18n.t<string, string>('common.reset-password.body'),
-        i18n.t<string, string>('common.reset-password.buttonText'),
-        i18n.t<string, string>('common.reset-password.linkText'),
-        i18n.t<string, string>('common.reset-password.farewell'),
+        this.i18n.t<string, string>('common.reset-password.title'),
+        this.i18n.t<string, string>('common.reset-password.greeting'),
+        this.i18n.t<string, string>('common.reset-password.body'),
+        this.i18n.t<string, string>('common.reset-password.buttonText'),
+        this.i18n.t<string, string>('common.reset-password.linkText'),
+        this.i18n.t<string, string>('common.reset-password.farewell'),
       ]);
 
       // Construct the confirmation link
-      const feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
-      const link = new URL('/auth/reset-password', feUrl);
+      const link = this.#constructFeUrl('/auth/reset-password');
       link.searchParams.set('token', token);
 
       const greetingPersonalized = greeting.replace(`{{firstName}}`, firstname ?? to) ?? 'Reset your password';
@@ -100,7 +97,7 @@ export class MailService {
           buttonText,
           linkText,
           farewell,
-          baseUrl: this.config.getOrThrow('app.frontendUrl', { infer: true }),
+          baseUrl: link.origin,
         }),
       );
 
@@ -121,21 +118,19 @@ export class MailService {
    * @param token The confirmation token
    */
   async sendInvitationEmail(to: string, company: string, token: string): Promise<boolean> {
-    const i18n = I18nContext.current();
-    if (i18n) {
+    if (this.i18n) {
       // Fetch all necessary translations in parallel
       const [title, greeting, body, buttonText, linkText, farewell] = await Promise.all([
-        i18n.t<string, string>('common.invite-email.title'),
-        i18n.t<string, string>('common.invite-email.greeting'),
-        i18n.t<string, string>('common.invite-email.body'),
-        i18n.t<string, string>('common.invite-email.buttonText'),
-        i18n.t<string, string>('common.invite-email.linkText'),
-        i18n.t<string, string>('common.invite-email.farewell'),
+        this.i18n.t<string, string>('common.invite-email.title'),
+        this.i18n.t<string, string>('common.invite-email.greeting'),
+        this.i18n.t<string, string>('common.invite-email.body'),
+        this.i18n.t<string, string>('common.invite-email.buttonText'),
+        this.i18n.t<string, string>('common.invite-email.linkText'),
+        this.i18n.t<string, string>('common.invite-email.farewell'),
       ]);
 
       // Construct the confirmation link
-      const feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
-      const link = new URL('/auth/sign-up', feUrl);
+      const link = this.#constructFeUrl('/auth/sign-up');
       link.searchParams.set('token', token);
 
       const greetingPersonalized = greeting.replace(`{{firstName}}`, to) ?? `Join ${company}`;
@@ -148,7 +143,7 @@ export class MailService {
           buttonText: buttonText.replace(`{{company}}`, company),
           linkText,
           farewell,
-          baseUrl: this.config.getOrThrow('app.frontendUrl', { infer: true }),
+          baseUrl: link.origin,
         }),
       );
 
@@ -179,5 +174,18 @@ export class MailService {
     });
 
     return true;
+  }
+
+  /**
+   * Constructs a URL object to the FE
+   * @param path The path to append to the FE URL
+   */
+  #constructFeUrl(path?: string): URL {
+    let feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
+    if (!feUrl.startsWith('http') && !feUrl.endsWith('https')) {
+      feUrl = `http://${feUrl}`;
+    }
+
+    return path ? new URL(path, feUrl) : new URL(feUrl);
   }
 }

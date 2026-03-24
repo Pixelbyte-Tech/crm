@@ -54,7 +54,7 @@ export class AlertEntity {
   channel: ChannelEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   channelId: string;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

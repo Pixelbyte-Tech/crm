@@ -57,7 +57,7 @@ export class PaymentTransactionEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @ManyToOne(() => IntegrationEntity, (e) => e.paymentTransactions, {
@@ -68,7 +68,7 @@ export class PaymentTransactionEntity {
   integration: IntegrationEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   integrationId: string;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

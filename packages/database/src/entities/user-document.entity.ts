@@ -59,7 +59,7 @@ export class UserDocumentEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

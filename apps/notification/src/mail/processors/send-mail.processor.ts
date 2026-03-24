@@ -1,5 +1,5 @@
+import { Job } from 'bull';
 import { DateTime } from 'luxon';
-import { Logger } from '@nestjs/common';
 import * as Sentry from '@sentry/nestjs';
 import { LessThan, Repository } from 'typeorm';
 import { Process, Processor } from '@nestjs/bull';
@@ -9,24 +9,26 @@ import { UserNotificationEntity } from '@crm/database';
 import { NotificationStatus, NotificationTemplate } from '@crm/types';
 
 import { JobType } from '../types';
-import { MailService } from '../services';
+import { BullLogger, MailService } from '../services';
 
 @Processor('notification-queue')
 export class SendMailProcessor {
   constructor(
+    private readonly logger: BullLogger,
     private readonly mailService: MailService,
     @InjectRepository(UserNotificationEntity) private readonly userNotificationRepo: Repository<UserNotificationEntity>,
   ) {}
-
-  private readonly logger = new Logger(this.constructor.name);
 
   /**
    * Handles the job
    */
   @Process({ name: JobType.SEND_MAIL, concurrency: 1 })
-  async handle() {
+  async handle(job: Job) {
     return Sentry.startNewTrace(async () => {
       return Sentry.startSpan({ name: JobType.SEND_MAIL, op: 'notification' }, async () => {
+        // Bind the logger
+        this.logger.bind(SendMailProcessor.name, job);
+
         const msg = `Processing mail notifications`;
         this.logger.log(`${msg} - Start`);
 
@@ -45,16 +47,16 @@ export class SendMailProcessor {
           // Process them
           for (const notification of notifications) {
             let meta: any;
-            const result = false;
+            let result = false;
 
             switch (notification.template) {
               case NotificationTemplate.USER_CONFIRM_EMAIL:
                 meta = notification.meta as unknown as { token: string; expireMs: number };
-                await this.mailService.sendConfirmEmail(notification.user.email, meta.token);
+                result = await this.mailService.sendConfirmEmail(notification.user.email, meta.token);
                 break;
               case NotificationTemplate.USER_FORGOT_PASSWORD:
                 meta = notification.meta as unknown as { token: string; expireMs: number };
-                await this.mailService.sendResetPassword(notification.user.email, meta.token);
+                result = await this.mailService.sendResetPassword(notification.user.email, meta.token);
                 break;
               default:
                 this.logger.error(`Unknown template '${notification.template}' for notification '${notification.id}'`);
@@ -72,7 +74,15 @@ export class SendMailProcessor {
 
             // Persist
             await this.userNotificationRepo.save(notification);
-            this.logger.log(`Processed notification '${notification.id}' with template '${notification.template}'`);
+
+            if (result) {
+              this.logger.log(`Processed notification '${notification.id}' with template '${notification.template}'`);
+              continue;
+            }
+
+            this.logger.warn(
+              `Failed to send notification '${notification.id}' with template '${notification.template}'`,
+            );
           }
 
           this.logger.log(`${msg} - Complete`);

@@ -34,7 +34,7 @@ export class WheelSpinEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

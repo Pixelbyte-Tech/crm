@@ -8,7 +8,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsPositive,
-  IsISO31661Alpha3,
+  IsISO31661Alpha2,
 } from 'class-validator';
 
 import { UserExperience, UserEmploymentStatus } from '@crm/types';
@@ -51,7 +51,7 @@ export class UpdateUserDetailsDto {
   state?: string | null;
 
   @IsOptional()
-  @IsISO31661Alpha3()
+  @IsISO31661Alpha2()
   country?: string | null;
 
   @IsOptional()

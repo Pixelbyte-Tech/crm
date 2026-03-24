@@ -82,7 +82,7 @@ export class TradingAccountEntity {
   server: ServerEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   serverId: string;
 
   @ManyToOne(() => UserEntity, (e) => e.tradingAccounts, {
@@ -93,7 +93,7 @@ export class TradingAccountEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

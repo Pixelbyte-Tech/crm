@@ -56,7 +56,7 @@ export class WalletTransactionEntity {
   tradingAccount?: TradingAccountEntity | null;
 
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   tradingAccountId?: string | null;
 
   @ManyToOne(() => UserEntity, (e) => e.walletTransactions, {
@@ -67,7 +67,7 @@ export class WalletTransactionEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @ManyToOne(() => WalletEntity, (e) => e.transactions, {
@@ -78,7 +78,7 @@ export class WalletTransactionEntity {
   wallet: WalletEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   walletId: string;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

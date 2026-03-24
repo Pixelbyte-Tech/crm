@@ -143,6 +143,7 @@ services:
     depends_on:
       - db-migrate
       - maildev
+      - bull-monitor
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -215,6 +216,7 @@ services:
       - '30008:9229'
     depends_on:
       - db-migrate
+      - bull-monitor
       - crm-postgres
       - crm-redis
       - crm-kafka

@@ -39,6 +39,8 @@ export class SmtpTransport implements TransportService {
       ? opts.from
       : `"${this.config.get('mail.defaultName', { infer: true })}" <${this.config.get('mail.defaultEmail', { infer: true })}>`;
 
+    console.log(opts);
+
     await this.#client.sendMail({
       to: opts.to,
       from,

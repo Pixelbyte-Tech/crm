@@ -2,8 +2,6 @@ import { InjectQueue } from '@nestjs/bull';
 import { Job, Queue, JobOptions } from 'bull';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 
-import { Env } from '@crm/utils';
-
 import { JobType } from '../types';
 
 @Injectable()
@@ -38,16 +36,11 @@ export class JobsService implements OnApplicationBootstrap {
     // Wait for 3 seconds
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    // Do not run on locally
-    if (Env.isDev()) {
-      return;
-    }
-
     //////////////////////////////////////////////////////////////
     // Sync Jobs (Scheduled)
 
-    await this.#scheduleJob(JobType.SEND_INVITATIONS, '*/5 * * * *');
-    await this.#scheduleJob(JobType.SEND_MAIL, '*/5 * * * *');
+    await this.#scheduleJob(JobType.SEND_INVITATIONS, '*/5 * * * * *');
+    await this.#scheduleJob(JobType.SEND_MAIL, '*/5 * * * * *');
   }
 
   /**

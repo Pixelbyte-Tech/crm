@@ -36,7 +36,7 @@ export class TradingAccountNoteEntity {
   author: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   authorId: string;
 
   @ManyToOne(() => TradingAccountEntity, (e) => e.notes, {
@@ -47,7 +47,7 @@ export class TradingAccountNoteEntity {
   tradingAccount: TradingAccountEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   tradingAccountId: string;
 
   @CreateDateColumn()

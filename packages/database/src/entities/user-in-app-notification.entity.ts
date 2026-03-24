@@ -35,7 +35,7 @@ export class UserInAppNotificationEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

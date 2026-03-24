@@ -35,7 +35,7 @@ export class UserNoteEntity {
   author: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   authorId: string;
 
   @ManyToOne(() => UserEntity, (e) => e.userNotes, {
@@ -46,7 +46,7 @@ export class UserNoteEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

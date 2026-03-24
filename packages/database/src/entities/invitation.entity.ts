@@ -49,7 +49,7 @@ export class InvitationEntity {
   sentByUser: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   sentByUserId: string;
 
   @CreateDateColumn()

@@ -40,7 +40,7 @@ export class LoyaltyEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   /** One-to-many relations */

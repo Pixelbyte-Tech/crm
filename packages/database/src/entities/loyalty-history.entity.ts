@@ -39,7 +39,7 @@ export class LoyaltyHistoryEntity {
   loyalty: LoyaltyEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   loyaltyId: string;
 
   @ManyToOne(() => UserEntity, (e) => e.loyaltyHistory, {
@@ -50,7 +50,7 @@ export class LoyaltyHistoryEntity {
   user: UserEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @CreateDateColumn()

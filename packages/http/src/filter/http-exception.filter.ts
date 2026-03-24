@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { set, isArray, isObject } from 'lodash';
 import { ValidationError } from 'class-validator';
+import { SentryExceptionCaptured } from '@sentry/nestjs';
 import { QueryFailedError, EntityNotFoundError, CannotCreateEntityIdMapError } from 'typeorm';
 import { Catch, Logger, HttpStatus, ArgumentsHost, HttpException, ExceptionFilter } from '@nestjs/common';
 
@@ -15,6 +16,7 @@ const DEFAULT_ERROR_MESSAGE = 'Something went wrong, please try again.';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
+  @SentryExceptionCaptured()
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();

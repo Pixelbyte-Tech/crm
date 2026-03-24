@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 
 import { Module } from '@nestjs/common';
+import { SentryModule } from '@sentry/nestjs/setup';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 
@@ -23,6 +24,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     AuthModule,
     ClientsModule.registerAsync({
       isGlobal: true,

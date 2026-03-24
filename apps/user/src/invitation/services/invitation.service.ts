@@ -47,7 +47,7 @@ export class InvitationService {
 
     try {
       // Create the invitation (sent by notification ms)
-      await this.#createInvitation(dto.email, dto.roles);
+      await this.#createInvitation(dto.email, dto.roles, fromUserId);
       this.#logger.log(`${msg} - Complete`);
       return true;
     } catch (err) {
@@ -211,8 +211,9 @@ export class InvitationService {
    * Creates a new invitation.
    * @param email The email of the invited user
    * @param roles The roles to assign to the user
+   * @param fromUserId The id of the user sending the invitation
    */
-  async #createInvitation(email: string, roles: Role[]): Promise<Invitation> {
+  async #createInvitation(email: string, roles: Role[], fromUserId: string): Promise<Invitation> {
     // Check if an invitation already exists for the email
     const statuses = [InvitationStatus.UNSENT, InvitationStatus.PENDING, InvitationStatus.RESEND_PENDING];
     const existingInvitation = await this.invitationRepo.findOne({
@@ -231,6 +232,7 @@ export class InvitationService {
     invitation.roles = roles;
     invitation.token = token;
     invitation.status = InvitationStatus.UNSENT;
+    invitation.sentByUserId = fromUserId;
 
     return this.invitationMapper.toInvitation(await this.invitationRepo.save(invitation));
   }

@@ -16,7 +16,7 @@ import {
 import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { UserCreatedEvent } from '@crm/kafka';
-import { UserEntity, UserDetailEntity, UserSettingEntity } from '@crm/database';
+import { UserEntity, UserSettingEntity } from '@crm/database';
 import { Role, User, UserStatus, UserDetail, UserSetting, UserSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
@@ -41,10 +41,6 @@ export class UserService {
     @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(UserSettingEntity)
-    private readonly userSettingRepo: Repository<UserSettingEntity>,
-    @InjectRepository(UserDetailEntity)
-    private readonly userDetailRepo: Repository<UserDetailEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -238,30 +234,32 @@ export class UserService {
 
     try {
       // Perform the update
-      await this.userDetailRepo.save({
-        ...(user.detailId ? { id: user.detailId } : {}),
-        ...(undefined !== dto.birthday ? { birthday: dto.birthday } : {}),
-        ...(undefined !== dto.phone ? { phone: dto.phone } : {}),
-        ...(undefined !== dto.addressLine1 ? { addressLine1: dto.addressLine1 } : {}),
-        ...(undefined !== dto.addressLine2 ? { addressLine2: dto.addressLine2 } : {}),
-        ...(undefined !== dto.city ? { city: dto.city } : {}),
-        ...(undefined !== dto.postcode ? { postcode: dto.postcode } : {}),
-        ...(undefined !== dto.state ? { state: dto.state } : {}),
-        ...(undefined !== dto.country ? { country: dto.country } : {}),
-        ...(undefined !== dto.taxId ? { taxId: dto.taxId } : {}),
-        ...(!isNil(dto.isPoaVerified) ? { isPoaVerified: dto.isPoaVerified } : {}),
-        ...(!isNil(dto.isPoiVerified) ? { isPoiVerified: dto.isPoiVerified } : {}),
-        ...(!isNil(dto.isPowVerified) ? { isPowVerified: dto.isPowVerified } : {}),
-        ...(!isNil(dto.isPoliticallyExposed) ? { isPoliticallyExposed: dto.isPoliticallyExposed } : {}),
-        ...(undefined !== dto.netCapitalUsd ? { netCapitalUsd: dto.netCapitalUsd } : {}),
-        ...(undefined !== dto.annualIncomeUsd ? { annualIncomeUsd: dto.annualIncomeUsd } : {}),
-        ...(undefined !== dto.approxAnnualInvestmentVolumeUsd
-          ? { approxAnnualInvestmentVolumeUsd: dto.approxAnnualInvestmentVolumeUsd }
-          : {}),
-        ...(undefined !== dto.occupation ? { occupation: dto.occupation } : {}),
-        ...(undefined !== dto.employmentStatus ? { employmentStatus: dto.employmentStatus } : {}),
-        ...(undefined !== dto.sourceOfFunds ? { sourceOfFunds: dto.sourceOfFunds } : {}),
-        ...(undefined !== dto.experience ? { experience: dto.experience } : {}),
+      await this.userRepo.save({
+        id: userId,
+        detail: {
+          ...(undefined !== dto.birthday ? { birthday: dto.birthday } : {}),
+          ...(undefined !== dto.phone ? { phone: dto.phone } : {}),
+          ...(undefined !== dto.addressLine1 ? { addressLine1: dto.addressLine1 } : {}),
+          ...(undefined !== dto.addressLine2 ? { addressLine2: dto.addressLine2 } : {}),
+          ...(undefined !== dto.city ? { city: dto.city } : {}),
+          ...(undefined !== dto.postcode ? { postcode: dto.postcode } : {}),
+          ...(undefined !== dto.state ? { state: dto.state } : {}),
+          ...(undefined !== dto.country ? { country: dto.country } : {}),
+          ...(undefined !== dto.taxId ? { taxId: dto.taxId } : {}),
+          ...(!isNil(dto.isPoaVerified) ? { isPoaVerified: dto.isPoaVerified } : {}),
+          ...(!isNil(dto.isPoiVerified) ? { isPoiVerified: dto.isPoiVerified } : {}),
+          ...(!isNil(dto.isPowVerified) ? { isPowVerified: dto.isPowVerified } : {}),
+          ...(!isNil(dto.isPoliticallyExposed) ? { isPoliticallyExposed: dto.isPoliticallyExposed } : {}),
+          ...(undefined !== dto.netCapitalUsd ? { netCapitalUsd: dto.netCapitalUsd } : {}),
+          ...(undefined !== dto.annualIncomeUsd ? { annualIncomeUsd: dto.annualIncomeUsd } : {}),
+          ...(undefined !== dto.approxAnnualInvestmentVolumeUsd
+            ? { approxAnnualInvestmentVolumeUsd: dto.approxAnnualInvestmentVolumeUsd }
+            : {}),
+          ...(undefined !== dto.occupation ? { occupation: dto.occupation } : {}),
+          ...(undefined !== dto.employmentStatus ? { employmentStatus: dto.employmentStatus } : {}),
+          ...(undefined !== dto.sourceOfFunds ? { sourceOfFunds: dto.sourceOfFunds } : {}),
+          ...(undefined !== dto.experience ? { experience: dto.experience } : {}),
+        },
       });
 
       this.#logger.log(`${msg} - Complete`);
@@ -289,12 +287,14 @@ export class UserService {
 
     try {
       // Perform the update
-      await this.userSettingRepo.save({
-        ...(user.settingsId ? { id: user.settingsId } : {}),
-        ...(!isNil(dto.canDeposit) ? { canDeposit: dto.canDeposit } : {}),
-        ...(!isNil(dto.canWithdraw) ? { canWithdraw: dto.canWithdraw } : {}),
-        ...(!isNil(dto.canAutoWithdraw) ? { canAutoWithdraw: dto.canAutoWithdraw } : {}),
-        ...(undefined !== dto.maxAutoWithdrawAmount ? { maxAutoWithdrawAmount: dto.maxAutoWithdrawAmount } : {}),
+      await this.userRepo.save({
+        id: userId,
+        settings: {
+          ...(!isNil(dto.canDeposit) ? { canDeposit: dto.canDeposit } : {}),
+          ...(!isNil(dto.canWithdraw) ? { canWithdraw: dto.canWithdraw } : {}),
+          ...(!isNil(dto.canAutoWithdraw) ? { canAutoWithdraw: dto.canAutoWithdraw } : {}),
+          ...(undefined !== dto.maxAutoWithdrawAmount ? { maxAutoWithdrawAmount: dto.maxAutoWithdrawAmount } : {}),
+        },
       });
 
       this.#logger.log(`${msg} - Complete`);

@@ -102,7 +102,7 @@ export class UserEntity {
   avatar?: UserAvatarEntity | null;
 
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   avatarId?: string | null;
 
   @OneToOne(() => UserDetailEntity, (e) => e.user, {
@@ -111,11 +111,11 @@ export class UserEntity {
     nullable: true,
     cascade: true, // This allows insert of entity in save()
   })
-  @JoinColumn({ name: 'userDetailId' })
+  @JoinColumn({ name: 'detailId', referencedColumnName: 'id' })
   detail?: UserDetailEntity | null;
 
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   detailId?: string | null;
 
   @OneToOne(() => UserSettingEntity, (e) => e.user, {
@@ -123,11 +123,11 @@ export class UserEntity {
     onDelete: 'CASCADE',
     cascade: true, // This allows insert of entity in save()
   })
-  @JoinColumn({ name: 'settingsId' })
+  @JoinColumn({ name: 'settingsId', referencedColumnName: 'id' })
   settings: UserSettingEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   settingsId: string;
 
   @OneToOne(() => LoyaltyEntity, (e) => e.user)

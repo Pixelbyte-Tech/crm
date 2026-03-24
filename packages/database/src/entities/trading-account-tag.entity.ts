@@ -52,7 +52,7 @@ export class TradingAccountTagEntity {
   taggedByUser?: UserEntity | null;
 
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   taggedByUserId?: string | null;
 
   @CreateDateColumn()

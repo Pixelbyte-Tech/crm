@@ -28,6 +28,7 @@
     "@nestjs/config": "*",
     "@nestjs/swagger": "*",
     "@nestjs/typeorm": "*",
+    "@sentry/nestjs": "*",
     "class-transformer": "*",
     "class-validator": "*",
     "typeorm": "*"

@@ -73,7 +73,7 @@ export class TradingAccountTypeEntity {
   server: ServerEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   serverId: string;
 
   @CreateDateColumn()

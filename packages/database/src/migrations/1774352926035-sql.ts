@@ -1,8 +1,6 @@
 import { QueryRunner, MigrationInterface } from 'typeorm';
 
-export class Sql1774300477153 implements MigrationInterface {
-  name = 'Sql1774300477153';
-
+export class Sql1774352926035 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE "trading_account_type_leverage" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "leverages" integer array NOT NULL, "countries" character varying(3) array NOT NULL, "tradingAccountTypeId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_debf2553a55dba41fef779c8efa" UNIQUE ("tradingAccountTypeId", "leverages", "countries"), CONSTRAINT "PK_b1adc4cadcc63e5bd2d14c52fd4" PRIMARY KEY ("id"))`,
@@ -138,7 +136,7 @@ export class Sql1774300477153 implements MigrationInterface {
       `CREATE INDEX "IDX_789c93161549f4a123834e2ef2" ON "audit_log" ("userId", "targetType", "targetId") `,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."invitation_status_enum" AS ENUM('unsent', 'pending', 'resend_Pending', 'accepted', 'rejected', 'expired')`,
+      `CREATE TYPE "public"."invitation_status_enum" AS ENUM('unsent', 'resend_Pending', 'pending', 'accepted', 'rejected', 'expired')`,
     );
     await queryRunner.query(
       `CREATE TYPE "public"."invitation_roles_enum" AS ENUM('admin', 'trade_support', 'cs_agent', 'compliance', 'user')`,
@@ -234,7 +232,7 @@ export class Sql1774300477153 implements MigrationInterface {
       `CREATE TYPE "public"."user_roles_enum" AS ENUM('admin', 'trade_support', 'cs_agent', 'compliance', 'user')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "roles" "public"."user_roles_enum" array NOT NULL, "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" text, "settingsId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userDetailId" uuid, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_c515f2c59bd83b80cf07846a96" UNIQUE ("userDetailId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "roles" "public"."user_roles_enum" array NOT NULL, "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" uuid, "settingsId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_f05fcc9b589876b45e82e17b31" UNIQUE ("detailId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_e12875dfb3b1d92d7d7c5377e2" ON "user" ("email") `);
     await queryRunner.query(`CREATE INDEX "IDX_58f5c71eaab331645112cf8cfa" ON "user" ("avatarId") `);
@@ -381,7 +379,7 @@ export class Sql1774300477153 implements MigrationInterface {
       `ALTER TABLE "user" ADD CONSTRAINT "FK_58f5c71eaab331645112cf8cfa5" FOREIGN KEY ("avatarId") REFERENCES "user_avatar"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
-      `ALTER TABLE "user" ADD CONSTRAINT "FK_c515f2c59bd83b80cf07846a968" FOREIGN KEY ("userDetailId") REFERENCES "user_detail"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+      `ALTER TABLE "user" ADD CONSTRAINT "FK_f05fcc9b589876b45e82e17b313" FOREIGN KEY ("detailId") REFERENCES "user_detail"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
       `ALTER TABLE "user" ADD CONSTRAINT "FK_390395c3d8592e3e8d8422ce853" FOREIGN KEY ("settingsId") REFERENCES "user_setting"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -398,7 +396,7 @@ export class Sql1774300477153 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "alert" DROP CONSTRAINT "FK_5b4173bbde31cc348ea217c8a1d"`);
     await queryRunner.query(`ALTER TABLE "wheel_spin" DROP CONSTRAINT "FK_0c29fe74363fb129ca1976554a7"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_390395c3d8592e3e8d8422ce853"`);
-    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_c515f2c59bd83b80cf07846a968"`);
+    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_f05fcc9b589876b45e82e17b313"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_58f5c71eaab331645112cf8cfa5"`);
     await queryRunner.query(`ALTER TABLE "user_in_app_notification" DROP CONSTRAINT "FK_2067fd15dacc6a6dd53b7a92cae"`);
     await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_23a1634ec0589f208f7577211a3"`);

@@ -2,16 +2,18 @@ import * as path from 'path';
 
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule, QueryResolver } from 'nestjs-i18n';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { InvitationEntity, GlobalSettingEntity, UserNotificationEntity } from '@crm/database';
 
+import mailConfig from './config/mail.config';
+
 import { TransportFactory } from './factories';
-import { JobsService, MailService } from './services';
 import { AppConfig } from '../config/app/app-config.type';
 import { SesTransport, SmtpTransport } from './transports';
+import { BullLogger, JobsService, MailService } from './services';
 import { SendMailProcessor, SendInvitationsProcessor } from './processors';
 
 @Module({
@@ -35,6 +37,7 @@ import { SendMailProcessor, SendInvitationsProcessor } from './processors';
         return { redis: `redis://${host}:${port}`, defaultJobOptions: { removeOnComplete: true, removeOnFail: 10 } };
       },
     }),
+    ConfigModule.forFeature(mailConfig),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
@@ -43,6 +46,7 @@ import { SendMailProcessor, SendInvitationsProcessor } from './processors';
     TypeOrmModule.forFeature([GlobalSettingEntity, InvitationEntity, UserNotificationEntity]),
   ],
   providers: [
+    BullLogger,
     JobsService,
     MailService,
     SendInvitationsProcessor,

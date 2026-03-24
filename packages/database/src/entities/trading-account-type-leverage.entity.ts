@@ -33,7 +33,7 @@ export class TradingAccountTypeLeverageEntity {
   tradingAccountType: TradingAccountTypeEntity;
 
   @Index()
-  @Column({ type: 'text' })
+  @Column({ type: 'uuid' })
   tradingAccountTypeId: string;
 
   @CreateDateColumn()

@@ -66,7 +66,7 @@ export class AuditLogEntity {
   user?: UserEntity | null;
 
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   userId?: string | null;
 
   @PrimaryColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

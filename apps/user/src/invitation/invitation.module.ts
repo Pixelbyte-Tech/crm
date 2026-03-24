@@ -8,8 +8,8 @@ import { UserEntity, InvitationEntity } from '@crm/database';
 import { InvitationMapper } from './mappers';
 import { ExpireInvitationsProcessor } from './processors';
 import { AppConfig } from '../config/app/app-config.type';
-import { JobsService, InvitationService } from './services';
 import { InvitationController } from './invitation.controller';
+import { BullLogger, JobsService, InvitationService } from './services';
 
 @Module({
   imports: [
@@ -34,7 +34,7 @@ import { InvitationController } from './invitation.controller';
     }),
     TypeOrmModule.forFeature([InvitationEntity, UserEntity]),
   ],
-  providers: [ExpireInvitationsProcessor, InvitationMapper, InvitationService, JobsService],
+  providers: [BullLogger, ExpireInvitationsProcessor, InvitationMapper, InvitationService, JobsService],
   controllers: [InvitationController],
   exports: [InvitationService],
 })

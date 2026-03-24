@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger, Injectable } from '@nestjs/common';
 
+import { Role } from '@crm/types';
 import { Cryptography } from '@crm/utils';
 
 import { UserEntity } from '../../entities/user.entity';
@@ -23,6 +24,7 @@ export class UserSeedService {
         const user = new UserEntity();
         user.firstName = 'John';
         user.lastName = 'Doe';
+        user.roles = [Role.USER];
         user.email = STANDARD_USER_EMAIL;
         user.securityPin = '1234';
         user.passwordHash = Cryptography.hash('P@ssword123');
@@ -55,6 +57,7 @@ export class UserSeedService {
         const user = new UserEntity();
         user.firstName = 'John';
         user.lastName = 'Doe (super)';
+        user.roles = [Role.ADMIN];
         user.email = ADMIN_USER_EMAIL;
         user.securityPin = '4321';
         user.passwordHash = Cryptography.hash('P@ssword123');
