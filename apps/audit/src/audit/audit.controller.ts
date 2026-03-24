@@ -32,11 +32,11 @@ export class AuditController {
 
     await this.auditService.persist(
       {
+        eventId: e.id,
         targetAction: AuditAction.CREATED,
         targetType: AuditTarget.USER,
         targetId: e.data.user.id,
         result: AuditResult.SUCCESS,
-        failureReason: undefined,
         occurredAt: DateTime.fromMillis(e.data.createdAt).toJSDate(),
       },
       e.metadata,
@@ -58,11 +58,11 @@ export class AuditController {
 
     await this.auditService.persist(
       {
-        targetAction: AuditAction.CREATED,
+        eventId: e.id,
+        targetAction: AuditAction.UPDATED,
         targetType: AuditTarget.USER,
         targetId: e.data.user.id,
         result: AuditResult.SUCCESS,
-        failureReason: undefined,
         occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
       },
       e.metadata,
@@ -84,11 +84,11 @@ export class AuditController {
 
     await this.auditService.persist(
       {
-        targetAction: AuditAction.CREATED,
+        eventId: e.id,
+        targetAction: AuditAction.DELETED,
         targetType: AuditTarget.USER,
         targetId: e.data.userId,
         result: AuditResult.SUCCESS,
-        failureReason: undefined,
         occurredAt: DateTime.fromMillis(e.data.deletedAt).toJSDate(),
       },
       e.metadata,
