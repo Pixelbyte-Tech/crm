@@ -12,7 +12,7 @@ import { AuditService } from './services/audit.service';
 @ApiExcludeController()
 export class AuditController {
   constructor(
-    @Inject('KAFKA') private readonly kafka: ClientKafka,
+    @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
     private readonly auditService: AuditService,
   ) {}
 
@@ -24,9 +24,8 @@ export class AuditController {
    * @param e The event
    * @param context The kafka context
    */
-  @EventPattern(UserCreatedEvent.type)
-  @EventPattern(`${UserCreatedEvent.type}.retry`)
   @KafkaDlq({ topic: UserCreatedEvent.type })
+  @EventPattern([UserCreatedEvent.type, `${UserCreatedEvent.type}.retry`])
   async onUserCreated(@Payload() e: UserCreatedEvent, @Ctx() context: KafkaContext): Promise<void> {
     const msg = `Received ${UserCreatedEvent.name} for '${e.data?.user.id ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
@@ -77,9 +76,8 @@ export class AuditController {
    * @param e The event
    * @param context The kafka context
    */
-  @EventPattern(UserDeletedEvent.type)
-  @EventPattern(`${UserDeletedEvent.type}.retry`)
   @KafkaDlq({ topic: UserDeletedEvent.type })
+  @EventPattern([UserDeletedEvent.type, `${UserDeletedEvent.type}.retry`])
   async onUserDeleted(@Payload() e: UserDeletedEvent, @Ctx() context: KafkaContext): Promise<void> {
     const msg = `Received ${UserDeletedEvent.name} for '${e.data?.userId ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
