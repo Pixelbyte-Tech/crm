@@ -6,7 +6,7 @@ import { Ctx, Payload, ClientKafka, EventPattern, KafkaContext } from '@nestjs/m
 import { AuditAction, AuditResult, AuditTarget } from '@crm/types';
 import { KafkaDlq, UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
 
-import { AuditService } from './services/audit.service';
+import { AuditService } from './services';
 
 @Controller()
 @ApiExcludeController()
