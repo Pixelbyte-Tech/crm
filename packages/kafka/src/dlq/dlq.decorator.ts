@@ -12,9 +12,7 @@ import { handleDlqError } from './dlq.helper';
  * - Tracks retry attempts using Kafka message headers
  * - Publishes failed messages to a retry topic (if retries remain)
  * - Publishes to DLQ topic after max retries exceeded
- * - Commits offsets so the consumer can move on
- *
- * Note: This decorator can be placed before or after @EventPattern decorators.
+ * - Commits offsets so the consumer can move on to the next message
  */
 export function KafkaDlq(options: KafkaDlqOptions) {
   const logger = new Logger('KafkaDlq');
