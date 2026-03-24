@@ -16,6 +16,7 @@ import { UserEntity, InvitationEntity } from '@crm/database';
 import { Invitation } from '../domain';
 import { InvitationMapper } from '../mappers';
 import { InviteUserDto, ListInvitationsDto } from '../dto';
+import { ExcessiveRoleGrantException } from '../exceptions';
 
 @Injectable()
 export class InvitationService {
@@ -33,6 +34,7 @@ export class InvitationService {
    * Invites a new user to the system. Sends an invitation email to the user.
    * @param dto The invite user dto
    * @param fromUserId The id of the user sending the invite
+   * @throws ExcessiveRoleGrantException If the roles being granted are excessive
    */
   async inviteUser(dto: InviteUserDto, fromUserId: string): Promise<boolean> {
     const msg = `Inviting '${dto.email}' by user '${fromUserId}'`;
@@ -43,6 +45,12 @@ export class InvitationService {
     if (!user) {
       this.#logger.error(`${msg}. Cannot find inviting user - Failed`);
       throw new UnprocessableEntityException('Inviting user not found');
+    }
+
+    // Test the roles being granted do not exceed the inviting user's permissions
+    // If user is admin they can grant any role to the invitee
+    if (!user.roles.includes(Role.ADMIN) || !dto.roles.every((role) => user.roles.includes(role))) {
+      throw new ExcessiveRoleGrantException(dto.roles.filter((role) => !user.roles.includes(role)));
     }
 
     try {

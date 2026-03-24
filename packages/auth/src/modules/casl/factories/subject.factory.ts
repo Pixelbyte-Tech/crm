@@ -155,7 +155,7 @@ export class SubjectFactory {
         return new UserDocumentSubject(await this.#find(UserDocumentEntity, ['userId'], req, filter));
 
       case UserNoteSubject.name:
-        return new UserNoteSubject(await this.#find(UserNoteEntity, ['userId'], req, filter));
+        return new UserNoteSubject(await this.#find(UserNoteEntity, ['userId', 'authorId'], req, filter));
 
       case UserNotificationSubject.name:
         return new UserNotificationSubject(await this.#find(UserInAppNotificationEntity, ['userId'], req, filter));
@@ -206,7 +206,7 @@ export class SubjectFactory {
       (await this.dataSource
         .createQueryBuilder()
         .from(target, 'e')
-        .select(select)
+        .select(select.map((s) => `e."${s}"`))
         .where(`e."${filter.findBy.toString()}" = :value`, { value })
         .getRawOne()) ?? {};
 

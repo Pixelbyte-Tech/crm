@@ -13,6 +13,7 @@ import {
   LoyaltySubject,
   ChannelSubject,
   AuditLogSubject,
+  UserNoteSubject,
   WheelSpinSubject,
   UserDetailSubject,
   UserAvatarSubject,
@@ -74,6 +75,7 @@ export class CaslAbilityFactory {
           can(Action.MANAGE, UserAvatarSubject);
           can(Action.MANAGE, UserDetailSubject);
           can(Action.MANAGE, UserDocumentSubject);
+          can(Action.MANAGE, UserNoteSubject);
           can(Action.MANAGE, UserNotificationSubject);
           can(Action.MANAGE, UserSettingSubject);
           can(Action.READ, WalletSubject);
@@ -114,6 +116,11 @@ export class CaslAbilityFactory {
           can(Action.CREATE, UserSubject);
           can(Action.UPDATE, UserSubject);
 
+          can(Action.READ, UserNoteSubject);
+          can(Action.CREATE, UserNoteSubject);
+          can(Action.UPDATE, UserNoteSubject, { authorId: user.userId });
+          can(Action.DELETE, UserNoteSubject, { authorId: user.userId });
+
           can(Action.READ, UserAuthSessionSubject);
           can(Action.READ, UserAvatarSubject);
           can(Action.READ, UserDetailSubject);
@@ -127,10 +134,21 @@ export class CaslAbilityFactory {
         case Role.CS_AGENT:
           can(Action.READ, UserSubject);
           can(Action.READ, UserAuthSessionSubject);
+
+          can(Action.READ, UserNoteSubject);
+          can(Action.CREATE, UserNoteSubject);
+          can(Action.UPDATE, UserNoteSubject, { authorId: user.userId });
+          can(Action.DELETE, UserNoteSubject, { authorId: user.userId });
+
           break;
         case Role.COMPLIANCE:
           can(Action.READ, UserSubject);
           can(Action.READ, UserAuthSessionSubject);
+
+          can(Action.READ, UserNoteSubject);
+          can(Action.CREATE, UserNoteSubject);
+          can(Action.UPDATE, UserNoteSubject, { authorId: user.userId });
+          can(Action.DELETE, UserNoteSubject, { authorId: user.userId });
           break;
       }
     }

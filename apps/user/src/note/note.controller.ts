@@ -3,9 +3,8 @@ import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
-import { UserNoteEntity } from '@crm/database';
-import { Auth, Action, AuthenticatedReq } from '@crm/auth';
 import { UserIdValidator, UserNoteIdValidator } from '@crm/validation';
+import { Auth, Action, UserNoteSubject, AuthenticatedReq } from '@crm/auth';
 
 import { Note } from './domain';
 import { NoteService } from './services';
@@ -22,7 +21,7 @@ export class NoteController {
    * @param userId The user id to whom the note belongs
    * @param noteId The note id to fetch
    */
-  @Auth(Action.READ, UserNoteEntity, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.READ, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note })
   @Get(':userId/notes/:noteId')
   public async list(
@@ -37,7 +36,7 @@ export class NoteController {
    * @param userId The user id to fetch
    * @param dto The payload dto
    */
-  @Auth(Action.READ, UserNoteEntity, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.READ, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note, isPaginated: true })
   @Get(':userId/notes')
   public async get(
@@ -53,7 +52,7 @@ export class NoteController {
    * @param dto The payload dto
    * @param req The authenticated request
    */
-  @Auth(Action.CREATE, UserNoteEntity, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.CREATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note })
   @Post(':userId/notes')
   public async create(
@@ -70,7 +69,7 @@ export class NoteController {
    * @param noteId The id of the note to update
    * @param dto The payload dto
    */
-  @Auth(Action.UPDATE, UserNoteEntity, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.UPDATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note })
   @Patch(':userId/notes/:noteId')
   public async update(
@@ -86,7 +85,7 @@ export class NoteController {
    * @param userId The user id the note belongs to
    * @param noteId The id of the note to delete
    */
-  @Auth(Action.UPDATE, UserNoteEntity, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.UPDATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi()
   @Delete(':userId/notes/:noteId')
   public async delete(
