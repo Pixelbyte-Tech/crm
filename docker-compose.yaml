@@ -44,6 +44,29 @@ services:
     networks:
       - crm-network
   ############################
+  audit:
+    profiles: [ 'dev' ]
+    <<: *nest_service
+    working_dir: /app/apps/audit
+    command: nest start --watch
+    build:
+      target: 'development'
+      args:
+        - TARGET_APP=audit
+    ports:
+      - '3001:3000'
+      - '30001:9229'
+    depends_on:
+      - crm-kafka
+      - crm-postgres
+    env_file:
+      - './apps/audit/.env'
+    volumes:
+      - ./apps/audit:/app/apps/audit
+      - ./packages:/app/packages
+    networks:
+      - crm-network
+  ############################
   bull-monitor:
     profiles: [ 'dev' ]
     <<: *nest_service
@@ -77,6 +100,7 @@ services:
       - '3003:3000'
       - '30003:9229'
     depends_on:
+      - audit
       - db-migrate
       - crm-postgres
       - crm-redis
@@ -101,6 +125,7 @@ services:
       - '3004:3000'
       - '30004:9229'
     depends_on:
+      - audit
       - db-migrate
       - crm-postgres
       - crm-redis
@@ -141,9 +166,10 @@ services:
       - '3005:3000'
       - '30005:9229'
     depends_on:
+      - audit
+      - bull-monitor
       - db-migrate
       - maildev
-      - bull-monitor
       - crm-postgres
       - crm-redis
       - crm-kafka
@@ -167,6 +193,7 @@ services:
       - '3006:3000'
       - '30006:9229'
     depends_on:
+      - audit
       - db-migrate
       - crm-postgres
       - crm-redis
@@ -191,6 +218,7 @@ services:
       - '3007:3000'
       - '30007:9229'
     depends_on:
+      - audit
       - db-migrate
       - crm-postgres
       - crm-redis
@@ -215,8 +243,9 @@ services:
       - '3008:3000'
       - '30008:9229'
     depends_on:
-      - db-migrate
+      - audit
       - bull-monitor
+      - db-migrate
       - crm-postgres
       - crm-redis
       - crm-kafka

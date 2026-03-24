@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
 import { Get, Req, Body, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
 
@@ -48,11 +49,12 @@ export class UserController {
   /**
    * Create a new user
    * @param dto The payload dto
+   * @param req The request
    */
   @OpenApi({ type: NewUserDto })
   @Post()
-  public async create(@Body() dto: CreateUserDto): Promise<{ data: NewUserDto }> {
-    return { data: await this.service.create(dto) };
+  public async create(@Body() dto: CreateUserDto, @Req() req: Request): Promise<{ data: NewUserDto }> {
+    return { data: await this.service.create(dto, req) };
   }
 
   /**
@@ -74,13 +76,14 @@ export class UserController {
       dto.status = undefined;
     }
 
-    return { data: await this.service.update(userId, dto) };
+    return { data: await this.service.update(userId, dto, req) };
   }
 
   /**
    * Updates a user's settings by user id
    * @param userId The user id to update
    * @param dto The payload dto
+   * @param req The authenticated request
    */
   @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
@@ -88,14 +91,16 @@ export class UserController {
   public async updateSettings(
     @Param('userId', UserIdValidator) userId: string,
     @Body() dto: UpdateUserSettingsDto,
+    @Req() req: AuthenticatedReq,
   ): Promise<{ data: User }> {
-    return { data: await this.service.updateSettings(userId, dto) };
+    return { data: await this.service.updateSettings(userId, dto, req) };
   }
 
   /**
    * Updates a user's details by user id
    * @param userId The user id to update
    * @param dto The payload dto
+   * @param req The authenticated request
    */
   @Auth(Action.UPDATE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi({ type: User })
@@ -103,18 +108,20 @@ export class UserController {
   public async updateDetails(
     @Param('userId', UserIdValidator) userId: string,
     @Body() dto: UpdateUserDetailsDto,
+    @Req() req: AuthenticatedReq,
   ): Promise<{ data: User }> {
-    return { data: await this.service.updateDetails(userId, dto) };
+    return { data: await this.service.updateDetails(userId, dto, req) };
   }
 
   /**
    * Deletes a user by id
    * @param userId The user id to delete
+   * @param req The authenticated request
    */
   @Auth(Action.DELETE, UserSubject, { in: 'params', use: 'userId', findBy: 'id' })
   @OpenApi()
   @Delete(':userId')
-  public async delete(@Param('userId', UserIdValidator) userId: string): Promise<void> {
-    await this.service.delete(userId);
+  public async delete(@Param('userId', UserIdValidator) userId: string, @Req() req: AuthenticatedReq): Promise<void> {
+    await this.service.delete(userId, req);
   }
 }

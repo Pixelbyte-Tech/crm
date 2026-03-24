@@ -16,6 +16,10 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
+    "@crm/auth": "workspace:^",
     "@crm/types": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6"
   }
 }

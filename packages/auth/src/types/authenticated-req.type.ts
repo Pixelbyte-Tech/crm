@@ -7,5 +7,8 @@ export interface AuthenticatedReq extends Request {
     userId: string;
     sessionId: string;
     roles: Role[];
+    userAgent?: string;
+    ipAddress?: string;
+    traceId?: string;
   };
 }

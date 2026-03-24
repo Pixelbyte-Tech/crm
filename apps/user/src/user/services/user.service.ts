@@ -1,5 +1,6 @@
 import { isNil } from 'lodash';
 import { DateTime } from 'luxon';
+import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
@@ -15,9 +16,10 @@ import {
 
 import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
-import { UserCreatedEvent } from '@crm/kafka';
+import { AuthenticatedReq } from '@crm/auth';
 import { UserEntity, UserSettingEntity } from '@crm/database';
-import { Role, User, UserStatus, UserDetail, UserSetting, UserSettingKey } from '@crm/types';
+import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
+import { Role, User, UserDetail, UserStatus, UserSetting, UserSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
@@ -92,8 +94,9 @@ export class UserService {
   /**
    * Creates a new user in the system.
    * @param dto The payload dto with the creation data
+   * @param req The request object
    */
-  async create(dto: CreateUserDto): Promise<NewUserDto> {
+  async create(dto: CreateUserDto, req?: Request): Promise<NewUserDto> {
     const msg = `Attempting to create user from email '${dto.email}'`;
 
     // Fetch the default settings
@@ -138,11 +141,14 @@ export class UserService {
       // Trigger the creation event
       this.kafka.emit(
         UserCreatedEvent.type,
-        new UserCreatedEvent({
-          user: domainUser,
-          confirmEmailToken: token.token,
-          createdAt: DateTime.fromJSDate(user.createdAt).toMillis(),
-        }),
+        new UserCreatedEvent(
+          {
+            user: domainUser,
+            confirmEmailToken: token.token,
+            createdAt: DateTime.fromJSDate(user.createdAt).toMillis(),
+          },
+          req,
+        ),
       );
 
       this.#logger.log(`${msg} - Complete`);
@@ -158,8 +164,9 @@ export class UserService {
    * Updates a user by their ID.
    * @param userId The id of the user to update
    * @param dto The update dto
+   * @param req The authenticated request
    */
-  async update(userId: string, dto: UpdateUserDto): Promise<User> {
+  async update(userId: string, dto: UpdateUserDto, req: AuthenticatedReq): Promise<User> {
     const msg = `Updating user '${userId}'`;
 
     // Find the user prior to the update
@@ -213,16 +220,26 @@ export class UserService {
       throw new UnprocessableEntityException(`Failed to update user '${userId}'`);
     }
 
+    // Build the domain user
+    const domainUser = await this.get(userId);
+
+    // Trigger the update event
+    this.kafka.emit(
+      UserUpdatedEvent.type,
+      new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+    );
+
     this.#logger.log(`${msg} - Complete`);
-    return this.get(userId);
+    return domainUser;
   }
 
   /**
    * Updates a user's details by their ID.
    * @param userId The id of the user to update
    * @param dto The update dto
+   * @param req The authenticated request
    */
-  async updateDetails(userId: string, dto: UpdateUserDetailsDto): Promise<User> {
+  async updateDetails(userId: string, dto: UpdateUserDetailsDto, req: AuthenticatedReq): Promise<User> {
     const msg = `Updating user '${userId}' details`;
 
     // Find the user prior to the update
@@ -262,8 +279,17 @@ export class UserService {
         },
       });
 
+      // Build the domain user
+      const domainUser = await this.get(userId);
+
+      // Trigger the update event
+      this.kafka.emit(
+        UserUpdatedEvent.type,
+        new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+      );
+
       this.#logger.log(`${msg} - Complete`);
-      return this.get(userId);
+      return domainUser;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
       throw new UnprocessableEntityException(`Failed to update user '${userId}' details`, { cause: err });
@@ -274,8 +300,9 @@ export class UserService {
    * Updates a user's settings by their ID.
    * @param userId The id of the user to update
    * @param dto The update dto
+   * @param req The authenticated request
    */
-  async updateSettings(userId: string, dto: UpdateUserSettingsDto): Promise<User> {
+  async updateSettings(userId: string, dto: UpdateUserSettingsDto, req: AuthenticatedReq): Promise<User> {
     const msg = `Updating user '${userId}' settings`;
 
     // Find the user prior to the update
@@ -297,8 +324,17 @@ export class UserService {
         },
       });
 
+      // Build the domain user
+      const domainUser = await this.get(userId);
+
+      // Trigger the update event
+      this.kafka.emit(
+        UserUpdatedEvent.type,
+        new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+      );
+
       this.#logger.log(`${msg} - Complete`);
-      return this.get(userId);
+      return domainUser;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
       throw new UnprocessableEntityException(`Failed to update user '${userId}' settings`, { cause: err });
@@ -308,8 +344,9 @@ export class UserService {
   /**
    * Deletes a user by their ID.
    * @param userId The id of the user to delete
+   * @param req The authenticated request
    */
-  async delete(userId: string): Promise<void> {
+  async delete(userId: string, req?: AuthenticatedReq): Promise<void> {
     const msg = `Deleting user '${userId}'`;
 
     // Find the user by ID
@@ -318,6 +355,9 @@ export class UserService {
       this.#logger.error(`${msg} - Failed`);
       throw new UnprocessableEntityException(`Failed to delete user '${userId}'`);
     }
+
+    // Trigger the update event
+    this.kafka.emit(UserDeletedEvent.type, new UserDeletedEvent({ userId, deletedAt: DateTime.utc().toMillis() }, req));
 
     this.#logger.log(`${msg} - Complete`);
   }

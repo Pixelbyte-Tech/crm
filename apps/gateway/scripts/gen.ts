@@ -11,7 +11,7 @@ import { Method, SwaggerDoc, KrakendSchema, KrakendEndpoint, KrakendServiceArg }
  */
 function toEndpoint(method: Method, endpointPath: string, serviceName: string, externalPath?: string): KrakendEndpoint {
   let endpoint = externalPath ?? endpointPath;
-  if (endpointPath.includes('api/alive')) {
+  if (endpointPath.includes('api/health')) {
     endpoint = endpoint.replace('api/', `api/${serviceName}/`);
   }
 

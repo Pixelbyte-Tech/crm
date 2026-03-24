@@ -13,7 +13,7 @@ import { AuditActor, AuditAction, AuditTarget, AuditResult } from '@crm/types';
 
 import { UserEntity } from './user.entity';
 
-@Index(['userId', 'targetType', 'targetId'])
+@Index(['eventId'])
 @Entity({ name: 'audit_log' })
 export class AuditLogEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -44,8 +44,8 @@ export class AuditLogEntity {
   failureReason?: string | null;
 
   // Request / traceability
-  @Column({ type: 'inet' })
-  ipAddress: string;
+  @Column({ type: 'inet', nullable: true })
+  ipAddress?: string | null;
 
   @Column({ type: 'text', nullable: true })
   userAgent?: string | null;
@@ -55,6 +55,13 @@ export class AuditLogEntity {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any> | null;
+
+  @Index()
+  @Column({ type: 'timestamp' })
+  occurredAt: Date;
+
+  @Column({ type: 'text' })
+  eventId: string;
 
   /** Many-to-many relations */
   @ManyToOne(() => UserEntity, (e) => e.auditLogs, {

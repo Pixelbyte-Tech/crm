@@ -29,7 +29,7 @@ export class HealthCheckProvider {
     const tasks: Promise<HealthIndicatorResult>[] = [];
 
     // Push various health check tasks
-    tasks.push(this.http.pingCheck('api', `http://localhost:3000/api/alive/ping`, { timeout: 2000 }));
+    tasks.push(this.http.pingCheck('api', `http://localhost:3000/api/health/ping`, { timeout: 2000 }));
     tasks.push(this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.8 }));
     tasks.push(this.db.pingCheck('database', { timeout: 5000 }));
 
