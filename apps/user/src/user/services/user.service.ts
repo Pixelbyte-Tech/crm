@@ -161,7 +161,7 @@ export class UserService {
     } catch (err) {
       await this.delete(user.id);
       this.#logger.error(`${msg} - Failed to send confirmation email`, err);
-      throw new InternalServerErrorException(`Failed to send confirmation email to '${dto.email}'`);
+      throw new InternalServerErrorException(`Failed to send confirmation email to '${dto.email}'`, { cause: err });
     }
   }
 

@@ -17,14 +17,16 @@ export class GlobalSettingSeedService {
 
     const settings: Map<GlobalSettingKey, unknown> = new Map();
     settings.set(GlobalSettingKey.COMPANY_NAME, 'Test Company');
+
     settings.set(GlobalSettingKey.USER_CAN_DEPOSIT, true);
     settings.set(GlobalSettingKey.USER_CAN_WITHDRAW, true);
     settings.set(GlobalSettingKey.USER_CAN_AUTO_WITHDRAW, false);
     settings.set(GlobalSettingKey.USER_MAX_AUTO_WITHDRAW_AMT, 10000);
 
-    const items: GlobalSettingEntity[] = [];
+    settings.set(GlobalSettingKey.USER_INVITATION_EXPIRE_DAYS, 7);
 
     try {
+      const items: GlobalSettingEntity[] = [];
       const existing = await this.repo.find();
 
       // Process any missing settings

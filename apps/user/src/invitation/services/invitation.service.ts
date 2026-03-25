@@ -1,6 +1,6 @@
-import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { In, Repository, EntityManager } from 'typeorm';
 import {
   Logger,
   Injectable,
@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 
 import { PaginatedResDto } from '@crm/http';
-import { Role, InvitationStatus } from '@crm/types';
-import { UserEntity, InvitationEntity } from '@crm/database';
+import { Role, GlobalSettingKey, InvitationStatus } from '@crm/types';
+import { UserEntity, InvitationEntity, GlobalSettingEntity } from '@crm/database';
 
 import { Invitation } from '../domain';
 import { InvitationMapper } from '../mappers';
@@ -26,6 +26,8 @@ export class InvitationService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(InvitationEntity)
     private readonly invitationRepo: Repository<InvitationEntity>,
+    @InjectRepository(GlobalSettingEntity)
+    private readonly settingRepo: Repository<GlobalSettingEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -60,7 +62,7 @@ export class InvitationService {
       return true;
     } catch (err) {
       this.#logger.error(`${msg}. Unable to create the invitation - Failed`, err);
-      throw new InternalServerErrorException('Failed to create the invitation');
+      throw new InternalServerErrorException('Failed to create the invitation', { cause: err });
     }
   }
 
@@ -89,7 +91,7 @@ export class InvitationService {
    * @param invitationId The id of the invitation to resend
    */
   async resendInvitation(invitationId: string): Promise<boolean> {
-    const msg = `Resending invitation '${invitationId}' email`;
+    const msg = `Resending invitation '${invitationId}'`;
     this.#logger.log(`${msg} - Start`);
 
     // Find the invitation
@@ -109,8 +111,8 @@ export class InvitationService {
       this.#logger.log(`${msg} - Complete`);
       return true;
     } catch (err) {
-      this.#logger.error(`${msg}. Unable to send invitation email - Failed`, err);
-      throw new InternalServerErrorException('Failed to send invitation email');
+      this.#logger.error(`${msg}. Unable to trigger invitation resend - Failed`, err);
+      throw new InternalServerErrorException('Failed to trigger invitation resend', { cause: err });
     }
   }
 
@@ -174,14 +176,13 @@ export class InvitationService {
 
     try {
       // Assign the user roles based on the invitation
-      await this.userRepo.update({ id: user.id }, { roles: invitation.roles });
-
       // Update the invitation status to 'accepted'
-      const res = await this.invitationRepo.update({ token: token }, { status: InvitationStatus.ACCEPTED });
-      if (res.affected && res.affected > 0) {
+      await this.userRepo.manager.transaction(async (trx: EntityManager) => {
+        await trx.update(UserEntity, { id: user.id }, { roles: invitation.roles });
+        await trx.update(InvitationEntity, { token: token }, { status: InvitationStatus.ACCEPTED });
+
         this.#logger.log(`${msg} - Complete`);
-        return true;
-      }
+      });
     } catch (err) {
       this.#logger.error(`${msg} - Failed to assign user to company`, err);
       return false;
@@ -224,12 +225,13 @@ export class InvitationService {
   async #createInvitation(email: string, roles: Role[], fromUserId: string): Promise<Invitation> {
     // Check if an invitation already exists for the email
     const statuses = [InvitationStatus.UNSENT, InvitationStatus.PENDING, InvitationStatus.RESEND_PENDING];
-    const existingInvitation = await this.invitationRepo.findOne({
-      where: { email, status: In(statuses) },
-    });
+    const existingInvitation = await this.invitationRepo.findOne({ where: { email, status: In(statuses) } });
     if (existingInvitation) {
       return this.invitationMapper.toInvitation(existingInvitation);
     }
+
+    // Fetch invitation expiry duration
+    const setting = await this.settingRepo.findOne({ where: { key: GlobalSettingKey.USER_INVITATION_EXPIRE_DAYS } });
 
     // Generate a unique token for the invitation
     const token = [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
@@ -241,6 +243,7 @@ export class InvitationService {
     invitation.token = token;
     invitation.status = InvitationStatus.UNSENT;
     invitation.sentByUserId = fromUserId;
+    invitation.expiresInDays = setting ? Number(setting.value) : 30;
 
     return this.invitationMapper.toInvitation(await this.invitationRepo.save(invitation));
   }

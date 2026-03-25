@@ -3,7 +3,7 @@ import { BullModule } from '@nestjs/bull';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserEntity, InvitationEntity } from '@crm/database';
+import { UserEntity, InvitationEntity, GlobalSettingEntity } from '@crm/database';
 
 import { InvitationMapper } from './mappers';
 import { ExpireInvitationsProcessor } from './processors';
@@ -32,7 +32,7 @@ import { BullLogger, JobsService, InvitationService } from './services';
         return { redis: `redis://${host}:${port}`, defaultJobOptions: { removeOnComplete: true, removeOnFail: 10 } };
       },
     }),
-    TypeOrmModule.forFeature([InvitationEntity, UserEntity]),
+    TypeOrmModule.forFeature([GlobalSettingEntity, InvitationEntity, UserEntity]),
   ],
   providers: [BullLogger, ExpireInvitationsProcessor, InvitationMapper, InvitationService, JobsService],
   controllers: [InvitationController],

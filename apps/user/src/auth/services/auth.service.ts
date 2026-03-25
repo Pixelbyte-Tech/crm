@@ -166,7 +166,7 @@ export class AuthService {
       return (result.affected ?? 0) > 0;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
-      throw new InternalServerErrorException('Failed to update user email confirmation status');
+      throw new InternalServerErrorException('Failed to update user email confirmation status', { cause: err });
     }
   }
 
@@ -199,7 +199,7 @@ export class AuthService {
       return true;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
-      throw new InternalServerErrorException('Failed to update user email');
+      throw new InternalServerErrorException('Failed to update user email', { cause: err });
     }
   }
 
