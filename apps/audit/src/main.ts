@@ -61,7 +61,7 @@ async function bootstrap() {
   });
 
   // Start Kafka consumer microservice
-  await app.startAllMicroservices();
+  void app.startAllMicroservices();
 
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();
