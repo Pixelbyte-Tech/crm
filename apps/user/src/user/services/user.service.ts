@@ -227,7 +227,7 @@ export class UserService {
       throw new UnprocessableEntityException(`Failed to update user '${userId}'`);
     }
 
-    // Build the domain user
+    // Build the domain model
     const domainUser = await this.get(userId);
 
     // If the email is changed we need to ask for a confirmation again
@@ -291,7 +291,7 @@ export class UserService {
         },
       });
 
-      // Build the domain user
+      // Build the domain model
       const domainUser = await this.get(userId);
 
       // Trigger the update event
@@ -336,7 +336,7 @@ export class UserService {
         },
       });
 
-      // Build the domain user
+      // Build the domain model
       const domainUser = await this.get(userId);
 
       // Trigger the update event

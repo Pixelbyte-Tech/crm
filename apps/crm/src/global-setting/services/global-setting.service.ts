@@ -85,7 +85,7 @@ export class GlobalSettingService {
       throw new InternalServerErrorException(`Failed to create global setting`);
     }
 
-    // Build the domain global setting
+    // Build the domain model
     const domainSetting = this.mapper.toSetting(entity);
 
     // Trigger the creation event
@@ -117,7 +117,7 @@ export class GlobalSettingService {
       throw new UnprocessableEntityException(`Failed to update global setting '${settingId}'`);
     }
 
-    // Build the domain global setting
+    // Build the domain model
     const domainSetting = await this.get(settingId);
 
     // Trigger the update event

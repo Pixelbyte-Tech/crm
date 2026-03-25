@@ -85,7 +85,7 @@ export class TagService {
       throw new InternalServerErrorException(`Failed to create tag`);
     }
 
-    // Build the domain tag
+    // Build the domain model
     const domainTag = this.tagMapper.toTag(entity);
 
     // Trigger the creation event
@@ -122,7 +122,7 @@ export class TagService {
       throw new UnprocessableEntityException(`Failed to update tag '${tagId}'`);
     }
 
-    // Build the domain tag
+    // Build the domain model
     const domainTag = await this.get(tagId);
 
     // Trigger the update event

@@ -100,7 +100,7 @@ export class PlatformClientService {
       throw new InternalServerErrorException(`Failed to create '${dto.platform}' platform client`);
     }
 
-    // Build the domain client
+    // Build the domain model
     const domainClient = this.clientMapper.toClient(entity);
 
     // Trigger the creation event
@@ -148,7 +148,7 @@ export class PlatformClientService {
       throw new UnprocessableEntityException(`Failed to update platform client '${clientId}'`);
     }
 
-    // Build the domain client
+    // Build the domain model
     const domainClient = await this.get(clientId);
 
     // Trigger the update event

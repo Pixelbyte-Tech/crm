@@ -104,7 +104,7 @@ export class NoteService {
       throw new InternalServerErrorException(`Failed to create note for user '${userId}'`);
     }
 
-    // Build the domain note
+    // Build the domain model
     const domainNote = this.noteMapper.toNote(entity);
 
     // Trigger the creation event
@@ -152,7 +152,7 @@ export class NoteService {
       throw new UnprocessableEntityException(`Failed to update user note '${noteId}'`);
     }
 
-    // Build the domain note
+    // Build the domain model
     const domainNote = await this.get(noteId, userId);
 
     // Trigger the update event

@@ -117,7 +117,7 @@ export class ServerService {
       throw new InternalServerErrorException(`Failed to create '${dto.platform}' server`);
     }
 
-    // Build the domain server
+    // Build the domain model
     const domainServer = this.serverMapper.toServer(entity);
 
     // Trigger the creation event
@@ -185,7 +185,7 @@ export class ServerService {
       throw new UnprocessableEntityException(`Failed to update server '${serverId}'`);
     }
 
-    // Build the domain server
+    // Build the domain model
     const domainServer = await this.get(serverId);
 
     // Trigger the update event
