@@ -1,7 +1,7 @@
 import { has, unset } from 'lodash';
 import { LoggerService } from '@nestjs/common';
 
-const OBFUSCATED = ['password'];
+const OBFUSCATED = ['securityPin', 'password'];
 
 const LOG_SIZE_LIMIT = 500_000;
 
