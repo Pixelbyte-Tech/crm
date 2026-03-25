@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
 import { GlobalSettingKey } from '@crm/types';
@@ -9,5 +10,6 @@ export class CreateGlobalSettingDto {
 
   /** The value of the global setting. Must not be empty. */
   @IsNotEmpty()
-  value: any;
+  @Type(() => String)
+  value: string;
 }

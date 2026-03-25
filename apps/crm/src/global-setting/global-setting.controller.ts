@@ -11,7 +11,7 @@ import { GlobalSettingService } from './services';
 import { ListGlobalSettingsDto, UpdateGlobalSettingDto, CreateGlobalSettingDto } from './dto';
 
 @ApiTags('Global Setting')
-@ApiExtraModels(CreateGlobalSettingDto, ListGlobalSettingsDto, UpdateGlobalSettingDto)
+@ApiExtraModels(GlobalSetting, CreateGlobalSettingDto, ListGlobalSettingsDto, UpdateGlobalSettingDto)
 @Controller({ path: 'settings', version: '1' })
 export class GlobalSettingController {
   constructor(private readonly service: GlobalSettingService) {}
