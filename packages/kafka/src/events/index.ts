@@ -1,3 +1,8 @@
+// Global Setting
+export * from './global-setting/global-setting-created.event';
+export * from './global-setting/global-setting-deleted.event';
+export * from './global-setting/global-setting-updated.event';
+
 // Integration
 export * from './integration/integration-created.event';
 export * from './integration/integration-deleted.event';

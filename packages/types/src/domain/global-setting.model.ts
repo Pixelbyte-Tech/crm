@@ -1,10 +1,10 @@
-import { UserSettingKey } from '../enums';
+import { GlobalSettingKey } from '../enums';
 
 export class GlobalSetting {
   /** Global setting unique identifier */
   id: string;
 
-  key: UserSettingKey;
+  key: GlobalSettingKey;
   value: string | number | boolean;
 
   createdAt: Date;

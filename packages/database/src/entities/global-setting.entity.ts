@@ -10,7 +10,7 @@ export class GlobalSettingEntity {
 
   @Index()
   @Column({ type: 'enum', enum: GlobalSettingKey })
-  key: string;
+  key: GlobalSettingKey;
 
   @Index()
   @Column({ type: 'text' })

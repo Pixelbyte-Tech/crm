@@ -21,6 +21,7 @@ import { AppConfig } from './config/app/app-config.type';
 import { AuthConfig } from './config/auth/auth-config.type';
 import { IntegrationModule } from './integration/integration.module';
 import { DatabaseConfig } from './config/database/database-config.type';
+import { GlobalSettingModule } from './global-setting/global-setting.module';
 import { PlatformClientModule } from './platform-client/platform-client.module';
 import { TradingAccountModule } from './trading-account/trading-account.module';
 
@@ -90,6 +91,7 @@ import { TradingAccountModule } from './trading-account/trading-account.module';
         maxUses: c.get('database.maxUses', { infer: true }),
       }),
     }),
+    GlobalSettingModule,
     HealthModule,
     IntegrationModule,
     PlatformClientModule,

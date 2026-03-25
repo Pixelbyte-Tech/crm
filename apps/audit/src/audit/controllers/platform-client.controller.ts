@@ -39,7 +39,7 @@ export class PlatformClientController {
       {
         eventId: e.id,
         targetAction: AuditAction.CREATED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.PLATFORM_CLIENT,
         targetId: e.data.clientId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.createdAt).toJSDate(),
@@ -65,7 +65,7 @@ export class PlatformClientController {
       {
         eventId: e.id,
         targetAction: AuditAction.UPDATED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.PLATFORM_CLIENT,
         targetId: e.data.clientId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
@@ -91,7 +91,7 @@ export class PlatformClientController {
       {
         eventId: e.id,
         targetAction: AuditAction.DELETED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.PLATFORM_CLIENT,
         targetId: e.data.clientId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.deletedAt).toJSDate(),

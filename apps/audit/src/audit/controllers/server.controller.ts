@@ -34,7 +34,7 @@ export class ServerController {
       {
         eventId: e.id,
         targetAction: AuditAction.CREATED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.SERVER,
         targetId: e.data.serverId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.createdAt).toJSDate(),
@@ -60,7 +60,7 @@ export class ServerController {
       {
         eventId: e.id,
         targetAction: AuditAction.UPDATED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.SERVER,
         targetId: e.data.serverId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
@@ -86,7 +86,7 @@ export class ServerController {
       {
         eventId: e.id,
         targetAction: AuditAction.DELETED,
-        targetType: AuditTarget.USER,
+        targetType: AuditTarget.SERVER,
         targetId: e.data.serverId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.deletedAt).toJSDate(),

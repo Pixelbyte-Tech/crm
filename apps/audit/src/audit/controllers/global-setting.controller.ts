@@ -4,13 +4,13 @@ import { Logger, Inject, Controller } from '@nestjs/common';
 import { Ctx, Payload, ClientKafka, EventPattern, KafkaContext } from '@nestjs/microservices';
 
 import { AuditAction, AuditResult, AuditTarget } from '@crm/types';
-import { KafkaDlq, IntegrationCreatedEvent, IntegrationUpdatedEvent, IntegrationDeletedEvent } from '@crm/kafka';
+import { KafkaDlq, GlobalSettingCreatedEvent, GlobalSettingUpdatedEvent, GlobalSettingDeletedEvent } from '@crm/kafka';
 
 import { AuditService } from '../services';
 
 @Controller()
 @ApiExcludeController()
-export class IntegrationController {
+export class GlobalSettingController {
   constructor(
     @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
     private readonly auditService: AuditService,
@@ -24,18 +24,18 @@ export class IntegrationController {
    * @param e The event
    * @param context The kafka context
    */
-  @KafkaDlq({ topic: IntegrationCreatedEvent.type })
-  @EventPattern([IntegrationCreatedEvent.type, `${IntegrationCreatedEvent.type}.retry`])
-  async onUserCreated(@Payload() e: IntegrationCreatedEvent, @Ctx() context: KafkaContext): Promise<void> {
-    const msg = `Received ${IntegrationCreatedEvent.name} for '${e.data?.integration.id ?? 'n/a'}'`;
+  @KafkaDlq({ topic: GlobalSettingCreatedEvent.type })
+  @EventPattern([GlobalSettingCreatedEvent.type, `${GlobalSettingCreatedEvent.type}.retry`])
+  async onUserCreated(@Payload() e: GlobalSettingCreatedEvent, @Ctx() context: KafkaContext): Promise<void> {
+    const msg = `Received ${GlobalSettingCreatedEvent.name} for '${e.data?.setting.id ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
 
     await this.auditService.persist(
       {
         eventId: e.id,
         targetAction: AuditAction.CREATED,
-        targetType: AuditTarget.INTEGRATION,
-        targetId: e.data.integration.id,
+        targetType: AuditTarget.SETTING,
+        targetId: e.data.setting.id,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.createdAt).toJSDate(),
       },
@@ -50,18 +50,18 @@ export class IntegrationController {
    * @param e The event
    * @param context The kafka context
    */
-  @KafkaDlq({ topic: IntegrationUpdatedEvent.type })
-  @EventPattern([IntegrationUpdatedEvent.type, `${IntegrationUpdatedEvent.type}.retry`])
-  async onUserUpdated(@Payload() e: IntegrationUpdatedEvent, @Ctx() context: KafkaContext): Promise<void> {
-    const msg = `Received ${IntegrationUpdatedEvent.name} for '${e.data?.integration.id ?? 'n/a'}'`;
+  @KafkaDlq({ topic: GlobalSettingUpdatedEvent.type })
+  @EventPattern([GlobalSettingUpdatedEvent.type, `${GlobalSettingUpdatedEvent.type}.retry`])
+  async onUserUpdated(@Payload() e: GlobalSettingUpdatedEvent, @Ctx() context: KafkaContext): Promise<void> {
+    const msg = `Received ${GlobalSettingUpdatedEvent.name} for '${e.data?.setting.id ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
 
     await this.auditService.persist(
       {
         eventId: e.id,
         targetAction: AuditAction.UPDATED,
-        targetType: AuditTarget.INTEGRATION,
-        targetId: e.data.integration.id,
+        targetType: AuditTarget.SETTING,
+        targetId: e.data.setting.id,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
       },
@@ -76,18 +76,18 @@ export class IntegrationController {
    * @param e The event
    * @param context The kafka context
    */
-  @KafkaDlq({ topic: IntegrationDeletedEvent.type })
-  @EventPattern([IntegrationDeletedEvent.type, `${IntegrationDeletedEvent.type}.retry`])
-  async onUserDeleted(@Payload() e: IntegrationDeletedEvent, @Ctx() context: KafkaContext): Promise<void> {
-    const msg = `Received ${IntegrationDeletedEvent.name} for '${e.data?.integrationId ?? 'n/a'}'`;
+  @KafkaDlq({ topic: GlobalSettingDeletedEvent.type })
+  @EventPattern([GlobalSettingDeletedEvent.type, `${GlobalSettingDeletedEvent.type}.retry`])
+  async onUserDeleted(@Payload() e: GlobalSettingDeletedEvent, @Ctx() context: KafkaContext): Promise<void> {
+    const msg = `Received ${GlobalSettingDeletedEvent.name} for '${e.data?.settingId ?? 'n/a'}'`;
     this.#logger.log(`${msg}`);
 
     await this.auditService.persist(
       {
         eventId: e.id,
         targetAction: AuditAction.DELETED,
-        targetType: AuditTarget.INTEGRATION,
-        targetId: e.data.integrationId,
+        targetType: AuditTarget.SETTING,
+        targetId: e.data.settingId,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.deletedAt).toJSDate(),
       },

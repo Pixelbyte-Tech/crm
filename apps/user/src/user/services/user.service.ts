@@ -19,7 +19,7 @@ import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
 import { UserEntity, UserSettingEntity } from '@crm/database';
 import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
-import { Role, User, UserDetail, UserStatus, UserSetting, UserSettingKey } from '@crm/types';
+import { Role, User, UserDetail, UserStatus, UserSetting, GlobalSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
@@ -103,10 +103,10 @@ export class UserService {
 
     // Fetch the default settings
     const settings = await this.globalSettingService.fetch();
-    const canDeposit = settings.find((s) => s.key === UserSettingKey.USER_CAN_DEPOSIT)?.value ?? true;
-    const canWithdraw = settings.find((s) => s.key === UserSettingKey.USER_CAN_WITHDRAW)?.value ?? true;
-    const canAutoWithdraw = settings.find((s) => s.key === UserSettingKey.USER_CAN_AUTO_WITHDRAW)?.value ?? false;
-    const maxAutoWithdrawAmount = settings.find((s) => s.key === UserSettingKey.USER_MAX_AUTO_WITHDRAW_AMT)?.value;
+    const canDeposit = settings.find((s) => s.key === GlobalSettingKey.USER_CAN_DEPOSIT)?.value ?? true;
+    const canWithdraw = settings.find((s) => s.key === GlobalSettingKey.USER_CAN_WITHDRAW)?.value ?? true;
+    const canAutoWithdraw = settings.find((s) => s.key === GlobalSettingKey.USER_CAN_AUTO_WITHDRAW)?.value ?? false;
+    const maxAutoWithdrawAmount = settings.find((s) => s.key === GlobalSettingKey.USER_MAX_AUTO_WITHDRAW_AMT)?.value;
 
     // Create the user settings
     const userSettings = new UserSettingEntity();

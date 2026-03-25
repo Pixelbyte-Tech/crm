@@ -1,3 +1,4 @@
+export * from './global-setting.controller';
 export * from './integration.controller';
 export * from './platform-client.controller';
 export * from './server.controller';

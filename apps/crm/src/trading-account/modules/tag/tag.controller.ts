@@ -10,7 +10,7 @@ import { Tag } from './domain';
 import { TagService } from './services';
 import { ListTagsDto, UpdateTagDto, CreateTagDto } from './dto';
 
-@ApiTags('Server')
+@ApiTags('Tag')
 @ApiExtraModels(CreateTagDto, ListTagsDto, UpdateTagDto)
 @Controller({ path: 'tags', version: '1' })
 export class TagController {

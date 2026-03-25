@@ -31,7 +31,7 @@ export class GlobalSettingSeedService {
       for (const [key, value] of Object.entries(settings)) {
         if (!existing.some((e) => e.key === key)) {
           const entity = new GlobalSettingEntity();
-          entity.key = key;
+          entity.key = key as GlobalSettingKey;
           entity.value = value;
           items.push(entity);
         }

@@ -10,6 +10,7 @@ import {
   ServerController,
   UserNoteController,
   IntegrationController,
+  GlobalSettingController,
   PlatformClientController,
 } from './controllers';
 
@@ -17,6 +18,7 @@ import {
   imports: [TypeOrmModule.forFeature([AuditLogEntity])],
   providers: [AuditService],
   controllers: [
+    GlobalSettingController,
     IntegrationController,
     PlatformClientController,
     ServerController,

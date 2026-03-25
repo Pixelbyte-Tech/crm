@@ -1,5 +1,5 @@
 import { set } from 'lodash';
-import { applyDecorators } from '@nestjs/common';
+import { Type, applyDecorators } from '@nestjs/common';
 import { SchemaObject, ReferenceObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import {
   ApiBody,
@@ -22,7 +22,7 @@ export function OpenApi(arg?: SwaggerResponseOptions) {
   const decorators: [ClassDecorator | MethodDecorator | PropertyDecorator] = [ApiOkResponse(apiResponse(arg))];
 
   if (arg && arg.type) {
-    decorators.push(ApiExtraModels(arg.type as () => void));
+    decorators.push(ApiExtraModels(arg.type as () => Type<unknown>));
   }
 
   if (arg && arg.tags) {
@@ -54,19 +54,16 @@ function apiResponse(options?: SwaggerResponseOptions) {
   };
 
   if (options?.isPaginated) {
-    response.schema.required.concat(['page', 'limit', 'total']);
+    response.schema.required = response.schema.required.concat(['page', 'limit', 'total']);
 
     set(response.schema.properties, 'page', {
       type: 'number',
-      required: true,
     });
     set(response.schema.properties, 'limit', {
       type: 'number',
-      required: true,
     });
     set(response.schema.properties, 'total', {
       type: 'number',
-      required: false,
     });
   }
 
@@ -84,7 +81,7 @@ function apiResponse(options?: SwaggerResponseOptions) {
 
   if (options && (options.isArray || options.isPaginated)) {
     response.schema.properties['data'] = {
-      array: true,
+      type: 'array',
       items: type.includes('/') ? { $ref: type } : { type },
     };
   } else {

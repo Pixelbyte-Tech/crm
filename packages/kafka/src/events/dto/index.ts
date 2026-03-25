@@ -1,3 +1,8 @@
+// Global Setting
+export * from './global-setting-created.dto';
+export * from './global-setting-deleted.dto';
+export * from './global-setting-updated.dto';
+
 // Integration
 export * from './integration-created.dto';
 export * from './integration-deleted.dto';

@@ -8,5 +8,7 @@ export enum AuditTarget {
   SETTING = 'setting',
   INTEGRATION = 'integration',
   SERVER = 'server',
+  PLATFORM_CLIENT = 'platform_client',
+  TAG = 'tag',
   OTHER = 'other',
 }

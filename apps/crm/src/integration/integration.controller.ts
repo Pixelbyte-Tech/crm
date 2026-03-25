@@ -11,7 +11,7 @@ import { IntegrationService } from './services';
 import { ListIntegrationsDto, UpdateIntegrationDto, CreateIntegrationDto } from './dto';
 
 @ApiTags('Integration')
-@ApiExtraModels(CreateIntegrationDto, ListIntegrationsDto, UpdateIntegrationDto)
+@ApiExtraModels(Integration, CreateIntegrationDto, ListIntegrationsDto, UpdateIntegrationDto)
 @Controller({ path: 'integrations', version: '1' })
 export class IntegrationController {
   constructor(private readonly service: IntegrationService) {}
