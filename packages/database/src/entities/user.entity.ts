@@ -210,7 +210,7 @@ export class UserEntity {
   @JoinColumn()
   userNotes: UserNoteEntity[];
 
-  @OneToMany(() => WalletEntity, (e) => e.user)
+  @OneToMany(() => WalletEntity, (e) => e.user, { cascade: true })
   @JoinColumn()
   wallets: WalletEntity[];
 

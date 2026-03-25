@@ -27,6 +27,7 @@ export * from './tag/tag-updated.event';
 export * from './user/user-created.event';
 export * from './user/user-deleted.event';
 export * from './user/user-updated.event';
+export * from './user/user-email-updated.event';
 
 // User Note
 export * from './user-note/user-note-created.event';

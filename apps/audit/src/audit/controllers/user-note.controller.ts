@@ -12,8 +12,8 @@ import { AuditService } from '../services';
 @ApiExcludeController()
 export class UserNoteController {
   constructor(
-    @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
     private readonly auditService: AuditService,
+    @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
   ) {}
 
   /** The logger instance for this class */

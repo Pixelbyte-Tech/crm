@@ -27,6 +27,7 @@ export * from './tag-updated.dto';
 export * from './user-created.dto';
 export * from './user-deleted.dto';
 export * from './user-updated.dto';
+export * from './user-email-updated.dto';
 
 // User note
 export * from './user-note-created.dto';

@@ -18,14 +18,13 @@ import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
 import { UserEntity, LoyaltyEntity, UserSettingEntity } from '@crm/database';
-import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
+import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent, UserEmailUpdatedEvent } from '@crm/kafka';
 import { Role, User, UserDetail, UserStatus, UserSetting, LoyaltyProgram, GlobalSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
 import { UserMapper } from '../mappers';
 import { AuthService } from '../../auth/services';
-import { NotificationService } from '../../notification/services';
 import {
   NewUserDto,
   ListUsersDto,
@@ -40,7 +39,6 @@ export class UserService {
   constructor(
     private readonly authService: AuthService,
     private readonly userMapper: UserMapper,
-    private readonly notificationService: NotificationService,
     private readonly globalSettingService: GlobalSettingService,
     @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserEntity)
@@ -232,7 +230,18 @@ export class UserService {
 
     // If the email is changed we need to ask for a confirmation again
     if (dto.email) {
-      await this.notificationService.scheduleConfirmEmail({ email: dto.email });
+      this.kafka.emit(
+        UserEmailUpdatedEvent.type,
+        new UserEmailUpdatedEvent(
+          {
+            id: user.id,
+            oldEmail: user.email,
+            newEmail: dto.email,
+            updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis(),
+          },
+          req,
+        ),
+      );
     }
 
     // Trigger the update event

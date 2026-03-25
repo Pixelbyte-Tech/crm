@@ -4,7 +4,7 @@ import { Logger, Inject, Controller } from '@nestjs/common';
 import { Ctx, Payload, ClientKafka, EventPattern, KafkaContext } from '@nestjs/microservices';
 
 import { AuditAction, AuditResult, AuditTarget } from '@crm/types';
-import { KafkaDlq, UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
+import { KafkaDlq, UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent, UserEmailUpdatedEvent } from '@crm/kafka';
 
 import { AuditService } from '../services';
 
@@ -12,8 +12,8 @@ import { AuditService } from '../services';
 @ApiExcludeController()
 export class UserController {
   constructor(
-    @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
     private readonly auditService: AuditService,
+    @Inject('KAFKA') private readonly kafka: ClientKafka, // Required by @KafkaDlq
   ) {}
 
   /** The logger instance for this class */
@@ -64,6 +64,33 @@ export class UserController {
         targetId: e.data.user.id,
         result: AuditResult.SUCCESS,
         occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
+      },
+      e.metadata,
+    );
+
+    await this.#commitNextOffset(context);
+  }
+
+  /**
+   * Listens for the event based on the pattern and records an audit trail
+   * @param e The event
+   * @param context The kafka context
+   */
+  @KafkaDlq({ topic: UserEmailUpdatedEvent.type })
+  @EventPattern([UserEmailUpdatedEvent.type, `${UserEmailUpdatedEvent.type}.retry`])
+  async onUserEmail(@Payload() e: UserEmailUpdatedEvent, @Ctx() context: KafkaContext): Promise<void> {
+    const msg = `Received ${UserEmailUpdatedEvent.name} for '${e.data?.id ?? 'n/a'}'`;
+    this.#logger.log(`${msg}`);
+
+    await this.auditService.persist(
+      {
+        eventId: e.id,
+        targetAction: AuditAction.UPDATED,
+        targetType: AuditTarget.USER,
+        targetId: e.data.id,
+        result: AuditResult.SUCCESS,
+        occurredAt: DateTime.fromMillis(e.data.updatedAt).toJSDate(),
+        metadata: { oldEmail: e.data.oldEmail, newEmail: e.data.newEmail } as Record<string, any>,
       },
       e.metadata,
     );

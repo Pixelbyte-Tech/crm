@@ -5,12 +5,13 @@ import { UserEntity, UserNotificationEntity } from '@crm/database';
 
 import { NotificationService } from './services';
 import { AuthModule } from '../auth/auth.module';
+import { KafkaController } from './kafka.controller';
 import { NotificationController } from './notification.controller';
 
 @Module({
   imports: [AuthModule, TypeOrmModule.forFeature([UserEntity, UserNotificationEntity])],
   providers: [NotificationService],
-  controllers: [NotificationController],
+  controllers: [KafkaController, NotificationController],
   exports: [NotificationService],
 })
 export class NotificationModule {}

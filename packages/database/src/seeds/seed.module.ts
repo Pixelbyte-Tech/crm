@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagSeedService } from './services/tag-seed.service';
 import { UserSeedService } from './services/user-seed.service';
 import { ServerSeedService } from './services/server-seed.service';
+import { UserNoteSeedService } from './services/user-note-seed.service';
 import { IntegrationSeedService } from './services/integration-seed.service';
 import { GlobalSettingSeedService } from './services/global-setting-seed.service';
 import { PlatformClientSeedService } from './services/platform-client-seed.service';
@@ -11,6 +12,7 @@ import { PlatformClientSeedService } from './services/platform-client-seed.servi
 import { TagEntity } from '../entities/tag.entity';
 import { UserEntity } from '../entities/user.entity';
 import { ServerEntity } from '../entities/server.entity';
+import { UserNoteEntity } from '../entities/user-note.entity';
 import { IntegrationEntity } from '../entities/integration.entity';
 import { GlobalSettingEntity } from '../entities/global-setting.entity';
 import { PlatformClientEntity } from '../entities/platform-client.entity';
@@ -35,6 +37,7 @@ import { PlatformClientEntity } from '../entities/platform-client.entity';
       ServerEntity,
       TagEntity,
       UserEntity,
+      UserNoteEntity,
     ]),
   ],
   providers: [
@@ -44,6 +47,7 @@ import { PlatformClientEntity } from '../entities/platform-client.entity';
     ServerSeedService,
     TagSeedService,
     UserSeedService,
+    UserNoteSeedService,
   ],
 })
 export class SeedModule {}
