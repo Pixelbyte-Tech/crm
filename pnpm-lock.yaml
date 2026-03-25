@@ -1172,7 +1172,14 @@ importers:
         specifier: ^4.17.21
         version: 4.17.24
 
-  packages/types: {}
+  packages/types:
+    dependencies:
+      class-transformer:
+        specifier: '*'
+        version: 0.5.1
+      class-validator:
+        specifier: '*'
+        version: 0.14.3
 
   packages/utils:
     dependencies:

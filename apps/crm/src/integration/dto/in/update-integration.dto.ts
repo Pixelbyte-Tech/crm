@@ -1,8 +1,10 @@
-import { Transform } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { Min, IsInt, IsEnum, Validate, IsOptional, IsISO31661Alpha2 } from 'class-validator';
 
 import { IntegrationName } from '@crm/types';
 import { toArray, toBoolean } from '@crm/validation';
+
+import { SettingsValidator } from '../../validators';
 
 export class UpdateIntegrationDto {
   /** A name of the integration to create  */
@@ -16,15 +18,17 @@ export class UpdateIntegrationDto {
   @Transform(toBoolean)
   isEnabled: boolean = false;
 
-  /** The integration settings */
+  /** The settings for the integration */
   @IsOptional()
-  // todo type these
+  @Type(() => Object)
+  @Validate(SettingsValidator)
   settings: Record<string, any>;
 
   /** The order of priority for this integration, lower is higher priority */
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Type(() => Number)
   priority?: number;
 
   /** Countries to allow using the integration, empty allows all */

@@ -14,5 +14,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"src/**/*.ts\""
+  },
+  "peerDependencies": {
+    "class-transformer": "*",
+    "class-validator": "*"
   }
 }
