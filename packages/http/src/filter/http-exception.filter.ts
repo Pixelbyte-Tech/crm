@@ -54,9 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message: data.message,
       ...(data.cause ? { cause: data.cause } : {}),
       ...(data.errors
-        ? {
-            errors: isObject(data.errors) || Array.isArray(data.errors) ? data.errors : [data.errors],
-          }
+        ? { errors: isObject(data.errors) || Array.isArray(data.errors) ? data.errors : [data.errors] }
         : {}),
     });
   }
