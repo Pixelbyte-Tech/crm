@@ -6,8 +6,8 @@ import { Role } from '@crm/types';
 import { Cryptography } from '@crm/utils';
 
 import { UserEntity } from '../../entities/user.entity';
-import { ADMIN_USER_EMAIL, STANDARD_USER_EMAIL } from '../seed-ids';
 import { UserSettingEntity } from '../../entities/user-setting.entity';
+import { ADMIN_USER_EMAIL, STANDARD_USER_EMAIL } from '../helper/seed-ids';
 
 @Injectable()
 export class UserSeedService {
@@ -16,11 +16,10 @@ export class UserSeedService {
   readonly #logger = new Logger(this.constructor.name);
 
   async run() {
-    this.#logger.log('Starting users seed');
+    this.#logger.log('Starting users seed...');
 
     try {
-      const count = await this.repo.count({ where: { email: STANDARD_USER_EMAIL } });
-      if (count === 0) {
+      if ((await this.repo.count({ where: { email: STANDARD_USER_EMAIL } })) === 0) {
         const user = new UserEntity();
         user.firstName = 'John';
         user.lastName = 'Doe';
@@ -47,13 +46,10 @@ export class UserSeedService {
         user.settings = userSettings;
 
         await this.repo.save(user);
-        this.#logger.log(`Seeded user '${STANDARD_USER_EMAIL}'`);
-      } else {
-        this.#logger.log('User already seeded, skipping');
+        this.#logger.log(` -> Seeded user '${STANDARD_USER_EMAIL}'`);
       }
 
-      const countSuper = await this.repo.count({ where: { email: ADMIN_USER_EMAIL } });
-      if (countSuper === 0) {
+      if ((await this.repo.count({ where: { email: ADMIN_USER_EMAIL } })) === 0) {
         const user = new UserEntity();
         user.firstName = 'John';
         user.lastName = 'Doe (super)';
@@ -80,8 +76,10 @@ export class UserSeedService {
         user.settings = userSettings;
 
         await this.repo.save(user);
-        this.#logger.log(`Seeded user '${ADMIN_USER_EMAIL}'`);
+        this.#logger.log(` -> Seeded user '${ADMIN_USER_EMAIL}'`);
       }
+
+      this.#logger.log('✅ Users seeded successfully');
     } catch (err) {
       this.#logger.error(`Error seeding users`, err);
       throw err;

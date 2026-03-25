@@ -13,7 +13,7 @@ export class GlobalSettingSeedService {
   readonly #logger = new Logger(this.constructor.name);
 
   async run() {
-    this.#logger.log('Starting global settings seed');
+    this.#logger.log('Starting global settings seed...');
 
     const settings: Map<GlobalSettingKey, unknown> = new Map();
     settings.set(GlobalSettingKey.COMPANY_NAME, 'Test Company');
@@ -39,7 +39,7 @@ export class GlobalSettingSeedService {
 
       if (items.length) {
         await this.repo.save(items);
-        this.#logger.log(`Seeded global settings`);
+        this.#logger.log('✅ Global settings seeded successfully');
       }
     } catch (err) {
       this.#logger.error(`Error seeding global settings`, err);
