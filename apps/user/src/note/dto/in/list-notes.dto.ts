@@ -4,7 +4,7 @@ import { PaginatedReqDto } from '@crm/http';
 import { toBoolean, UserIdValidator } from '@crm/validation';
 
 export class ListNotesDto extends PaginatedReqDto {
-  /** Filter by only pinned notes */
+  /** Filter by pinned attribute */
   @IsOptional()
   @Validate(toBoolean)
   pinned?: boolean;

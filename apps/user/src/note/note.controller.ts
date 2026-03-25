@@ -60,7 +60,7 @@ export class NoteController {
     @Query() dto: CreateNoteDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Note }> {
-    return { data: await this.service.create(req.user.userId, userId, dto) };
+    return { data: await this.service.create(req.user.userId, userId, dto, req) };
   }
 
   /**
@@ -68,6 +68,7 @@ export class NoteController {
    * @param userId The user id the note belongs to
    * @param noteId The id of the note to update
    * @param dto The payload dto
+   * @param req The authenticated request
    */
   @Auth(Action.UPDATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note })
@@ -76,14 +77,16 @@ export class NoteController {
     @Param('userId', UserIdValidator) userId: string,
     @Param('noteId', UserNoteIdValidator) noteId: string,
     @Query() dto: UpdateNoteDto,
+    @Req() req: AuthenticatedReq,
   ): Promise<{ data: Note }> {
-    return { data: await this.service.update(noteId, userId, dto) };
+    return { data: await this.service.update(noteId, userId, dto, req) };
   }
 
   /**
    * Deletes an existing note
    * @param userId The user id the note belongs to
    * @param noteId The id of the note to delete
+   * @param req The authenticated request
    */
   @Auth(Action.UPDATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi()
@@ -91,7 +94,8 @@ export class NoteController {
   public async delete(
     @Param('userId', UserIdValidator) userId: string,
     @Param('noteId', UserNoteIdValidator) noteId: string,
+    @Req() req: AuthenticatedReq,
   ): Promise<void> {
-    await this.service.delete(noteId, userId);
+    await this.service.delete(noteId, userId, req);
   }
 }

@@ -1,9 +1,12 @@
 import { isNil } from 'lodash';
+import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   Logger,
+  Inject,
   Injectable,
   NotFoundException,
   InternalServerErrorException,
@@ -11,7 +14,9 @@ import {
 } from '@nestjs/common';
 
 import { PaginatedResDto } from '@crm/http';
+import { AuthenticatedReq } from '@crm/auth';
 import { UserNoteEntity } from '@crm/database';
+import { UserNoteCreatedEvent, UserNoteDeletedEvent, UserNoteUpdatedEvent } from '@crm/kafka';
 
 import { Note } from '../domain';
 import { NoteMapper } from '../mappers';
@@ -21,6 +26,7 @@ import { ListNotesDto, CreateNoteDto, UpdateNoteDto } from '../dto';
 export class NoteService {
   constructor(
     private readonly noteMapper: NoteMapper,
+    @Inject('KAFKA') private readonly kafka: ClientKafka,
     @InjectRepository(UserNoteEntity)
     private readonly noteRepo: Repository<UserNoteEntity>,
   ) {}
@@ -79,8 +85,9 @@ export class NoteService {
    * @param authorId The id of the note author
    * @param userId The id of the user the note belongs to
    * @param dto The note dto
+   * @param req The authenticated request
    */
-  async create(authorId: string, userId: string, dto: CreateNoteDto): Promise<Note> {
+  async create(authorId: string, userId: string, dto: CreateNoteDto, req?: AuthenticatedReq): Promise<Note> {
     const msg = `Attempting to create note for user '${userId}'`;
 
     // Create and persist the entity
@@ -97,8 +104,27 @@ export class NoteService {
       throw new InternalServerErrorException(`Failed to create note for user '${userId}'`);
     }
 
+    // Build the domain user
+    const domainNote = this.noteMapper.toNote(entity);
+
+    // Trigger the creation event
+    this.kafka.emit(
+      UserNoteCreatedEvent.type,
+      new UserNoteCreatedEvent(
+        {
+          noteId: domainNote.id,
+          body: domainNote.body,
+          summary: domainNote.summary,
+          userId: domainNote.userId,
+          authorId: domainNote.authorId,
+          createdAt: DateTime.fromJSDate(domainNote.createdAt).toMillis(),
+        },
+        req,
+      ),
+    );
+
     this.#logger.log(`${msg} - Complete`);
-    return this.noteMapper.toNote(entity);
+    return domainNote;
   }
 
   /**
@@ -106,8 +132,9 @@ export class NoteService {
    * @param noteId The id of the note to update
    * @param userId The id of the user the note belongs to
    * @param dto The update dto
+   * @param req The authenticated request
    */
-  async update(noteId: string, userId: string, dto: UpdateNoteDto): Promise<Note> {
+  async update(noteId: string, userId: string, dto: UpdateNoteDto, req?: AuthenticatedReq): Promise<Note> {
     const msg = `Updating user note '${noteId}'`;
 
     // Update the entity by its id
@@ -125,16 +152,36 @@ export class NoteService {
       throw new UnprocessableEntityException(`Failed to update user note '${noteId}'`);
     }
 
+    // Build the domain user
+    const domainNote = await this.get(noteId, userId);
+
+    // Trigger the update event
+    this.kafka.emit(
+      UserNoteUpdatedEvent.type,
+      new UserNoteUpdatedEvent(
+        {
+          noteId: domainNote.id,
+          body: domainNote.body,
+          summary: domainNote.summary,
+          userId: domainNote.userId,
+          authorId: domainNote.authorId,
+          updatedAt: DateTime.fromJSDate(domainNote.updatedAt).toMillis(),
+        },
+        req,
+      ),
+    );
+
     this.#logger.log(`${msg} - Complete`);
-    return this.get(noteId, userId);
+    return domainNote;
   }
 
   /**
    * Deletes an existing user note.
    * @param noteId The id of the note to delete
    * @param userId The id of the user to whom the note belongs
+   * @param req The authenticated request
    */
-  async delete(noteId: string, userId: string): Promise<boolean> {
+  async delete(noteId: string, userId: string, req?: AuthenticatedReq): Promise<boolean> {
     const msg = `Deleting user note '${noteId}'`;
     this.#logger.log(`${msg} - Start`);
 
@@ -151,6 +198,12 @@ export class NoteService {
       this.#logger.error(`${msg} - Failed`);
       return false;
     }
+
+    // Trigger the deletion event
+    this.kafka.emit(
+      UserNoteDeletedEvent.type,
+      new UserNoteDeletedEvent({ noteId: noteId, deletedAt: DateTime.utc().toMillis() }, req),
+    );
 
     return true;
   }
