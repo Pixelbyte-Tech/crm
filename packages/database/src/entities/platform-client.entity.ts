@@ -17,6 +17,9 @@ export class PlatformClientEntity {
   @Column({ type: 'text' })
   link: string;
 
+  @Column({ type: 'jsonb', nullable: true })
+  settings?: Record<string, any> | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

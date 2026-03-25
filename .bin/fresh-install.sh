@@ -55,3 +55,6 @@ find "$WORKSPACE_ROOT" -type f -name "tsconfig.tsbuildinfo" -prune -exec rm -rf 
 
 echo ""
 echo -e "${GREEN}✓ Cleanup complete!${NC}"
+
+pnpm i
+pnpm build

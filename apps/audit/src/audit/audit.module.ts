@@ -4,11 +4,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuditLogEntity } from '@crm/database';
 
 import { AuditService } from './services';
-import { UserController, ServerController, UserNoteController, IntegrationController } from './controllers';
+import {
+  UserController,
+  ServerController,
+  UserNoteController,
+  IntegrationController,
+  PlatformClientController,
+} from './controllers';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AuditLogEntity])],
   providers: [AuditService],
-  controllers: [IntegrationController, ServerController, UserController, UserNoteController],
+  controllers: [IntegrationController, PlatformClientController, ServerController, UserController, UserNoteController],
 })
 export class AuditModule {}

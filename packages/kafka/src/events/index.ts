@@ -3,6 +3,11 @@ export * from './integration/integration-created.event';
 export * from './integration/integration-deleted.event';
 export * from './integration/integration-updated.event';
 
+// Platform client
+export * from './platform-client/platform-client-created.event';
+export * from './platform-client/platform-client-deleted.event';
+export * from './platform-client/platform-client-updated.event';
+
 // Server
 export * from './server/server-created.event';
 export * from './server/server-deleted.event';

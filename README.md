@@ -14,22 +14,27 @@ nvm install 22
 nvm use 22
 ```
 
+> You only need to do this once!
+
 Install [pnpm](https://pnpm.io/) globally, if you haven't already:
 
 ```bash
 corepack enable pnpm
 ```
 
-Install the project dependencies:
+> You only need to do this once!
+
+Install the project dependencies and build the project:
 
 ```bash
 pnpm i
+pnpm build
 ```
 
-Build packages:
+Alternatively, you can use the `shell` script to install dependencies and build the project:
 
 ```bash
-pnpm build
+sh .bin/fresh-install.sh
 ```
 
 Apply environment variables:

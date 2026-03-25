@@ -21,6 +21,7 @@ import { AppConfig } from './config/app/app-config.type';
 import { AuthConfig } from './config/auth/auth-config.type';
 import { IntegrationModule } from './integration/integration.module';
 import { DatabaseConfig } from './config/database/database-config.type';
+import { PlatformClientModule } from './platform-client/platform-client.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     HealthModule,
     IntegrationModule,
+    PlatformClientModule,
     ServerModule,
     SwaggerModule,
     ValidationModule,

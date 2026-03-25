@@ -12,5 +12,6 @@ import { IntegrationModule } from '../integration/integration.module';
   imports: [IntegrationModule, TypeOrmModule.forFeature([ServerEntity])],
   providers: [ServerMapper, ServerService],
   controllers: [ServerController],
+  exports: [ServerService],
 })
 export class ServerModule {}
