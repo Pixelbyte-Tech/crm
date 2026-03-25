@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { Validate, IsOptional } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
@@ -7,6 +8,7 @@ export class ListNotesDto extends PaginatedReqDto {
   /** Filter by pinned attribute */
   @IsOptional()
   @Validate(toBoolean)
+  @Transform(toBoolean)
   pinned?: boolean;
 
   /** Filter by author */

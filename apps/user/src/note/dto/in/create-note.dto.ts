@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsString, Validate, IsOptional, IsNotEmpty } from 'class-validator';
 
 import { toBoolean } from '@crm/validation';
@@ -17,5 +18,6 @@ export class CreateNoteDto {
   /** Whether to pin the new note */
   @IsOptional()
   @Validate(toBoolean)
+  @Transform(toBoolean)
   isPinned?: boolean;
 }

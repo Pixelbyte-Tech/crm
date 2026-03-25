@@ -1,6 +1,6 @@
 import { UserSettingKey } from '../enums';
 
-export class GlobalSettingSubject {
+export class GlobalSetting {
   /** Global setting unique identifier */
   id: string;
 
@@ -10,7 +10,7 @@ export class GlobalSettingSubject {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(data?: GlobalSettingSubject) {
+  constructor(data?: GlobalSetting) {
     if (data) {
       this.id = data.id;
 

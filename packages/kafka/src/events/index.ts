@@ -1,3 +1,8 @@
+// Integration
+export * from './integration/integration-created.event';
+export * from './integration/integration-deleted.event';
+export * from './integration/integration-updated.event';
+
 // User
 export * from './user/user-created.event';
 export * from './user/user-deleted.event';

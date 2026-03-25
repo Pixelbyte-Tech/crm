@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { GlobalSettingEntity } from '@crm/database';
-import { UserSettingKey, GlobalSettingSubject } from '@crm/types';
+import { GlobalSetting, UserSettingKey } from '@crm/types';
 
 @Injectable()
 export class GlobalSettingMapper {
-  toSetting(data: GlobalSettingEntity): GlobalSettingSubject {
-    const model = new GlobalSettingSubject();
+  toSetting(data: GlobalSettingEntity): GlobalSetting {
+    const model = new GlobalSetting();
     model.id = data.id;
     model.key = data.key as unknown as UserSettingKey;
 

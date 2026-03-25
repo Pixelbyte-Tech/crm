@@ -1,4 +1,4 @@
-export enum Integration {
+export enum IntegrationName {
   MT5 = 'mt5',
   YOUR_BOURSE = 'your_bourse',
   TRADE_LOCKER = 'trade_locker',

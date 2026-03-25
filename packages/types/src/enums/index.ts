@@ -11,7 +11,7 @@ export * from './common/channel.enum';
 export * from './common/document-status.enum';
 export * from './common/document-type.enum';
 export * from './common/global-setting-key.enum';
-export * from './common/integration.enum';
+export * from './common/integration-name.enum';
 export * from './common/integration-type.enum';
 export * from './common/invitation-status.enum';
 export * from './common/sort-dir.enum';

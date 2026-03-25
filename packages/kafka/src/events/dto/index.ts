@@ -1,3 +1,8 @@
+// Integration
+export * from './integration-created.dto';
+export * from './integration-deleted.dto';
+export * from './integration-updated.dto';
+
 // User
 export * from './user-created.dto';
 export * from './user-deleted.dto';

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { GlobalSettingEntity } from '@crm/database';
-import { UserSettingKey, GlobalSettingSubject } from '@crm/types';
+import { GlobalSetting, UserSettingKey } from '@crm/types';
 
 import { GlobalSettingMapper } from '../mappers';
 
@@ -19,7 +19,7 @@ export class GlobalSettingService {
    * Returns a specific global setting
    * @param key The setting key to fetch
    */
-  async fetchOne(key: UserSettingKey): Promise<undefined | GlobalSettingSubject> {
+  async fetchOne(key: UserSettingKey): Promise<undefined | GlobalSetting> {
     const record = await this.repo.findOne({ where: { key } });
     if (record) {
       return this.globalSettingMapper.toSetting(record);
@@ -29,10 +29,10 @@ export class GlobalSettingService {
   /**
    * Returns all global settings
    */
-  async fetch(): Promise<GlobalSettingSubject[]> {
+  async fetch(): Promise<GlobalSetting[]> {
     const records = await this.repo.find();
 
-    const results: GlobalSettingSubject[] = [];
+    const results: GlobalSetting[] = [];
     for (const record of records) {
       results.push(this.globalSettingMapper.toSetting(record));
     }

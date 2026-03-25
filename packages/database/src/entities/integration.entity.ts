@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Integration, IntegrationType } from '@crm/types';
+import { IntegrationName, IntegrationType } from '@crm/types';
 
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 
@@ -20,8 +20,8 @@ export class IntegrationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'enum', enum: Integration })
-  name: Integration;
+  @Column({ type: 'enum', enum: IntegrationName })
+  name: IntegrationName;
 
   @Index()
   @Column({ type: 'enum', enum: IntegrationType })

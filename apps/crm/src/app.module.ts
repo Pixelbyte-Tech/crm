@@ -1,6 +1,9 @@
+import { randomBytes } from 'node:crypto';
+
 import { Module } from '@nestjs/common';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Transport, ClientsModule } from '@nestjs/microservices';
 
 import { SwaggerModule } from '@crm/swagger';
 import { DatabaseModule } from '@crm/database';
@@ -11,11 +14,42 @@ import databaseConfig from './config/database/database.config';
 
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
+import { AppConfig } from './config/app/app-config.type';
+import { IntegrationModule } from './integration/integration.module';
 import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
   imports: [
     SentryModule.forRoot(),
+    ClientsModule.registerAsync({
+      isGlobal: true,
+      clients: [
+        {
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          name: 'KAFKA',
+          useFactory: (c: ConfigService<{ app: AppConfig }>) => ({
+            name: 'KAFKA',
+            transport: Transport.KAFKA,
+            options: {
+              client: {
+                brokers: c
+                  .getOrThrow('app.kafkaBrokers', { infer: true })
+                  .split(',')
+                  .map((t) => t.trim()),
+              },
+              clientId: `${c.getOrThrow('app.appName', { infer: true })}-${randomBytes(4).toString('hex')}`,
+              retry: { retries: 20 },
+              consumer: {
+                groupId: c.getOrThrow('app.appName', { infer: true }),
+                allowAutoTopicCreation: true,
+                retry: { retries: 20 },
+              },
+            },
+          }),
+        },
+      ],
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig],
@@ -44,6 +78,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
       }),
     }),
     HealthModule,
+    IntegrationModule,
     SwaggerModule,
     ValidationModule,
   ],
