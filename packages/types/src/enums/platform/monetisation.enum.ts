@@ -1,4 +1,4 @@
-export enum Monetization {
+export enum Monetisation {
   REAL = 'real',
   DEMO = 'demo',
 }

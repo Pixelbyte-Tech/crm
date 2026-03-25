@@ -3,6 +3,11 @@ export * from './integration-created.dto';
 export * from './integration-deleted.dto';
 export * from './integration-updated.dto';
 
+// Integration
+export * from './server-created.dto';
+export * from './server-deleted.dto';
+export * from './server-updated.dto';
+
 // User
 export * from './user-created.dto';
 export * from './user-deleted.dto';

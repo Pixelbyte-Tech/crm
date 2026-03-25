@@ -12,6 +12,7 @@ import {
 
 import { IntegrationName, IntegrationType } from '@crm/types';
 
+import { ServerEntity } from './server.entity';
 import { PaymentTransactionEntity } from './payment-transaction.entity';
 
 @Entity({ name: 'integration' })
@@ -47,6 +48,10 @@ export class IntegrationEntity {
   @OneToMany(() => PaymentTransactionEntity, (e) => e.integration)
   @JoinColumn()
   paymentTransactions: PaymentTransactionEntity[];
+
+  @OneToMany(() => ServerEntity, (e) => e.integration)
+  @JoinColumn()
+  servers: ServerEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -10,7 +10,7 @@ import { Auth, Action, AuthenticatedReq, IntegrationSubject } from '@crm/auth';
 import { IntegrationService } from './services';
 import { ListIntegrationsDto, UpdateIntegrationDto, CreateIntegrationDto } from './dto';
 
-@ApiTags('Integrations')
+@ApiTags('Integration')
 @ApiExtraModels(CreateIntegrationDto, ListIntegrationsDto, UpdateIntegrationDto)
 @Controller({ path: 'integrations', version: '1' })
 export class IntegrationController {
@@ -77,7 +77,7 @@ export class IntegrationController {
    * @param integrationId The integration to delete
    * @param req The authenticated request
    */
-  @Auth(Action.UPDATE, IntegrationSubject)
+  @Auth(Action.DELETE, IntegrationSubject)
   @OpenApi()
   @Delete(':integrationId')
   public async delete(

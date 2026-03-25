@@ -4,6 +4,7 @@ import { Min, IsInt, IsEnum, Validate, IsOptional, IsISO31661Alpha2 } from 'clas
 import { IntegrationName } from '@crm/types';
 import { toArray, toBoolean } from '@crm/validation';
 
+import { IntegrationSetting } from '../../types';
 import { SettingsValidator } from '../../validators';
 
 export class UpdateIntegrationDto {
@@ -22,7 +23,7 @@ export class UpdateIntegrationDto {
   @IsOptional()
   @Type(() => Object)
   @Validate(SettingsValidator)
-  settings: Record<string, any>;
+  settings: IntegrationSetting;
 
   /** The order of priority for this integration, lower is higher priority */
   @IsOptional()

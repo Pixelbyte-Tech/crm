@@ -28,7 +28,7 @@ export * from './messaging/notification-template.enum';
 export * from './payment/payment-transaction-status.enum';
 export * from './payment/payment-transaction-type.enum';
 
-export * from './platform/monetization.enum';
+export * from './platform/monetisation.enum';
 export * from './platform/platform.enum';
 export * from './platform/platform-client-type.enum';
 export * from './platform/trading-account-status.enum';

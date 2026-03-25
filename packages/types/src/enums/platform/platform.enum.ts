@@ -3,4 +3,5 @@ export enum Platform {
   CT = 'ctrader',
   TL = 'tradelocker',
   DX = 'dxtrade',
+  YB = 'yourbourse',
 }

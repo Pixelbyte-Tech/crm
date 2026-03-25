@@ -3,6 +3,11 @@ export * from './integration/integration-created.event';
 export * from './integration/integration-deleted.event';
 export * from './integration/integration-updated.event';
 
+// Server
+export * from './server/server-created.event';
+export * from './server/server-deleted.event';
+export * from './server/server-updated.event';
+
 // User
 export * from './user/user-created.event';
 export * from './user/user-deleted.event';

@@ -11,5 +11,6 @@ import { IntegrationController } from './integration.controller';
   imports: [TypeOrmModule.forFeature([IntegrationEntity])],
   providers: [IntegrationMapper, IntegrationService],
   controllers: [IntegrationController],
+  exports: [IntegrationService],
 })
 export class IntegrationModule {}

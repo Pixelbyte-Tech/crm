@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Platform, Monetization, TradingAccountStatus } from '@crm/types';
+import { Platform, Monetisation, TradingAccountStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
 import { ServerEntity } from './server.entity';
@@ -41,8 +41,8 @@ export class TradingAccountEntity {
   @Column({ type: 'enum', enum: Platform })
   platform: Platform;
 
-  @Column({ type: 'enum', enum: Monetization })
-  monetization: Monetization;
+  @Column({ type: 'enum', enum: Monetisation })
+  monetisation: Monetisation;
 
   @Column({ type: 'enum', enum: TradingAccountStatus })
   status: TradingAccountStatus;

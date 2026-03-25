@@ -148,7 +148,7 @@ export class IntegrationService {
         ...(dto.name ? { name: dto.name } : {}),
         ...(dto.name ? { type: this.#determineType(dto.name) } : {}),
         ...(!isNil(dto.isEnabled) ? { isEnabled: dto.isEnabled } : {}),
-        ...(dto.settings ? { settings: dto.settings } : {}),
+        ...(dto.settings ? { settings: dto.settings as any } : {}),
         ...(dto.priority ? { priority: dto.priority } : {}),
         ...(undefined !== dto.allowedCountries ? { allowedCountries: dto.allowedCountries } : {}),
         ...(undefined !== dto.excludedCountries ? { excludedCountries: dto.excludedCountries } : {}),

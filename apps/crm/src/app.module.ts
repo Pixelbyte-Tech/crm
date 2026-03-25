@@ -16,6 +16,7 @@ import databaseConfig from './config/database/database.config';
 
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
+import { ServerModule } from './server/server.module';
 import { AppConfig } from './config/app/app-config.type';
 import { AuthConfig } from './config/auth/auth-config.type';
 import { IntegrationModule } from './integration/integration.module';
@@ -89,6 +90,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     HealthModule,
     IntegrationModule,
+    ServerModule,
     SwaggerModule,
     ValidationModule,
   ],

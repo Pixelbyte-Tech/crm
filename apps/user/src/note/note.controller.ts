@@ -10,7 +10,7 @@ import { Note } from './domain';
 import { NoteService } from './services';
 import { ListNotesDto, CreateNoteDto, UpdateNoteDto } from './dto';
 
-@ApiTags('User Notes')
+@ApiTags('User Note')
 @ApiExtraModels(CreateNoteDto, ListNotesDto, UpdateNoteDto)
 @Controller({ path: 'users', version: '1' })
 export class NoteController {
@@ -88,7 +88,7 @@ export class NoteController {
    * @param noteId The id of the note to delete
    * @param req The authenticated request
    */
-  @Auth(Action.UPDATE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
+  @Auth(Action.DELETE, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi()
   @Delete(':userId/notes/:noteId')
   public async delete(
