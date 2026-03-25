@@ -13,6 +13,11 @@ export * from './server/server-created.event';
 export * from './server/server-deleted.event';
 export * from './server/server-updated.event';
 
+// Tag
+export * from './tag/tag-created.event';
+export * from './tag/tag-deleted.event';
+export * from './tag/tag-updated.event';
+
 // User
 export * from './user/user-created.event';
 export * from './user/user-deleted.event';

@@ -117,7 +117,7 @@ export class ServerService {
       throw new InternalServerErrorException(`Failed to create '${dto.platform}' server`);
     }
 
-    // Build the domain user
+    // Build the domain server
     const domainServer = this.serverMapper.toServer(entity);
 
     // Trigger the creation event

@@ -22,6 +22,7 @@ import { AuthConfig } from './config/auth/auth-config.type';
 import { IntegrationModule } from './integration/integration.module';
 import { DatabaseConfig } from './config/database/database-config.type';
 import { PlatformClientModule } from './platform-client/platform-client.module';
+import { TradingAccountModule } from './trading-account/trading-account.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { PlatformClientModule } from './platform-client/platform-client.module';
     PlatformClientModule,
     ServerModule,
     SwaggerModule,
+    TradingAccountModule,
     ValidationModule,
   ],
 })

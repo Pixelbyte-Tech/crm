@@ -13,6 +13,11 @@ export * from './server-created.dto';
 export * from './server-deleted.dto';
 export * from './server-updated.dto';
 
+// Tag
+export * from './tag-created.dto';
+export * from './tag-deleted.dto';
+export * from './tag-updated.dto';
+
 // User
 export * from './user-created.dto';
 export * from './user-deleted.dto';

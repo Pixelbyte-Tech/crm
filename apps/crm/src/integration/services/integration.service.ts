@@ -113,7 +113,7 @@ export class IntegrationService {
       throw new InternalServerErrorException(`Failed to create '${type}' integration`);
     }
 
-    // Build the domain user
+    // Build the domain integration
     const domainIntegration = this.integrationMapper.toIntegration(entity);
 
     // Trigger the creation event
@@ -160,7 +160,7 @@ export class IntegrationService {
       throw new UnprocessableEntityException(`Failed to update integration '${integrationId}'`);
     }
 
-    // Build the domain user
+    // Build the domain integration
     const domainIntegration = await this.get(integrationId);
 
     // Trigger the update event

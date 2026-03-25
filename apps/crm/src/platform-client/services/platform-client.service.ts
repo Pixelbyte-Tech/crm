@@ -100,7 +100,7 @@ export class PlatformClientService {
       throw new InternalServerErrorException(`Failed to create '${dto.platform}' platform client`);
     }
 
-    // Build the domain user
+    // Build the domain client
     const domainClient = this.clientMapper.toClient(entity);
 
     // Trigger the creation event

@@ -5,6 +5,7 @@ import { AuditLogEntity } from '@crm/database';
 
 import { AuditService } from './services';
 import {
+  TagController,
   UserController,
   ServerController,
   UserNoteController,
@@ -15,6 +16,13 @@ import {
 @Module({
   imports: [TypeOrmModule.forFeature([AuditLogEntity])],
   providers: [AuditService],
-  controllers: [IntegrationController, PlatformClientController, ServerController, UserController, UserNoteController],
+  controllers: [
+    IntegrationController,
+    PlatformClientController,
+    ServerController,
+    TagController,
+    UserController,
+    UserNoteController,
+  ],
 })
 export class AuditModule {}
