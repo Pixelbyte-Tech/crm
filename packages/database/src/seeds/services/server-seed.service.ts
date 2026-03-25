@@ -38,7 +38,7 @@ export class ServerSeedService {
         entity.offsetHours = 0;
 
         await this.repo.save(entity);
-        this.#logger.log(` -> Seeded server for '${integration.name}'`);
+        this.#logger.debug(` -> Seeded server for '${integration.name}'`);
       }
 
       this.#logger.log('✅ Servers seeded successfully');

@@ -22,7 +22,7 @@ export class TagSeedService {
         const entity = new TagEntity();
         entity.name = tag;
         await this.repo.save(entity);
-        this.#logger.log(` -> Seeded tag '${tag}'`);
+        this.#logger.debug(` -> Seeded tag '${tag}'`);
       }
 
       this.#logger.log('✅ Tags seeded successfully');

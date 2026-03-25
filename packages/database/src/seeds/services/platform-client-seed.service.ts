@@ -31,7 +31,7 @@ export class PlatformClientSeedService {
           entity.settings = { sample: 'test', foo: 'bar' };
 
           await this.repo.save(entity);
-          this.#logger.log(` -> Seeded ${name} platform client '${clientType}'`);
+          this.#logger.debug(` -> Seeded ${name} platform client '${clientType}'`);
         }
       }
 

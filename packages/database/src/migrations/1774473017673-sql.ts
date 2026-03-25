@@ -1,108 +1,7 @@
 import { QueryRunner, MigrationInterface } from 'typeorm';
 
-export class Sql1774465819312 implements MigrationInterface {
+export class Sql1774473017673 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`CREATE TYPE "public"."payment_transaction_type_enum" AS ENUM('deposit', 'withdrawal')`);
-    await queryRunner.query(
-      `CREATE TYPE "public"."payment_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'refunded')`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "payment_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" text, "amount" numeric NOT NULL, "paidAmount" numeric NOT NULL, "currency" character varying(3) NOT NULL, "type" "public"."payment_transaction_type_enum" NOT NULL, "status" "public"."payment_transaction_status_enum" NOT NULL, "comment" text, "metadata" jsonb, "processedAt" TIMESTAMP, "userId" uuid NOT NULL, "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e7b6f0a7f06d29d6ff522aa4a4c" UNIQUE ("externalId", "integrationId", "createdAt"), CONSTRAINT "PK_60f71bf3d278b326e8323b6d696" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_c30515be97af9ab6316b00ddeb" ON "payment_transaction" ("userId") `);
-    await queryRunner.query(
-      `CREATE INDEX "IDX_23a1634ec0589f208f7577211a" ON "payment_transaction" ("integrationId") `,
-    );
-    await queryRunner.query(
-      `CREATE TYPE "public"."integration_name_enum" AS ENUM('mt5', 'your_bourse', 'trade_locker', 'dx_trader', 'ctrader', 'sumsub', 'onfido', 'sendx', 'cryptochill', 'bridger_pay', 'helios')`,
-    );
-    await queryRunner.query(
-      `CREATE TYPE "public"."integration_type_enum" AS ENUM('trading_platform', 'marketing', 'kyc', 'payment')`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "integration" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" "public"."integration_name_enum" NOT NULL, "type" "public"."integration_type_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "priority" integer NOT NULL DEFAULT '0', "allowedCountries" character varying(3) array, "excludedCountries" character varying(3) array, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_52d7fa32a7832b377fc2d7f6199" UNIQUE ("name"), CONSTRAINT "PK_f348d4694945d9dc4c7049a178a" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_0f8042d2f9626359c87f3f0655" ON "integration" ("type") `);
-    await queryRunner.query(`CREATE INDEX "IDX_e2780d4d78095ea3fd05e080bb" ON "integration" ("priority") `);
-    await queryRunner.query(
-      `CREATE TABLE "trading_account_type_leverage" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "leverages" integer array NOT NULL, "countries" character varying(3) array NOT NULL, "tradingAccountTypeId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_debf2553a55dba41fef779c8efa" UNIQUE ("tradingAccountTypeId", "leverages", "countries"), CONSTRAINT "PK_b1adc4cadcc63e5bd2d14c52fd4" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_b2b1d5983b107b64a91bf88f83" ON "trading_account_type_leverage" ("tradingAccountTypeId") `,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "trading_account_type" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "description" text, "isEnabled" boolean NOT NULL DEFAULT false, "isKycRequired" boolean NOT NULL DEFAULT false, "allowedLeverages" integer array, "allowedCurrencies" character varying(3) array, "allowedCountries" character varying(3) array, "excludedCountries" character varying(3) array, "minDepositAmountUsd" numeric, "maxDepositAmountUsd" numeric, "maxAccountsPerUser" integer, "userGroupName" text, "platformUserGroupId" text NOT NULL, "serverId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d2526f8f85282a9ccd2cc26b747" UNIQUE ("name"), CONSTRAINT "PK_56e2e7d0077e776c5d875124f96" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_57189f0be2fc7943a94f217d47" ON "trading_account_type" ("serverId") `);
-    await queryRunner.query(
-      `CREATE TYPE "public"."server_platform_enum" AS ENUM('mt5', 'ctrader', 'tradelocker', 'dxtrade', 'yourbourse')`,
-    );
-    await queryRunner.query(`CREATE TYPE "public"."server_monetisation_enum" AS ENUM('real', 'demo')`);
-    await queryRunner.query(
-      `CREATE TABLE "server" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "platform" "public"."server_platform_enum" NOT NULL, "monetisation" "public"."server_monetisation_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "timezone" text NOT NULL DEFAULT 'utc', "offsetHours" smallint NOT NULL DEFAULT '0', "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e16254733ff2264f94f856316ee" UNIQUE ("name"), CONSTRAINT "PK_f8b8af38bdc23b447c0a57c7937" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_902704dee723d735fa0af911f4" ON "server" ("platform") `);
-    await queryRunner.query(`CREATE INDEX "IDX_56dd8fbc6aa8dfb5bc91da27e9" ON "server" ("monetisation") `);
-    await queryRunner.query(`CREATE INDEX "IDX_0c5f45f81fc2ca4879bdd0206c" ON "server" ("integrationId") `);
-    await queryRunner.query(
-      `CREATE TABLE "tag" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_6a9775008add570dc3e5a0bab7b" UNIQUE ("name"), CONSTRAINT "PK_8e4052373c579afc1471f526760" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "trading_account_tag" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "tagId" uuid NOT NULL, "tradingAccountId" uuid NOT NULL, "taggedByUserId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d4be9fd08a316d25d594ca0c473" UNIQUE ("tagId", "tradingAccountId"), CONSTRAINT "PK_4269e577cfd0a145a1357d4e8c7" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_d44e3bfca46203999446a556fa" ON "trading_account_tag" ("tagId") `);
-    await queryRunner.query(
-      `CREATE INDEX "IDX_6242ad1311294b229ee78dc71e" ON "trading_account_tag" ("tradingAccountId") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_1bcf082f7eae195b16dd4b35e1" ON "trading_account_tag" ("taggedByUserId") `,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "trading_account_note" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "summary" text, "body" text NOT NULL, "isPinned" boolean NOT NULL DEFAULT false, "authorId" uuid NOT NULL, "tradingAccountId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b2969e0524ee5e0f22f079de39f" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_1a124cb89d5f68383e8b7bcdfb" ON "trading_account_note" ("isPinned") `);
-    await queryRunner.query(`CREATE INDEX "IDX_f7cea51933658d5b6faea45c73" ON "trading_account_note" ("authorId") `);
-    await queryRunner.query(
-      `CREATE INDEX "IDX_9b8d6fe43113dad71c5275c9c3" ON "trading_account_note" ("tradingAccountId") `,
-    );
-    await queryRunner.query(
-      `CREATE TYPE "public"."trading_account_platform_enum" AS ENUM('mt5', 'ctrader', 'tradelocker', 'dxtrade', 'yourbourse')`,
-    );
-    await queryRunner.query(`CREATE TYPE "public"."trading_account_monetisation_enum" AS ENUM('real', 'demo')`);
-    await queryRunner.query(`CREATE TYPE "public"."trading_account_status_enum" AS ENUM('active', 'suspended')`);
-    await queryRunner.query(
-      `CREATE TABLE "trading_account" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "platformId" text NOT NULL, "platformUserId" text, "platformAccountName" text, "friendlyName" text, "platform" "public"."trading_account_platform_enum" NOT NULL, "monetisation" "public"."trading_account_monetisation_enum" NOT NULL, "status" "public"."trading_account_status_enum" NOT NULL, "registeredAt" TIMESTAMP NOT NULL, "login" text NOT NULL, "password" text NOT NULL, "serverId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_228ac2effbc4deb31cad77f7b2a" UNIQUE ("serverId", "platformId"), CONSTRAINT "PK_25bd7be8455e74a8a1ea478203f" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_c7fc44c34f7727c055541a3be6" ON "trading_account" ("serverId") `);
-    await queryRunner.query(`CREATE INDEX "IDX_6e4e317edbe690900ebad00b98" ON "trading_account" ("userId") `);
-    await queryRunner.query(
-      `CREATE TYPE "public"."wallet_transaction_history_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "wallet_transaction_history" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."wallet_transaction_history_status_enum" NOT NULL, "comment" text, "occurredAt" TIMESTAMP NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_98b95e87a53f283021718a150d6" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_4e343762e1fab760d9248dda1d" ON "wallet_transaction_history" ("status") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_964e7e809f04289fba17efa595" ON "wallet_transaction_history" ("occurredAt") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_a5e230a983916c53f15b7b6464" ON "wallet_transaction_history" ("tradingAccountId") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_f80db91119dbacc5f6ed1f62bc" ON "wallet_transaction_history" ("userId") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_5a8241c79ab3ecbaa438605195" ON "wallet_transaction_history" ("walletId") `,
-    );
-    await queryRunner.query(`CREATE TYPE "public"."wallet_assettype_enum" AS ENUM('fiat', 'crypto', 'commission')`);
-    await queryRunner.query(
-      `CREATE TABLE "wallet" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "friendlyName" character varying, "assetType" "public"."wallet_assettype_enum" NOT NULL, "balance" numeric NOT NULL, "currency" character varying(3) NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_c8d0130b44210fe9bb058e30c49" UNIQUE ("userId", "currency"), CONSTRAINT "PK_bec464dd8d54c39c54fd32e2334" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_f91dbefa771fbcbde7dc44ea08" ON "wallet" ("assetType") `);
-    await queryRunner.query(`CREATE INDEX "IDX_852bd836234c8f7777ec35957f" ON "wallet" ("currency") `);
-    await queryRunner.query(`CREATE INDEX "IDX_35472b1fe48b6330cd34970956" ON "wallet" ("userId") `);
     await queryRunner.query(
       `CREATE TYPE "public"."loyalty_history_source_enum" AS ENUM('login', 'mystery_box', 'daily_trading', 'weekly_trading', 'risk_mastery', 'spin_and_win', 'other')`,
     );
@@ -115,9 +14,8 @@ export class Sql1774465819312 implements MigrationInterface {
       `CREATE TYPE "public"."loyalty_program_enum" AS ENUM('standard', 'silver', 'gold', 'platinum')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "loyalty" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "points" integer NOT NULL DEFAULT '0', "spins" integer NOT NULL DEFAULT '0', "program" "public"."loyalty_program_enum" NOT NULL DEFAULT 'standard', "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_a7e5fcf9e75f61d7a58c84046e1" UNIQUE ("userId"), CONSTRAINT "REL_a7e5fcf9e75f61d7a58c84046e" UNIQUE ("userId"), CONSTRAINT "PK_327d399b9ca75dd638ccbd4b991" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "loyalty" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "points" integer NOT NULL DEFAULT '0', "spins" smallint NOT NULL DEFAULT '0', "program" "public"."loyalty_program_enum" NOT NULL DEFAULT 'standard', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_327d399b9ca75dd638ccbd4b991" PRIMARY KEY ("id"))`,
     );
-    await queryRunner.query(`CREATE INDEX "IDX_a7e5fcf9e75f61d7a58c84046e" ON "loyalty" ("userId") `);
     await queryRunner.query(
       `CREATE TABLE "user_note" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "summary" text, "body" text NOT NULL, "isPinned" boolean NOT NULL DEFAULT false, "authorId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_de9eca07e8faa7006abc18152c6" PRIMARY KEY ("id"))`,
     );
@@ -142,7 +40,7 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_2621409ebc295c5da7ff3e4139" ON "audit_log" ("userId") `);
     await queryRunner.query(`CREATE INDEX "IDX_936a31c3fca31a0b332f924a3a" ON "audit_log" ("eventId") `);
     await queryRunner.query(
-      `CREATE TABLE "wheel_spin" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "isRespin" boolean NOT NULL DEFAULT false, "isClosed" boolean NOT NULL DEFAULT false, "sector" integer NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_6399b3e8d7eaa97153bfebca76d" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "wheel_spin" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "isRespin" boolean NOT NULL DEFAULT false, "isClosed" boolean NOT NULL DEFAULT false, "sector" smallint NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_6399b3e8d7eaa97153bfebca76d" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_0c29fe74363fb129ca1976554a" ON "wheel_spin" ("userId") `);
     await queryRunner.query(
@@ -214,6 +112,116 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_8e09c3c2412dc12d088c1e8ade" ON "user_document" ("type") `);
     await queryRunner.query(`CREATE INDEX "IDX_2e2937efbb8460104254560a6b" ON "user_document" ("status") `);
     await queryRunner.query(`CREATE INDEX "IDX_bea6ff5b6ea0d461a438a2e837" ON "user_document" ("userId") `);
+    await queryRunner.query(`CREATE TYPE "public"."payment_transaction_type_enum" AS ENUM('deposit', 'withdrawal')`);
+    await queryRunner.query(
+      `CREATE TYPE "public"."payment_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'refunded')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "payment_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" text, "amount" numeric NOT NULL, "paidAmount" numeric NOT NULL, "currency" character varying(3) NOT NULL, "type" "public"."payment_transaction_type_enum" NOT NULL, "status" "public"."payment_transaction_status_enum" NOT NULL, "comment" text, "metadata" jsonb, "processedAt" TIMESTAMP, "userId" uuid NOT NULL, "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e7b6f0a7f06d29d6ff522aa4a4c" UNIQUE ("externalId", "integrationId", "createdAt"), CONSTRAINT "PK_60f71bf3d278b326e8323b6d696" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_c30515be97af9ab6316b00ddeb" ON "payment_transaction" ("userId") `);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_23a1634ec0589f208f7577211a" ON "payment_transaction" ("integrationId") `,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."integration_name_enum" AS ENUM('mt5', 'your_bourse', 'trade_locker', 'dx_trader', 'ctrader', 'sumsub', 'onfido', 'sendx', 'cryptochill', 'bridger_pay', 'helios')`,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."integration_type_enum" AS ENUM('trading_platform', 'marketing', 'kyc', 'payment')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "integration" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" "public"."integration_name_enum" NOT NULL, "type" "public"."integration_type_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "priority" integer NOT NULL DEFAULT '0', "allowedCountries" character varying(3) array, "excludedCountries" character varying(3) array, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_52d7fa32a7832b377fc2d7f6199" UNIQUE ("name"), CONSTRAINT "PK_f348d4694945d9dc4c7049a178a" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_0f8042d2f9626359c87f3f0655" ON "integration" ("type") `);
+    await queryRunner.query(`CREATE INDEX "IDX_e2780d4d78095ea3fd05e080bb" ON "integration" ("priority") `);
+    await queryRunner.query(
+      `CREATE TABLE "trading_account_type_leverage" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "leverages" integer array NOT NULL, "countries" character varying(3) array NOT NULL, "tradingAccountTypeId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_debf2553a55dba41fef779c8efa" UNIQUE ("tradingAccountTypeId", "leverages", "countries"), CONSTRAINT "PK_b1adc4cadcc63e5bd2d14c52fd4" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_b2b1d5983b107b64a91bf88f83" ON "trading_account_type_leverage" ("tradingAccountTypeId") `,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "trading_account_type" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "description" text, "isEnabled" boolean NOT NULL DEFAULT false, "isKycRequired" boolean NOT NULL DEFAULT false, "allowedLeverages" integer array, "allowedCurrencies" character varying(3) array, "allowedCountries" character varying(3) array, "excludedCountries" character varying(3) array, "minDepositAmountUsd" numeric, "maxDepositAmountUsd" numeric, "maxAccountsPerUser" integer, "userGroupName" text, "platformUserGroupId" text NOT NULL, "serverId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d2526f8f85282a9ccd2cc26b747" UNIQUE ("name"), CONSTRAINT "PK_56e2e7d0077e776c5d875124f96" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_57189f0be2fc7943a94f217d47" ON "trading_account_type" ("serverId") `);
+    await queryRunner.query(
+      `CREATE TYPE "public"."server_platform_enum" AS ENUM('mt5', 'ctrader', 'tradelocker', 'dxtrade', 'yourbourse')`,
+    );
+    await queryRunner.query(`CREATE TYPE "public"."server_monetisation_enum" AS ENUM('real', 'demo')`);
+    await queryRunner.query(
+      `CREATE TABLE "server" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "platform" "public"."server_platform_enum" NOT NULL, "monetisation" "public"."server_monetisation_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "timezone" text NOT NULL DEFAULT 'utc', "offsetHours" smallint NOT NULL DEFAULT '0', "integrationId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e16254733ff2264f94f856316ee" UNIQUE ("name"), CONSTRAINT "PK_f8b8af38bdc23b447c0a57c7937" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_902704dee723d735fa0af911f4" ON "server" ("platform") `);
+    await queryRunner.query(`CREATE INDEX "IDX_56dd8fbc6aa8dfb5bc91da27e9" ON "server" ("monetisation") `);
+    await queryRunner.query(`CREATE INDEX "IDX_0c5f45f81fc2ca4879bdd0206c" ON "server" ("integrationId") `);
+    await queryRunner.query(
+      `CREATE TYPE "public"."wallet_transaction_type_enum" AS ENUM('deposit', 'withdrawal', 'transfer', 'fee')`,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."wallet_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "wallet_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" character varying, "type" "public"."wallet_transaction_type_enum" NOT NULL, "status" "public"."wallet_transaction_status_enum" NOT NULL, "amount" numeric NOT NULL, "balanceBefore" numeric NOT NULL, "balanceAfter" numeric NOT NULL, "ipAddress" character varying, "comment" text, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b0aeefba240d7685fe37832df67" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_060e96e8f43c47d27653d757fc" ON "wallet_transaction" ("type") `);
+    await queryRunner.query(`CREATE INDEX "IDX_c73c76a0e033bed04036835fce" ON "wallet_transaction" ("status") `);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_01fd2ad964a28e540fd26c855c" ON "wallet_transaction" ("tradingAccountId") `,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_9071d3c9266c4521bdafe29307" ON "wallet_transaction" ("userId") `);
+    await queryRunner.query(`CREATE INDEX "IDX_07de5136ba8e92bb97d45b9a7a" ON "wallet_transaction" ("walletId") `);
+    await queryRunner.query(
+      `CREATE TABLE "tag" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_6a9775008add570dc3e5a0bab7b" UNIQUE ("name"), CONSTRAINT "PK_8e4052373c579afc1471f526760" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "trading_account_tag" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "tagId" uuid NOT NULL, "tradingAccountId" uuid NOT NULL, "taggedByUserId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d4be9fd08a316d25d594ca0c473" UNIQUE ("tagId", "tradingAccountId"), CONSTRAINT "PK_4269e577cfd0a145a1357d4e8c7" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_d44e3bfca46203999446a556fa" ON "trading_account_tag" ("tagId") `);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_6242ad1311294b229ee78dc71e" ON "trading_account_tag" ("tradingAccountId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_1bcf082f7eae195b16dd4b35e1" ON "trading_account_tag" ("taggedByUserId") `,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "trading_account_note" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "summary" text, "body" text NOT NULL, "isPinned" boolean NOT NULL DEFAULT false, "authorId" uuid NOT NULL, "tradingAccountId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b2969e0524ee5e0f22f079de39f" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_1a124cb89d5f68383e8b7bcdfb" ON "trading_account_note" ("isPinned") `);
+    await queryRunner.query(`CREATE INDEX "IDX_f7cea51933658d5b6faea45c73" ON "trading_account_note" ("authorId") `);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_9b8d6fe43113dad71c5275c9c3" ON "trading_account_note" ("tradingAccountId") `,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."wallet_transaction_history_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "wallet_transaction_history" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."wallet_transaction_history_status_enum" NOT NULL, "comment" text, "occurredAt" TIMESTAMP NOT NULL, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_98b95e87a53f283021718a150d6" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_4e343762e1fab760d9248dda1d" ON "wallet_transaction_history" ("status") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_964e7e809f04289fba17efa595" ON "wallet_transaction_history" ("occurredAt") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_a5e230a983916c53f15b7b6464" ON "wallet_transaction_history" ("tradingAccountId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_f80db91119dbacc5f6ed1f62bc" ON "wallet_transaction_history" ("userId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_5a8241c79ab3ecbaa438605195" ON "wallet_transaction_history" ("walletId") `,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."trading_account_platform_enum" AS ENUM('mt5', 'ctrader', 'tradelocker', 'dxtrade', 'yourbourse')`,
+    );
+    await queryRunner.query(`CREATE TYPE "public"."trading_account_monetisation_enum" AS ENUM('real', 'demo')`);
+    await queryRunner.query(`CREATE TYPE "public"."trading_account_status_enum" AS ENUM('active', 'suspended')`);
+    await queryRunner.query(
+      `CREATE TABLE "trading_account" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "platformId" text NOT NULL, "platformUserId" text, "platformAccountName" text, "friendlyName" text, "platform" "public"."trading_account_platform_enum" NOT NULL, "monetisation" "public"."trading_account_monetisation_enum" NOT NULL, "status" "public"."trading_account_status_enum" NOT NULL, "registeredAt" TIMESTAMP NOT NULL, "login" text NOT NULL, "password" text NOT NULL, "serverId" uuid NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_228ac2effbc4deb31cad77f7b2a" UNIQUE ("serverId", "platformId"), CONSTRAINT "PK_25bd7be8455e74a8a1ea478203f" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_c7fc44c34f7727c055541a3be6" ON "trading_account" ("serverId") `);
+    await queryRunner.query(`CREATE INDEX "IDX_6e4e317edbe690900ebad00b98" ON "trading_account" ("userId") `);
     await queryRunner.query(`CREATE TYPE "public"."user_auth_session_status_enum" AS ENUM('attempted', 'complete')`);
     await queryRunner.query(
       `CREATE TABLE "user_auth_session" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "hash" text NOT NULL, "ipAddress" text, "userAgent" text, "status" "public"."user_auth_session_status_enum" NOT NULL DEFAULT 'attempted', "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_9305f2fa3d30c97cbe46de91477" UNIQUE ("userId", "createdAt"), CONSTRAINT "PK_be1faadd9b4398947aaa1972980" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
@@ -244,28 +252,20 @@ export class Sql1774465819312 implements MigrationInterface {
       `CREATE TYPE "public"."user_roles_enum" AS ENUM('admin', 'trade_support', 'cs_agent', 'compliance', 'user')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "roles" "public"."user_roles_enum" array NOT NULL, "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" uuid, "settingsId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_f05fcc9b589876b45e82e17b31" UNIQUE ("detailId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "firstName" text NOT NULL, "middleName" text, "lastName" text NOT NULL, "email" text NOT NULL, "passwordHash" text NOT NULL, "securityPin" character varying NOT NULL, "status" "public"."user_status_enum" NOT NULL DEFAULT 'active', "roles" "public"."user_roles_enum" array NOT NULL, "isEmailVerified" boolean NOT NULL DEFAULT false, "emailVerifiedAt" TIMESTAMP, "isTermsAccepted" boolean NOT NULL DEFAULT false, "termsAcceptedAt" TIMESTAMP, "isPrivacyAccepted" boolean NOT NULL DEFAULT false, "privacyAcceptedAt" TIMESTAMP, "isCookiesAccepted" boolean NOT NULL DEFAULT false, "cookiesAcceptedAt" TIMESTAMP, "avatarId" uuid, "detailId" uuid, "loyaltyId" uuid NOT NULL, "settingsId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "UQ_f006246faa766d1b2d550479f02" UNIQUE ("loyaltyId"), CONSTRAINT "UQ_390395c3d8592e3e8d8422ce853" UNIQUE ("settingsId"), CONSTRAINT "UQ_f05fcc9b589876b45e82e17b313" UNIQUE ("detailId"), CONSTRAINT "REL_58f5c71eaab331645112cf8cfa" UNIQUE ("avatarId"), CONSTRAINT "REL_f05fcc9b589876b45e82e17b31" UNIQUE ("detailId"), CONSTRAINT "REL_f006246faa766d1b2d550479f0" UNIQUE ("loyaltyId"), CONSTRAINT "REL_390395c3d8592e3e8d8422ce85" UNIQUE ("settingsId"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_e12875dfb3b1d92d7d7c5377e2" ON "user" ("email") `);
     await queryRunner.query(`CREATE INDEX "IDX_58f5c71eaab331645112cf8cfa" ON "user" ("avatarId") `);
     await queryRunner.query(`CREATE INDEX "IDX_f05fcc9b589876b45e82e17b31" ON "user" ("detailId") `);
+    await queryRunner.query(`CREATE INDEX "IDX_f006246faa766d1b2d550479f0" ON "user" ("loyaltyId") `);
     await queryRunner.query(`CREATE INDEX "IDX_390395c3d8592e3e8d8422ce85" ON "user" ("settingsId") `);
+    await queryRunner.query(`CREATE TYPE "public"."wallet_assettype_enum" AS ENUM('fiat', 'crypto', 'commission')`);
     await queryRunner.query(
-      `CREATE TYPE "public"."wallet_transaction_type_enum" AS ENUM('deposit', 'withdrawal', 'transfer', 'fee')`,
+      `CREATE TABLE "wallet" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "friendlyName" character varying, "assetType" "public"."wallet_assettype_enum" NOT NULL, "balance" numeric NOT NULL, "currency" character varying(3) NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_c8d0130b44210fe9bb058e30c49" UNIQUE ("userId", "currency"), CONSTRAINT "PK_bec464dd8d54c39c54fd32e2334" PRIMARY KEY ("id"))`,
     );
-    await queryRunner.query(
-      `CREATE TYPE "public"."wallet_transaction_status_enum" AS ENUM('open', 'rejected', 'processing', 'completed', 'failed', 'canceled')`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "wallet_transaction" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "externalId" character varying, "type" "public"."wallet_transaction_type_enum" NOT NULL, "status" "public"."wallet_transaction_status_enum" NOT NULL, "amount" numeric NOT NULL, "balanceBefore" numeric NOT NULL, "balanceAfter" numeric NOT NULL, "ipAddress" character varying, "comment" text, "tradingAccountId" uuid, "userId" uuid NOT NULL, "walletId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_b0aeefba240d7685fe37832df67" PRIMARY KEY ("id", "createdAt")) PARTITION BY RANGE ("createdAt")`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_060e96e8f43c47d27653d757fc" ON "wallet_transaction" ("type") `);
-    await queryRunner.query(`CREATE INDEX "IDX_c73c76a0e033bed04036835fce" ON "wallet_transaction" ("status") `);
-    await queryRunner.query(
-      `CREATE INDEX "IDX_01fd2ad964a28e540fd26c855c" ON "wallet_transaction" ("tradingAccountId") `,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_9071d3c9266c4521bdafe29307" ON "wallet_transaction" ("userId") `);
-    await queryRunner.query(`CREATE INDEX "IDX_07de5136ba8e92bb97d45b9a7a" ON "wallet_transaction" ("walletId") `);
+    await queryRunner.query(`CREATE INDEX "IDX_f91dbefa771fbcbde7dc44ea08" ON "wallet" ("assetType") `);
+    await queryRunner.query(`CREATE INDEX "IDX_852bd836234c8f7777ec35957f" ON "wallet" ("currency") `);
+    await queryRunner.query(`CREATE INDEX "IDX_35472b1fe48b6330cd34970956" ON "wallet" ("userId") `);
     await queryRunner.query(`CREATE TYPE "public"."trading_event_volatility_enum" AS ENUM('low', 'medium', 'high')`);
     await queryRunner.query(`CREATE TYPE "public"."trading_event_potency_enum" AS ENUM('zero', 'b', 'm', 'k', 't')`);
     await queryRunner.query(
@@ -300,6 +300,11 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "exchange_rate" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "from" character varying(3) NOT NULL, "to" character varying(3) NOT NULL, "rate" numeric NOT NULL, "date" date NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_a4b3b0455c9af5059d64a0bda04" UNIQUE ("from", "to", "date"), CONSTRAINT "PK_5c5d27d2b900ef6cdeef0398472" PRIMARY KEY ("id"))`,
     );
+    await queryRunner.query(`CREATE TYPE "public"."channel_type_enum" AS ENUM('email', 'slack', 'sms', 'telegram')`);
+    await queryRunner.query(
+      `CREATE TABLE "channel" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "public"."channel_type_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_071b77ed6f24d28b08431d7c0da" UNIQUE ("type"), CONSTRAINT "PK_590f33ee6ee7d76437acf362e39" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_d3df7cfab121e44694bc9b744e" ON "channel" ("isEnabled") `);
     await queryRunner.query(`CREATE TYPE "public"."alert_status_enum" AS ENUM('pending', 'delivered', 'failed')`);
     await queryRunner.query(`CREATE TYPE "public"."alert_level_enum" AS ENUM('warning', 'delivered', 'critical')`);
     await queryRunner.query(`CREATE TYPE "public"."alert_type_enum" AS ENUM('payments', 'kyc', 'other')`);
@@ -310,67 +315,11 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_5a112a234c18bbd8df5f24d248" ON "alert" ("level") `);
     await queryRunner.query(`CREATE INDEX "IDX_976e67503908a38e535d3d6377" ON "alert" ("type") `);
     await queryRunner.query(`CREATE INDEX "IDX_5b4173bbde31cc348ea217c8a1" ON "alert" ("channelId") `);
-    await queryRunner.query(`CREATE TYPE "public"."channel_type_enum" AS ENUM('email', 'slack', 'sms', 'telegram')`);
-    await queryRunner.query(
-      `CREATE TABLE "channel" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "type" "public"."channel_type_enum" NOT NULL, "isEnabled" boolean NOT NULL DEFAULT false, "settings" jsonb NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_071b77ed6f24d28b08431d7c0da" UNIQUE ("type"), CONSTRAINT "PK_590f33ee6ee7d76437acf362e39" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(`CREATE INDEX "IDX_d3df7cfab121e44694bc9b744e" ON "channel" ("isEnabled") `);
-    await queryRunner.query(
-      `ALTER TABLE "payment_transaction" ADD CONSTRAINT "FK_c30515be97af9ab6316b00ddeb1" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "payment_transaction" ADD CONSTRAINT "FK_23a1634ec0589f208f7577211a3" FOREIGN KEY ("integrationId") REFERENCES "integration"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_type_leverage" ADD CONSTRAINT "FK_b2b1d5983b107b64a91bf88f839" FOREIGN KEY ("tradingAccountTypeId") REFERENCES "trading_account_type"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_type" ADD CONSTRAINT "FK_57189f0be2fc7943a94f217d47b" FOREIGN KEY ("serverId") REFERENCES "server"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "server" ADD CONSTRAINT "FK_0c5f45f81fc2ca4879bdd0206c3" FOREIGN KEY ("integrationId") REFERENCES "integration"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_d44e3bfca46203999446a556fa7" FOREIGN KEY ("tagId") REFERENCES "tag"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_6242ad1311294b229ee78dc71e7" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_1bcf082f7eae195b16dd4b35e1e" FOREIGN KEY ("taggedByUserId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_note" ADD CONSTRAINT "FK_f7cea51933658d5b6faea45c735" FOREIGN KEY ("authorId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_note" ADD CONSTRAINT "FK_9b8d6fe43113dad71c5275c9c30" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account" ADD CONSTRAINT "FK_c7fc44c34f7727c055541a3be6f" FOREIGN KEY ("serverId") REFERENCES "server"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "trading_account" ADD CONSTRAINT "FK_6e4e317edbe690900ebad00b98c" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_a5e230a983916c53f15b7b64645" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_f80db91119dbacc5f6ed1f62bcb" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_5a8241c79ab3ecbaa4386051955" FOREIGN KEY ("walletId") REFERENCES "wallet"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet" ADD CONSTRAINT "FK_35472b1fe48b6330cd349709564" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
     await queryRunner.query(
       `ALTER TABLE "loyalty_history" ADD CONSTRAINT "FK_3d0094ee38350ffdcb38f1282e2" FOREIGN KEY ("loyaltyId") REFERENCES "loyalty"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
       `ALTER TABLE "loyalty_history" ADD CONSTRAINT "FK_c1aa0a0f83df296557b410f5b93" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "loyalty" ADD CONSTRAINT "FK_a7e5fcf9e75f61d7a58c84046e1" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
       `ALTER TABLE "user_note" ADD CONSTRAINT "FK_071db9921110b2fe5d57cb70f9d" FOREIGN KEY ("authorId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -409,6 +358,60 @@ export class Sql1774465819312 implements MigrationInterface {
       `ALTER TABLE "user_document" ADD CONSTRAINT "FK_bea6ff5b6ea0d461a438a2e837c" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
+      `ALTER TABLE "payment_transaction" ADD CONSTRAINT "FK_c30515be97af9ab6316b00ddeb1" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "payment_transaction" ADD CONSTRAINT "FK_23a1634ec0589f208f7577211a3" FOREIGN KEY ("integrationId") REFERENCES "integration"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_type_leverage" ADD CONSTRAINT "FK_b2b1d5983b107b64a91bf88f839" FOREIGN KEY ("tradingAccountTypeId") REFERENCES "trading_account_type"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_type" ADD CONSTRAINT "FK_57189f0be2fc7943a94f217d47b" FOREIGN KEY ("serverId") REFERENCES "server"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "server" ADD CONSTRAINT "FK_0c5f45f81fc2ca4879bdd0206c3" FOREIGN KEY ("integrationId") REFERENCES "integration"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_01fd2ad964a28e540fd26c855c4" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_9071d3c9266c4521bdafe29307a" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_07de5136ba8e92bb97d45b9a7af" FOREIGN KEY ("walletId") REFERENCES "wallet"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_d44e3bfca46203999446a556fa7" FOREIGN KEY ("tagId") REFERENCES "tag"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_6242ad1311294b229ee78dc71e7" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_tag" ADD CONSTRAINT "FK_1bcf082f7eae195b16dd4b35e1e" FOREIGN KEY ("taggedByUserId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_note" ADD CONSTRAINT "FK_f7cea51933658d5b6faea45c735" FOREIGN KEY ("authorId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_note" ADD CONSTRAINT "FK_9b8d6fe43113dad71c5275c9c30" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_a5e230a983916c53f15b7b64645" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_f80db91119dbacc5f6ed1f62bcb" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" ADD CONSTRAINT "FK_5a8241c79ab3ecbaa4386051955" FOREIGN KEY ("walletId") REFERENCES "wallet"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account" ADD CONSTRAINT "FK_c7fc44c34f7727c055541a3be6f" FOREIGN KEY ("serverId") REFERENCES "server"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "trading_account" ADD CONSTRAINT "FK_6e4e317edbe690900ebad00b98c" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "user_auth_session" ADD CONSTRAINT "FK_10c4d5bf21e3f34543db172bc00" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
@@ -424,16 +427,13 @@ export class Sql1774465819312 implements MigrationInterface {
       `ALTER TABLE "user" ADD CONSTRAINT "FK_f05fcc9b589876b45e82e17b313" FOREIGN KEY ("detailId") REFERENCES "user_detail"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
+      `ALTER TABLE "user" ADD CONSTRAINT "FK_f006246faa766d1b2d550479f02" FOREIGN KEY ("loyaltyId") REFERENCES "loyalty"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "user" ADD CONSTRAINT "FK_390395c3d8592e3e8d8422ce853" FOREIGN KEY ("settingsId") REFERENCES "user_setting"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
-      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_01fd2ad964a28e540fd26c855c4" FOREIGN KEY ("tradingAccountId") REFERENCES "trading_account"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_9071d3c9266c4521bdafe29307a" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction" ADD CONSTRAINT "FK_07de5136ba8e92bb97d45b9a7af" FOREIGN KEY ("walletId") REFERENCES "wallet"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
+      `ALTER TABLE "wallet" ADD CONSTRAINT "FK_35472b1fe48b6330cd349709564" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
     await queryRunner.query(
       `ALTER TABLE "alert" ADD CONSTRAINT "FK_5b4173bbde31cc348ea217c8a1d" FOREIGN KEY ("channelId") REFERENCES "channel"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -442,15 +442,40 @@ export class Sql1774465819312 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "alert" DROP CONSTRAINT "FK_5b4173bbde31cc348ea217c8a1d"`);
-    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_07de5136ba8e92bb97d45b9a7af"`);
-    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_9071d3c9266c4521bdafe29307a"`);
-    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_01fd2ad964a28e540fd26c855c4"`);
+    await queryRunner.query(`ALTER TABLE "wallet" DROP CONSTRAINT "FK_35472b1fe48b6330cd349709564"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_390395c3d8592e3e8d8422ce853"`);
+    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_f006246faa766d1b2d550479f02"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_f05fcc9b589876b45e82e17b313"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_58f5c71eaab331645112cf8cfa5"`);
     await queryRunner.query(`ALTER TABLE "user_in_app_notification" DROP CONSTRAINT "FK_2067fd15dacc6a6dd53b7a92cae"`);
     await queryRunner.query(`ALTER TABLE "user_notification" DROP CONSTRAINT "FK_dce2a8927967051c447ae10bc8b"`);
     await queryRunner.query(`ALTER TABLE "user_auth_session" DROP CONSTRAINT "FK_10c4d5bf21e3f34543db172bc00"`);
+    await queryRunner.query(`ALTER TABLE "trading_account" DROP CONSTRAINT "FK_6e4e317edbe690900ebad00b98c"`);
+    await queryRunner.query(`ALTER TABLE "trading_account" DROP CONSTRAINT "FK_c7fc44c34f7727c055541a3be6f"`);
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_5a8241c79ab3ecbaa4386051955"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_f80db91119dbacc5f6ed1f62bcb"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_a5e230a983916c53f15b7b64645"`,
+    );
+    await queryRunner.query(`ALTER TABLE "trading_account_note" DROP CONSTRAINT "FK_9b8d6fe43113dad71c5275c9c30"`);
+    await queryRunner.query(`ALTER TABLE "trading_account_note" DROP CONSTRAINT "FK_f7cea51933658d5b6faea45c735"`);
+    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_1bcf082f7eae195b16dd4b35e1e"`);
+    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_6242ad1311294b229ee78dc71e7"`);
+    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_d44e3bfca46203999446a556fa7"`);
+    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_07de5136ba8e92bb97d45b9a7af"`);
+    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_9071d3c9266c4521bdafe29307a"`);
+    await queryRunner.query(`ALTER TABLE "wallet_transaction" DROP CONSTRAINT "FK_01fd2ad964a28e540fd26c855c4"`);
+    await queryRunner.query(`ALTER TABLE "server" DROP CONSTRAINT "FK_0c5f45f81fc2ca4879bdd0206c3"`);
+    await queryRunner.query(`ALTER TABLE "trading_account_type" DROP CONSTRAINT "FK_57189f0be2fc7943a94f217d47b"`);
+    await queryRunner.query(
+      `ALTER TABLE "trading_account_type_leverage" DROP CONSTRAINT "FK_b2b1d5983b107b64a91bf88f839"`,
+    );
+    await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_23a1634ec0589f208f7577211a3"`);
+    await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_c30515be97af9ab6316b00ddeb1"`);
     await queryRunner.query(`ALTER TABLE "user_document" DROP CONSTRAINT "FK_bea6ff5b6ea0d461a438a2e837c"`);
     await queryRunner.query(`ALTER TABLE "user_reward" DROP CONSTRAINT "FK_7e500605e47e9257c25e7ec87ae"`);
     await queryRunner.query(`ALTER TABLE "user_reward" DROP CONSTRAINT "FK_ef8e443d9a7cd2881b2e75ae35d"`);
@@ -463,36 +488,8 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "audit_log" DROP CONSTRAINT "FK_2621409ebc295c5da7ff3e41396"`);
     await queryRunner.query(`ALTER TABLE "user_note" DROP CONSTRAINT "FK_236dbd155cee61376a015913576"`);
     await queryRunner.query(`ALTER TABLE "user_note" DROP CONSTRAINT "FK_071db9921110b2fe5d57cb70f9d"`);
-    await queryRunner.query(`ALTER TABLE "loyalty" DROP CONSTRAINT "FK_a7e5fcf9e75f61d7a58c84046e1"`);
     await queryRunner.query(`ALTER TABLE "loyalty_history" DROP CONSTRAINT "FK_c1aa0a0f83df296557b410f5b93"`);
     await queryRunner.query(`ALTER TABLE "loyalty_history" DROP CONSTRAINT "FK_3d0094ee38350ffdcb38f1282e2"`);
-    await queryRunner.query(`ALTER TABLE "wallet" DROP CONSTRAINT "FK_35472b1fe48b6330cd349709564"`);
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_5a8241c79ab3ecbaa4386051955"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_f80db91119dbacc5f6ed1f62bcb"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "wallet_transaction_history" DROP CONSTRAINT "FK_a5e230a983916c53f15b7b64645"`,
-    );
-    await queryRunner.query(`ALTER TABLE "trading_account" DROP CONSTRAINT "FK_6e4e317edbe690900ebad00b98c"`);
-    await queryRunner.query(`ALTER TABLE "trading_account" DROP CONSTRAINT "FK_c7fc44c34f7727c055541a3be6f"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_note" DROP CONSTRAINT "FK_9b8d6fe43113dad71c5275c9c30"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_note" DROP CONSTRAINT "FK_f7cea51933658d5b6faea45c735"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_1bcf082f7eae195b16dd4b35e1e"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_6242ad1311294b229ee78dc71e7"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_tag" DROP CONSTRAINT "FK_d44e3bfca46203999446a556fa7"`);
-    await queryRunner.query(`ALTER TABLE "server" DROP CONSTRAINT "FK_0c5f45f81fc2ca4879bdd0206c3"`);
-    await queryRunner.query(`ALTER TABLE "trading_account_type" DROP CONSTRAINT "FK_57189f0be2fc7943a94f217d47b"`);
-    await queryRunner.query(
-      `ALTER TABLE "trading_account_type_leverage" DROP CONSTRAINT "FK_b2b1d5983b107b64a91bf88f839"`,
-    );
-    await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_23a1634ec0589f208f7577211a3"`);
-    await queryRunner.query(`ALTER TABLE "payment_transaction" DROP CONSTRAINT "FK_c30515be97af9ab6316b00ddeb1"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_d3df7cfab121e44694bc9b744e"`);
-    await queryRunner.query(`DROP TABLE "channel"`);
-    await queryRunner.query(`DROP TYPE "public"."channel_type_enum"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_5b4173bbde31cc348ea217c8a1"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_976e67503908a38e535d3d6377"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_5a112a234c18bbd8df5f24d248"`);
@@ -501,6 +498,9 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`DROP TYPE "public"."alert_type_enum"`);
     await queryRunner.query(`DROP TYPE "public"."alert_level_enum"`);
     await queryRunner.query(`DROP TYPE "public"."alert_status_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_d3df7cfab121e44694bc9b744e"`);
+    await queryRunner.query(`DROP TABLE "channel"`);
+    await queryRunner.query(`DROP TYPE "public"."channel_type_enum"`);
     await queryRunner.query(`DROP TABLE "exchange_rate"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_ee6dede9d68f0a9f6a864558d0"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_5d48351912deefef9e2211e771"`);
@@ -517,15 +517,13 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`DROP TYPE "public"."trading_event_period_enum"`);
     await queryRunner.query(`DROP TYPE "public"."trading_event_potency_enum"`);
     await queryRunner.query(`DROP TYPE "public"."trading_event_volatility_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_07de5136ba8e92bb97d45b9a7a"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_9071d3c9266c4521bdafe29307"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_01fd2ad964a28e540fd26c855c"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_c73c76a0e033bed04036835fce"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_060e96e8f43c47d27653d757fc"`);
-    await queryRunner.query(`DROP TABLE "wallet_transaction"`);
-    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_status_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_type_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_35472b1fe48b6330cd34970956"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_852bd836234c8f7777ec35957f"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_f91dbefa771fbcbde7dc44ea08"`);
+    await queryRunner.query(`DROP TABLE "wallet"`);
+    await queryRunner.query(`DROP TYPE "public"."wallet_assettype_enum"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_390395c3d8592e3e8d8422ce85"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_f006246faa766d1b2d550479f0"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_f05fcc9b589876b45e82e17b31"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_58f5c71eaab331645112cf8cfa"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_e12875dfb3b1d92d7d7c5377e2"`);
@@ -545,6 +543,56 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "public"."IDX_2ec50c79c575a4384ebc6ac9bf"`);
     await queryRunner.query(`DROP TABLE "user_auth_session"`);
     await queryRunner.query(`DROP TYPE "public"."user_auth_session_status_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_6e4e317edbe690900ebad00b98"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_c7fc44c34f7727c055541a3be6"`);
+    await queryRunner.query(`DROP TABLE "trading_account"`);
+    await queryRunner.query(`DROP TYPE "public"."trading_account_status_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."trading_account_monetisation_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."trading_account_platform_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_5a8241c79ab3ecbaa438605195"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_f80db91119dbacc5f6ed1f62bc"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_a5e230a983916c53f15b7b6464"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_964e7e809f04289fba17efa595"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_4e343762e1fab760d9248dda1d"`);
+    await queryRunner.query(`DROP TABLE "wallet_transaction_history"`);
+    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_history_status_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_9b8d6fe43113dad71c5275c9c3"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_f7cea51933658d5b6faea45c73"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_1a124cb89d5f68383e8b7bcdfb"`);
+    await queryRunner.query(`DROP TABLE "trading_account_note"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_1bcf082f7eae195b16dd4b35e1"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_6242ad1311294b229ee78dc71e"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_d44e3bfca46203999446a556fa"`);
+    await queryRunner.query(`DROP TABLE "trading_account_tag"`);
+    await queryRunner.query(`DROP TABLE "tag"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_07de5136ba8e92bb97d45b9a7a"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_9071d3c9266c4521bdafe29307"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_01fd2ad964a28e540fd26c855c"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_c73c76a0e033bed04036835fce"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_060e96e8f43c47d27653d757fc"`);
+    await queryRunner.query(`DROP TABLE "wallet_transaction"`);
+    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_status_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_type_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_0c5f45f81fc2ca4879bdd0206c"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_56dd8fbc6aa8dfb5bc91da27e9"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_902704dee723d735fa0af911f4"`);
+    await queryRunner.query(`DROP TABLE "server"`);
+    await queryRunner.query(`DROP TYPE "public"."server_monetisation_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."server_platform_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_57189f0be2fc7943a94f217d47"`);
+    await queryRunner.query(`DROP TABLE "trading_account_type"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_b2b1d5983b107b64a91bf88f83"`);
+    await queryRunner.query(`DROP TABLE "trading_account_type_leverage"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_e2780d4d78095ea3fd05e080bb"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_0f8042d2f9626359c87f3f0655"`);
+    await queryRunner.query(`DROP TABLE "integration"`);
+    await queryRunner.query(`DROP TYPE "public"."integration_type_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."integration_name_enum"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_23a1634ec0589f208f7577211a"`);
+    await queryRunner.query(`DROP INDEX "public"."IDX_c30515be97af9ab6316b00ddeb"`);
+    await queryRunner.query(`DROP TABLE "payment_transaction"`);
+    await queryRunner.query(`DROP TYPE "public"."payment_transaction_status_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."payment_transaction_type_enum"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_bea6ff5b6ea0d461a438a2e837"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_2e2937efbb8460104254560a6b"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_8e09c3c2412dc12d088c1e8ade"`);
@@ -597,59 +645,11 @@ export class Sql1774465819312 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "public"."IDX_071db9921110b2fe5d57cb70f9"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_f41080bfa60a302640e365e552"`);
     await queryRunner.query(`DROP TABLE "user_note"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_a7e5fcf9e75f61d7a58c84046e"`);
     await queryRunner.query(`DROP TABLE "loyalty"`);
     await queryRunner.query(`DROP TYPE "public"."loyalty_program_enum"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_c1aa0a0f83df296557b410f5b9"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_3d0094ee38350ffdcb38f1282e"`);
     await queryRunner.query(`DROP TABLE "loyalty_history"`);
     await queryRunner.query(`DROP TYPE "public"."loyalty_history_source_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_35472b1fe48b6330cd34970956"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_852bd836234c8f7777ec35957f"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_f91dbefa771fbcbde7dc44ea08"`);
-    await queryRunner.query(`DROP TABLE "wallet"`);
-    await queryRunner.query(`DROP TYPE "public"."wallet_assettype_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_5a8241c79ab3ecbaa438605195"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_f80db91119dbacc5f6ed1f62bc"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_a5e230a983916c53f15b7b6464"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_964e7e809f04289fba17efa595"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_4e343762e1fab760d9248dda1d"`);
-    await queryRunner.query(`DROP TABLE "wallet_transaction_history"`);
-    await queryRunner.query(`DROP TYPE "public"."wallet_transaction_history_status_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_6e4e317edbe690900ebad00b98"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_c7fc44c34f7727c055541a3be6"`);
-    await queryRunner.query(`DROP TABLE "trading_account"`);
-    await queryRunner.query(`DROP TYPE "public"."trading_account_status_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."trading_account_monetisation_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."trading_account_platform_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_9b8d6fe43113dad71c5275c9c3"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_f7cea51933658d5b6faea45c73"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_1a124cb89d5f68383e8b7bcdfb"`);
-    await queryRunner.query(`DROP TABLE "trading_account_note"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_1bcf082f7eae195b16dd4b35e1"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_6242ad1311294b229ee78dc71e"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_d44e3bfca46203999446a556fa"`);
-    await queryRunner.query(`DROP TABLE "trading_account_tag"`);
-    await queryRunner.query(`DROP TABLE "tag"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_0c5f45f81fc2ca4879bdd0206c"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_56dd8fbc6aa8dfb5bc91da27e9"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_902704dee723d735fa0af911f4"`);
-    await queryRunner.query(`DROP TABLE "server"`);
-    await queryRunner.query(`DROP TYPE "public"."server_monetisation_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."server_platform_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_57189f0be2fc7943a94f217d47"`);
-    await queryRunner.query(`DROP TABLE "trading_account_type"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_b2b1d5983b107b64a91bf88f83"`);
-    await queryRunner.query(`DROP TABLE "trading_account_type_leverage"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_e2780d4d78095ea3fd05e080bb"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_0f8042d2f9626359c87f3f0655"`);
-    await queryRunner.query(`DROP TABLE "integration"`);
-    await queryRunner.query(`DROP TYPE "public"."integration_type_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."integration_name_enum"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_23a1634ec0589f208f7577211a"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_c30515be97af9ab6316b00ddeb"`);
-    await queryRunner.query(`DROP TABLE "payment_transaction"`);
-    await queryRunner.query(`DROP TYPE "public"."payment_transaction_status_enum"`);
-    await queryRunner.query(`DROP TYPE "public"."payment_transaction_type_enum"`);
   }
 }

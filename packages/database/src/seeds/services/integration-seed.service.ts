@@ -31,7 +31,7 @@ export class IntegrationSeedService {
         entity.settings = {};
 
         await this.repo.save(entity);
-        this.#logger.log(` -> Seeded integration '${name}'`);
+        this.#logger.debug(` -> Seeded integration '${name}'`);
       }
 
       this.#logger.log('✅ Integrations seeded successfully');

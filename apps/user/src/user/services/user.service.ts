@@ -17,9 +17,9 @@ import {
 import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
-import { UserEntity, UserSettingEntity } from '@crm/database';
+import { UserEntity, LoyaltyEntity, UserSettingEntity } from '@crm/database';
 import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent } from '@crm/kafka';
-import { Role, User, UserDetail, UserStatus, UserSetting, GlobalSettingKey } from '@crm/types';
+import { Role, User, UserDetail, UserStatus, UserSetting, LoyaltyProgram, GlobalSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
@@ -115,17 +115,22 @@ export class UserService {
     userSettings.canAutoWithdraw = Boolean(canAutoWithdraw);
     userSettings.maxAutoWithdrawAmount = Number(maxAutoWithdrawAmount ?? 1000);
 
+    // Create the user loyalty
+    const loyalty = new LoyaltyEntity();
+    loyalty.program = dto.loyaltyProgram ?? LoyaltyProgram.STANDARD;
+
     // Create the new user
     const user = await this.userRepo.save({
       email: dto.email,
       password: Cryptography.hash(dto.password),
       roles: [Role.USER],
       firstName: dto.firstName,
-      lastName: dto.lastName,
       middleName: dto.middleName,
+      lastName: dto.lastName,
       securityPin: Math.floor(1000 + Math.random() * 9000).toString(),
       status: UserStatus.ACTIVE,
       settings: userSettings,
+      loyalty,
     });
 
     if (!user) {

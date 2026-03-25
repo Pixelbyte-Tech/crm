@@ -1,6 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, Validate, IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEnum, IsEmail, Validate, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
+import { LoyaltyProgram } from '@crm/types';
 import { toLowerCase, PasswordValidator } from '@crm/validation';
 
 export class CreateUserDto {
@@ -29,4 +30,9 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  /** The user's loyalty program. Defaults to 'standard' if not provided. */
+  @IsOptional()
+  @IsEnum(LoyaltyProgram)
+  loyaltyProgram?: LoyaltyProgram;
 }

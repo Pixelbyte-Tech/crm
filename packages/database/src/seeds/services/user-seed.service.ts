@@ -2,10 +2,11 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger, Injectable } from '@nestjs/common';
 
-import { Role } from '@crm/types';
 import { Cryptography } from '@crm/utils';
+import { Role, LoyaltyProgram } from '@crm/types';
 
 import { UserEntity } from '../../entities/user.entity';
+import { LoyaltyEntity } from '../../entities/loyalty.entity';
 import { UserSettingEntity } from '../../entities/user-setting.entity';
 import { ADMIN_USER_EMAIL, STANDARD_USER_EMAIL } from '../helper/seed-ids';
 
@@ -45,8 +46,14 @@ export class UserSeedService {
 
         user.settings = userSettings;
 
+        // Create the user loyalty
+        const loyalty = new LoyaltyEntity();
+        loyalty.program = LoyaltyProgram.STANDARD;
+
+        user.loyalty = loyalty;
+
         await this.repo.save(user);
-        this.#logger.log(` -> Seeded user '${STANDARD_USER_EMAIL}'`);
+        this.#logger.debug(` -> Seeded user '${STANDARD_USER_EMAIL}'`);
       }
 
       if ((await this.repo.count({ where: { email: ADMIN_USER_EMAIL } })) === 0) {
@@ -75,8 +82,14 @@ export class UserSeedService {
 
         user.settings = userSettings;
 
+        // Create the user loyalty
+        const loyalty = new LoyaltyEntity();
+        loyalty.program = LoyaltyProgram.STANDARD;
+
+        user.loyalty = loyalty;
+
         await this.repo.save(user);
-        this.#logger.log(` -> Seeded user '${ADMIN_USER_EMAIL}'`);
+        this.#logger.debug(` -> Seeded user '${ADMIN_USER_EMAIL}'`);
       }
 
       this.#logger.log('✅ Users seeded successfully');

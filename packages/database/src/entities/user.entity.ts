@@ -39,6 +39,7 @@ import { WalletTransactionHistoryEntity } from './wallet-transaction-history.ent
 @Entity({ name: 'user' })
 @Unique(['detailId'])
 @Unique(['settingsId'])
+@Unique(['loyaltyId'])
 @Unique(['email'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -120,6 +121,18 @@ export class UserEntity {
   @Column({ type: 'uuid', nullable: true })
   detailId?: string | null;
 
+  @OneToOne(() => LoyaltyEntity, (e) => e.user, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+    cascade: true, // This allows insert of entity in save()
+  })
+  @JoinColumn({ name: 'loyaltyId' })
+  loyalty: LoyaltyEntity;
+
+  @Index()
+  @Column({ type: 'uuid' })
+  loyaltyId: string;
+
   @OneToOne(() => UserSettingEntity, (e) => e.user, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
@@ -131,9 +144,6 @@ export class UserEntity {
   @Index()
   @Column({ type: 'uuid' })
   settingsId: string;
-
-  @OneToOne(() => LoyaltyEntity, (e) => e.user)
-  loyalty: LoyaltyEntity[];
 
   /** One-to-many relations */
   @OneToMany(() => AuditLogEntity, (e) => e.user)

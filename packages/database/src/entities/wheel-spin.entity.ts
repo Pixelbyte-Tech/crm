@@ -22,7 +22,7 @@ export class WheelSpinEntity {
   @Column({ type: 'boolean', default: false })
   isClosed: boolean;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'smallint' })
   sector: number;
 
   /** Many-to-one relations */
