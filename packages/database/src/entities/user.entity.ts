@@ -21,10 +21,12 @@ import { WheelSpinEntity } from './wheel-spin.entity';
 import { InvitationEntity } from './invitation.entity';
 import { UserAvatarEntity } from './user-avatar.entity';
 import { UserDetailEntity } from './user-detail.entity';
+import { UserRewardEntity } from './user-reward.entity';
 import { UserSettingEntity } from './user-setting.entity';
 import { UserDocumentEntity } from './user-document.entity';
 import { TradingAccountEntity } from './trading-account.entity';
 import { LoyaltyHistoryEntity } from './loyalty-history.entity';
+import { UserMysteryBoxEntity } from './user-mystery-box.entity';
 import { UserAuthSessionEntity } from './user-auth-session.entity';
 import { UserNotificationEntity } from './user-notification.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
@@ -154,6 +156,10 @@ export class UserEntity {
   @JoinColumn()
   loyaltyHistory: LoyaltyHistoryEntity[];
 
+  @OneToMany(() => UserMysteryBoxEntity, (e) => e.user)
+  @JoinColumn()
+  mysteryBoxes: UserMysteryBoxEntity[];
+
   @OneToMany(() => UserNotificationEntity, (e) => e.user)
   @JoinColumn()
   notifications: UserNotificationEntity[];
@@ -161,6 +167,14 @@ export class UserEntity {
   @OneToMany(() => PaymentTransactionEntity, (e) => e.user)
   @JoinColumn()
   paymentTransactions: PaymentTransactionEntity[];
+
+  @OneToMany(() => UserRewardEntity, (e) => e.user)
+  @JoinColumn()
+  rewards: UserRewardEntity[];
+
+  @OneToMany(() => UserRewardEntity, (e) => e.awardedByUserId)
+  @JoinColumn()
+  rewardsGiven: UserRewardEntity[];
 
   @OneToMany(() => InvitationEntity, (e) => e.sentByUser)
   @JoinColumn()

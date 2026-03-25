@@ -18,6 +18,8 @@ export * from './common/sort-dir.enum';
 
 export * from './loyalty/loyalty-points-source.enum';
 export * from './loyalty/loyalty-program.enum';
+export * from './loyalty/reward-source.enum';
+export * from './loyalty/reward-type.enum';
 
 export * from './messaging/alert-level.enum';
 export * from './messaging/alert-status.enum';

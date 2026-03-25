@@ -8,6 +8,7 @@ import { UserEntity } from './entities/user.entity';
 import { AlertEntity } from './entities/alert.entity';
 import { ServerEntity } from './entities/server.entity';
 import { WalletEntity } from './entities/wallet.entity';
+import { RewardEntity } from './entities/reward.entity';
 import { ChannelEntity } from './entities/channel.entity';
 import { LoyaltyEntity } from './entities/loyalty.entity';
 import { AuditLogEntity } from './entities/audit-log.entity';
@@ -16,6 +17,8 @@ import { WheelSpinEntity } from './entities/wheel-spin.entity';
 import { InvitationEntity } from './entities/invitation.entity';
 import { UserAvatarEntity } from './entities/user-avatar.entity';
 import { UserDetailEntity } from './entities/user-detail.entity';
+import { UserRewardEntity } from './entities/user-reward.entity';
+import { MysteryBoxEntity } from './entities/mystery-box.entity';
 import { IntegrationEntity } from './entities/integration.entity';
 import { UserSettingEntity } from './entities/user-setting.entity';
 import { ExchangeRateEntity } from './entities/exchange-rate.entity';
@@ -25,8 +28,10 @@ import { GlobalSettingEntity } from './entities/global-setting.entity';
 import { PlatformClientEntity } from './entities/platform-client.entity';
 import { TradingAccountEntity } from './entities/trading-account.entity';
 import { LoyaltyHistoryEntity } from './entities/loyalty-history.entity';
+import { UserMysteryBoxEntity } from './entities/user-mystery-box.entity';
 import { UserAuthSessionEntity } from './entities/user-auth-session.entity';
 import { UserNotificationEntity } from './entities/user-notification.entity';
+import { PaymentPromoCodeEntity } from './entities/payment-promo-code.entity';
 import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
 import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
@@ -119,8 +124,11 @@ export class DatabaseModule {
         IntegrationEntity,
         LoyaltyEntity,
         LoyaltyHistoryEntity,
+        MysteryBoxEntity,
+        PaymentPromoCodeEntity,
         PaymentTransactionEntity,
         PlatformClientEntity,
+        RewardEntity,
         ServerEntity,
         TagEntity,
         TradingAccountEntity,
@@ -134,8 +142,10 @@ export class DatabaseModule {
         UserAvatarEntity,
         UserDetailEntity,
         UserDocumentEntity,
+        UserMysteryBoxEntity,
         UserNoteEntity,
         UserNotificationEntity,
+        UserRewardEntity,
         UserInAppNotificationEntity,
         UserSettingEntity,
         WalletEntity,
