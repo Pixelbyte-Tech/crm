@@ -24,6 +24,34 @@ import { PositionReqMapper } from '../../mappers/request/ct/position-req.mapper'
 import { TrendbarReqMapper } from '../../mappers/request/ct/trendbar-req.mapper';
 import { TraderGroupMapper } from '../../mappers/response/ct/trader-group.mapper';
 
+import { Bar } from '../../models/bar';
+import { Order } from '../../models/order';
+import { Symbol } from '../../models/symbol';
+import { Account } from '../../models/account';
+import { Position } from '../../models/position';
+import { RiskPlan } from '../../models/risk-plan';
+import { UserGroup } from '../../models/user-group';
+import { SpreadGroup } from '../../models/spread-group';
+import { JournalEntry } from '../../models/journal-entry';
+import { AccountResult } from '../../models/account-result';
+import { PasswordResult } from '../../models/password-result';
+import { TradingHoliday } from '../../models/trading-holiday';
+import { TradingSessions } from '../../models/trading-session';
+import { CommissionGroup } from '../../models/commission-group';
+import { Balance, BalanceOperation } from '../../models/balance';
+import { TotalOnlineUsers } from '../../models/total-online-users';
+import { UpdateOrderResult } from '../../models/update-order-result';
+import { ClosePositionResult } from '../../models/close-position-result';
+import { UpdatePositionResult } from '../../models/update-position-result';
+import { CloseAllTradesResult } from '../../models/close-all-trades-result';
+import { CTCredentials, PlatformServer } from '../../models/platform-server';
+import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
+import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+
+import { CtCtid } from '../../types/ct/user/ctid.type';
+import { CtTrader } from '../../types/ct/account/account.type';
+import { CtTraderGroup } from '../../types/ct/account/group.type';
+
 import { AbstractCtService } from './abstract.ct.service';
 import { CtManagerApiService } from './manager/ct-manager-api.service';
 import { CtSnapshotApiService } from './snapshot/ct-snapshot-api.service';
@@ -41,33 +69,7 @@ import { UpdatePositionDto } from '../../dto/update-position.dto';
 import { CreateAccountDto, CtAdditionalCreateAccountData } from '../../dto/create-account.dto';
 import { UpdateAccountDto, CtAdditionalUpdateAccountData } from '../../dto/update-account.dto';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { CtCtid } from '../../types/ct/user/ctid.type';
-import { SpreadGroup } from '../../models/spread-group';
-import { JournalEntry } from '../../models/journal-entry';
-import { AccountResult } from '../../models/account-result';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { CtTrader } from '../../types/ct/account/account.type';
-import { TradingSessions } from '../../models/trading-session';
-import { CommissionGroup } from '../../models/commission-group';
-import { Balance, BalanceOperation } from '../../models/balance';
-import { CtTraderGroup } from '../../types/ct/account/group.type';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { CTCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
 import { CredentialType, PlatformService } from '../../factory/platform.factory';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
 import {
   ActionRejectedException,
   UnknownPositionException,

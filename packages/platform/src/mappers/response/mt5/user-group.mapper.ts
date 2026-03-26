@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { UserGroup } from '../../../models/user-group';
+
 import { Mt5Group } from '../../../types/mt5/account/group.type';
 
 @Injectable()

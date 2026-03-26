@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common';
 
 import { getTimezoneOffset } from '@crm/utils';
 
+import { TradingHoliday } from '../../../models/trading-holiday';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
 import { CtMapperHelper } from '../../helper/ct-mapper.helper';
-import { TradingHoliday } from '../../../models/trading-holiday';
 import { ProtoHoliday, ProtoManagerSymbol } from '../../../services/ct/manager/proto/base/ts';
 
 @Injectable()

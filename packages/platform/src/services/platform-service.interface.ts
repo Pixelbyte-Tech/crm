@@ -1,17 +1,3 @@
-import { CircuitBreakerAxios } from './internal/circuit-breaker-axios.service';
-
-import { UserGroupDto } from '../dto/user-group.dto';
-import { OpenOrderDto } from '../dto/open-order.dto';
-import { AddHolidayDto } from '../dto/add-holiday.dto';
-import { UpdateOrderDto } from '../dto/update-order.dto';
-import { OpenPositionDto } from '../dto/open-position.dto';
-import { DeleteHolidayDto } from '../dto/delete-holiday.dto';
-import { UpdateHolidayDto } from '../dto/update-holiday.dto';
-import { UpdatePasswordDto } from '../dto/update-password.dto';
-import { UpdatePositionDto } from '../dto/update-position.dto';
-import { UpdateAccountDto, UpdateAccountAdditionalData } from '../dto/update-account.dto';
-import { CreateAccountDto, CreateAccountAdditionalData } from '../dto/create-account.dto';
-
 import { Bar } from '../models/bar';
 import { Order } from '../models/order';
 import { Symbol } from '../models/symbol';
@@ -35,6 +21,20 @@ import { UpdatePositionResult } from '../models/update-position-result';
 import { CloseAllTradesResult } from '../models/close-all-trades-result';
 import { CancelAllOrdersResult } from '../models/close-all-orders-result';
 import { UserGroupAggregateBalance } from '../models/user-group-aggregate-balance';
+
+import { CircuitBreakerAxios } from './internal/circuit-breaker-axios.service';
+
+import { UserGroupDto } from '../dto/user-group.dto';
+import { OpenOrderDto } from '../dto/open-order.dto';
+import { AddHolidayDto } from '../dto/add-holiday.dto';
+import { UpdateOrderDto } from '../dto/update-order.dto';
+import { OpenPositionDto } from '../dto/open-position.dto';
+import { DeleteHolidayDto } from '../dto/delete-holiday.dto';
+import { UpdateHolidayDto } from '../dto/update-holiday.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
+import { UpdatePositionDto } from '../dto/update-position.dto';
+import { UpdateAccountDto, UpdateAccountAdditionalData } from '../dto/update-account.dto';
+import { CreateAccountDto, CreateAccountAdditionalData } from '../dto/create-account.dto';
 
 export interface PlatformService {
   get server(): PlatformServer<Credentials>;

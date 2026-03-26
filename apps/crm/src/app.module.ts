@@ -9,6 +9,7 @@ import { AuthModule } from '@crm/auth';
 import { SwaggerModule } from '@crm/swagger';
 import { DatabaseModule } from '@crm/database';
 import { ValidationModule } from '@crm/validation';
+import { PlatformModule } from '@crm/platform/dist/platform.module';
 
 import appConfig from './config/app/app.config';
 import authConfig from './config/auth/auth.config';
@@ -95,6 +96,13 @@ import { TradingAccountModule } from './trading-account/trading-account.module';
     HealthModule,
     IntegrationModule,
     PlatformClientModule,
+    PlatformModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (c: ConfigService<{ app: AppConfig }>) => ({
+        redisHost: c.getOrThrow('app.redisHost', { infer: true }),
+        redisPort: c.getOrThrow('app.redisPort', { infer: true }),
+      }),
+    }),
     ServerModule,
     SwaggerModule,
     TradingAccountModule,

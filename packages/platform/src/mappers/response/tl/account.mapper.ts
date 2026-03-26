@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Balance } from '../../../models/balance';
 import { Account } from '../../../models/account';
 import { AccountResult } from '../../../models/account-result';
+
 import { TlAccount } from '../../../types/tl/account/account.type';
 
 @Injectable()

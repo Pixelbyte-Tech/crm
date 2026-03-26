@@ -2,10 +2,11 @@ import Redis from 'ioredis';
 import { Axios } from 'axios';
 import { Inject, Logger, Injectable } from '@nestjs/common';
 
+import { Mt5Group } from '../../types/mt5/account/group.type';
+
 import { Serializer } from '../../services/serializer.service';
 
 import { BaseMapperHelper } from './base-mapper.helper';
-import { Mt5Group } from '../../types/mt5/account/group.type';
 
 @Injectable()
 export class Mt5MapperHelper extends BaseMapperHelper {

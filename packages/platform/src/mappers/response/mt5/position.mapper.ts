@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Side, PositionStatus } from '@crm/types';
 
 import { Position } from '../../../models/position';
+
 import { Mt5Position } from '../../../types/mt5/trade/position.type';
 
 @Injectable()

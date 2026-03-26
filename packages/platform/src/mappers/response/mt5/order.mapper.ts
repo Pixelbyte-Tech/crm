@@ -4,7 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { OrderType } from '@crm/types';
 
 import { Order } from '../../../models/order';
+
 import { Mt5Order } from '../../../types/mt5/trade/order.type';
+
 import { UnprocessableResponseException } from '../../../exceptions';
 
 @Injectable()

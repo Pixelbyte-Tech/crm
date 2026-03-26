@@ -55,6 +55,8 @@ import { PositionReqMapper as CtPositionReqMapper } from './mappers/request/ct/p
 import { TraderGroupMapper as CtTraderGroupMapper } from './mappers/response/ct/trader-group.mapper';
 import { ScheduleProfileMapper as CtScheduleProfileMapper } from './mappers/response/ct/schedule-profile.mapper';
 
+import { Serializer } from './services/serializer.service';
+
 // Other
 import { PlatformFactory } from './factory/platform.factory';
 import { TlMapperHelper } from './mappers/helper/tl-mapper.helper';
@@ -94,7 +96,7 @@ export class PlatformModule {
         I18nModule.forRoot({
           fallbackLanguage: 'en',
           loaderOptions: {
-            path: join(__dirname, '/platform/mappers/error/i18n/'),
+            path: join(__dirname, '/mappers/error/i18n/'),
             watch: true,
           },
           resolvers: [{ use: HeaderResolver, options: ['lang'] }, AcceptLanguageResolver],
@@ -112,6 +114,7 @@ export class PlatformModule {
             return new Redis(port, host, { keepAlive: 1, reconnectOnError: () => true });
           },
         },
+        Serializer,
 
         // Core
         Mt5RequestMapper,
@@ -175,23 +178,7 @@ export class PlatformModule {
         CtTraderReqMapper,
         CtTrendbarReqMapper,
       ],
-      exports: [
-        'PLATFORM_CONFIG_OPTIONS',
-
-        PlatformFactory,
-
-        Mt5ErrorMapper,
-        Mt5ResponseMapper,
-        Mt5RequestMapper,
-
-        TlErrorMapper,
-        TlResponseMapper,
-        TlRequestMapper,
-
-        CtErrorMapper,
-        CtRequestMapper,
-        CtResponseMapper,
-      ],
+      exports: ['PLATFORM_CONFIG_OPTIONS', PlatformFactory],
     };
   }
 

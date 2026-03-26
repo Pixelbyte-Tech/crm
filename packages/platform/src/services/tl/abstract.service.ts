@@ -5,12 +5,13 @@ import { Logger } from '@nestjs/common';
 import { Cache } from '@nestjs/cache-manager';
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+import { TLCredentials, PlatformServer } from '../../models/platform-server';
+
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
 import { getTimezoneOffset } from '../../utils/time.utils';
 import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
-import { TLCredentials, PlatformServer } from '../../models/platform-server';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
 import { ResponseMapper } from '../../mappers/response/response-mapper.interface';
 import {
@@ -141,7 +142,7 @@ export abstract class AbstractService {
    * a format which is valid for the service's requirements
    * @param credentials The credentials object to validate
    * @param baseUrl The base URL of the platform server
-   * @throws InvalidServerCredentialsException If the format is not correct
+   * @throws InvalidServerCredentialsException If the format is incorrect
    */
   #validateCredentials(credentials: unknown, baseUrl: string): void {
     const requiredCredentials = ['apiKey'];

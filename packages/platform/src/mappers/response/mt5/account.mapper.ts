@@ -3,10 +3,12 @@ import { Injectable } from '@nestjs/common';
 
 import { Account } from '../../../models/account';
 import { Balance } from '../../../models/balance';
-import { Mt5User } from '../../../types/mt5/account/user.type';
 import { AccountResult } from '../../../models/account-result';
-import { Mt5MapperHelper } from '../../helper/mt5-mapper.helper';
+
+import { Mt5User } from '../../../types/mt5/account/user.type';
 import { Mt5Account } from '../../../types/mt5/account/account.type';
+
+import { Mt5MapperHelper } from '../../helper/mt5-mapper.helper';
 import { UnprocessableResponseException } from '../../../exceptions';
 
 @Injectable()

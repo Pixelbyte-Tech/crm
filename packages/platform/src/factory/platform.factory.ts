@@ -23,6 +23,8 @@ import { CtErrorMapper } from '../mappers/error/ct-error.mapper';
 import { CtRequestMapper } from '../mappers/request/ct-request.mapper';
 import { CtResponseMapper } from '../mappers/response/ct-response.mapper';
 
+import { Credentials, CTCredentials, MTCredentials, TLCredentials, PlatformServer } from '../models/platform-server';
+
 import { TlService } from '../services/tl/tl.service';
 import { CtService } from '../services/ct/ct.service';
 import { Mt5Service } from '../services/mt5/mt5.service';
@@ -34,7 +36,6 @@ import { CircuitBreakerAxios } from '../services/internal/circuit-breaker-axios.
 import { PlatformNotSupportedException } from '../exceptions';
 import { PlatformService } from '../services/platform-service.interface';
 import { CtMarketPriceService } from '../services/ct/manager/ct-market-price-service';
-import { Credentials, CTCredentials, MTCredentials, TLCredentials, PlatformServer } from '../models/platform-server';
 
 export { PlatformService } from '../services/platform-service.interface';
 

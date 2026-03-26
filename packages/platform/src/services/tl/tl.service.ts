@@ -20,6 +20,42 @@ import { AccountReqMapper } from '../../mappers/request/tl/account-req.mapper';
 import { SpreadPlanMapper } from '../../mappers/response/tl/spread-plan.mapper';
 import { CommissionPlanMapper } from '../../mappers/response/tl/commission-plan.mapper';
 
+import { Bar } from '../../models/bar';
+import { Order } from '../../models/order';
+import { Symbol } from '../../models/symbol';
+import { Account } from '../../models/account';
+import { Position } from '../../models/position';
+import { RiskPlan } from '../../models/risk-plan';
+import { UserGroup } from '../../models/user-group';
+import { SpreadGroup } from '../../models/spread-group';
+import { AccountResult } from '../../models/account-result';
+import { PasswordResult } from '../../models/password-result';
+import { TradingHoliday } from '../../models/trading-holiday';
+import { TradingSessions } from '../../models/trading-session';
+import { CommissionGroup } from '../../models/commission-group';
+import { Balance, BalanceOperation } from '../../models/balance';
+import { TotalOnlineUsers } from '../../models/total-online-users';
+import { UpdateOrderResult } from '../../models/update-order-result';
+import { ClosePositionResult } from '../../models/close-position-result';
+import { UpdatePositionResult } from '../../models/update-position-result';
+import { CloseAllTradesResult } from '../../models/close-all-trades-result';
+import { TLCredentials, PlatformServer } from '../../models/platform-server';
+import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
+import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+
+import { TlUser } from '../../types/tl/user/user.type';
+import { TlGroup } from '../../types/tl/account/group.type';
+import { TlRiskPlan } from '../../types/tl/plan/risk-plan.type';
+import { TlPosition } from '../../types/tl/trade/position.type';
+import { TlAccount } from '../../types/tl/account/account.type';
+import { TlSpreadPlan } from '../../types/tl/plan/spread-plan.type';
+import { TlInstrument } from '../../types/tl/symbol/instrument.type';
+import { TlOrder, TlOrderStatus } from '../../types/tl/trade/order.type';
+import { TlCommissionPlan } from '../../types/tl/plan/commission-plan.type';
+import { TlAccountOperation } from '../../types/tl/account/account-operation.type';
+import { TlAccountStatementReport } from '../../types/tl/report/account-statement-report.type';
+import { TlClosedPositionsHistoryReport } from '../../types/tl/report/closed-positions-history-report.type';
+
 import { AbstractService } from './abstract.service';
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
@@ -34,44 +70,10 @@ import { UpdatePasswordDto } from '../../dto/update-password.dto';
 import { UpdateAccountDto, TlAdditionalUpdateAccountData } from '../../dto/update-account.dto';
 import { CreateAccountDto, TlAdditionalCreateAccountData } from '../../dto/create-account.dto';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
 import { isOk } from '../../utils/http.utils';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { TlUser } from '../../types/tl/user/user.type';
-import { SpreadGroup } from '../../models/spread-group';
-import { TlGroup } from '../../types/tl/account/group.type';
-import { AccountResult } from '../../models/account-result';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { TradingSessions } from '../../models/trading-session';
-import { TlRiskPlan } from '../../types/tl/plan/risk-plan.type';
-import { TlPosition } from '../../types/tl/trade/position.type';
-import { TlAccount } from '../../types/tl/account/account.type';
-import { CommissionGroup } from '../../models/commission-group';
 import { CredentialType } from '../../factory/platform.factory';
 import { PlatformService } from '../platform-service.interface';
-import { Balance, BalanceOperation } from '../../models/balance';
 import { UnsupportedOperationException } from '../../exceptions';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { TlSpreadPlan } from '../../types/tl/plan/spread-plan.type';
-import { TlInstrument } from '../../types/tl/symbol/instrument.type';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { TlOrder, TlOrderStatus } from '../../types/tl/trade/order.type';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { TlCommissionPlan } from '../../types/tl/plan/commission-plan.type';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { TLCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
-import { TlAccountOperation } from '../../types/tl/account/account-operation.type';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
-import { TlAccountStatementReport } from '../../types/tl/report/account-statement-report.type';
-import { TlClosedPositionsHistoryReport } from '../../types/tl/report/closed-positions-history-report.type';
 
 export class TlService extends AbstractService implements PlatformService {
   constructor(

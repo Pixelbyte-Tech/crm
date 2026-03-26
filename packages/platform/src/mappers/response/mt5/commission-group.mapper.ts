@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { Mt5Group } from '../../../types/mt5/account/group.type';
 import { CommissionGroup } from '../../../models/commission-group';
+
+import { Mt5Group } from '../../../types/mt5/account/group.type';
 
 @Injectable()
 export class CommissionGroupMapper {

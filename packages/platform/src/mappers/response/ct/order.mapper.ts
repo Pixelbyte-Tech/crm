@@ -3,9 +3,10 @@ import { Injectable } from '@nestjs/common';
 
 import { OrderType } from '@crm/types';
 
+import { Order, OrderStatus } from '../../../models/order';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
-import { Order, OrderStatus } from '../../../models/order';
 import { CtMapperHelper } from '../../helper/ct-mapper.helper';
 import { UnprocessableResponseException } from '../../../exceptions';
 import {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Bar, BarTimeframe } from '../../../models/bar';
+
 import { Mt5Candle } from '../../../types/mt5/candle/candle.type';
 
 @Injectable()

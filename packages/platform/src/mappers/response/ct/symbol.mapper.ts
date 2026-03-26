@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
+import { Symbol } from '../../../models/symbol';
+import { TradingSessions } from '../../../models/trading-session';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
-import { Symbol } from '../../../models/symbol';
 import { CtMapperHelper } from '../../helper/ct-mapper.helper';
-import { TradingSessions } from '../../../models/trading-session';
 import { ScheduleProfileMapper } from './schedule-profile.mapper';
 import { ProtoManagerSymbol } from '../../../services/ct/manager/proto/base/ts';
 

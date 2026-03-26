@@ -2,10 +2,11 @@ import Redis from 'ioredis';
 import { Axios } from 'axios';
 import { Inject, Logger, Injectable } from '@nestjs/common';
 
+import { TlRiskPlan } from '../../types/tl/plan/risk-plan.type';
+
 import { Serializer } from '../../services/serializer.service';
 
 import { BaseMapperHelper } from './base-mapper.helper';
-import { TlRiskPlan } from '../../types/tl/plan/risk-plan.type';
 
 @Injectable()
 export class TlMapperHelper extends BaseMapperHelper {

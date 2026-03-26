@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 
+import { Bar, BarTimeframe } from '../../../models/bar';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
-import { Bar, BarTimeframe } from '../../../models/bar';
 import { CtMapperHelper } from '../../helper/ct-mapper.helper';
 import { ProtoTrendbar } from '../../../services/ct/manager/proto/base/ts';
 

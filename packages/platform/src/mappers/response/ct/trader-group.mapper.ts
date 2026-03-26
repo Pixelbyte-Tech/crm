@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { UserGroup } from '../../../models/user-group';
+
 import { CtTraderGroup } from '../../../types/ct/account/group.type';
+
 import { ProtoGroup } from '../../../services/ct/manager/proto/base/ts';
 
 @Injectable()

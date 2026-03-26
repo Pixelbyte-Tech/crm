@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { getTimezoneOffset } from '../../../utils/time.utils';
 import { TradingSession, TradingSessions } from '../../../models/trading-session';
+
+import { getTimezoneOffset } from '../../../utils/time.utils';
 import { ProtoScheduleProfile } from '../../../services/ct/manager/proto/base/ts';
 
 @Injectable()

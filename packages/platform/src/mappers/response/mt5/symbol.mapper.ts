@@ -5,7 +5,9 @@ import { getTimezoneOffset } from '@crm/utils';
 
 import { Symbol } from '../../../models/symbol';
 import { TradingSessions } from '../../../models/trading-session';
+
 import { Mt5Symbol, Mt5Session, Mt5SessionTime } from '../../../types/mt5/symbol/symbol.type';
+
 import { cleanDay, calcShift, chunkResults, cleanSession, OffsetResult } from '../../../utils/trade-session.utils';
 
 interface WeekDay extends Mt5SessionTime {

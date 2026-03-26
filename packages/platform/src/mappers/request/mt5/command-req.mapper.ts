@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Side, OrderType } from '@crm/types';
 
 import { Mt5OrderType } from '../../../types/mt5/trade/order.type';
+
 import { InvalidMethodParametersException } from '../../../exceptions';
 
 enum TypeFill {

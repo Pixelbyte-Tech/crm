@@ -4,9 +4,10 @@ import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import globals from 'globals';
 import { FlatCompat } from '@eslint/eslintrc';
-import tsParser from '@typescript-eslint/parser';
 import perfectionist from 'eslint-plugin-perfectionist';
 import unusedImports from 'eslint-plugin-unused-imports';
+
+import tsParser from '@typescript-eslint/parser';
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -89,6 +90,8 @@ export default [
             'tl_mapper',
             'ct_mapper',
             'dx_mapper',
+            'models',
+            'types',
             'services',
             'dtos',
           ],
@@ -120,6 +123,14 @@ export default [
             {
               groupName: 'dx_mapper',
               elementNamePattern: ['.+dx.+\\.mapper'],
+            },
+            {
+              groupName: 'models',
+              elementNamePattern: ['.+models.+'],
+            },
+            {
+              groupName: 'types',
+              elementNamePattern: ['.+types.+'],
             },
             {
               groupName: 'dtos',

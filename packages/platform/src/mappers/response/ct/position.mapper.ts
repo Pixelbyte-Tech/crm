@@ -3,12 +3,13 @@ import { Injectable } from '@nestjs/common';
 
 import { Side, PositionStatus } from '@crm/types';
 
+import { Position } from '../../../models/position';
+import { ClosePositionResult } from '../../../models/close-position-result';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
-import { Position } from '../../../models/position';
 import { CtMapperHelper } from '../../helper/ct-mapper.helper';
 import { UnprocessableResponseException } from '../../../exceptions';
-import { ClosePositionResult } from '../../../models/close-position-result';
 import {
   ProtoDeal,
   ProtoOrder,

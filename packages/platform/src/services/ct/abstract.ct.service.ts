@@ -8,12 +8,13 @@ import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { Cryptography } from '@crm/utils';
 
+import { CTCredentials, PlatformServer } from '../../models/platform-server';
+
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
 import { InvalidServerUrlException } from '../../exceptions';
 import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
-import { CTCredentials, PlatformServer } from '../../models/platform-server';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
 import { ResponseMapper } from '../../mappers/response/response-mapper.interface';
 

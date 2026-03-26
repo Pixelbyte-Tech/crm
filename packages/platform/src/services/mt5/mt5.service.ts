@@ -23,6 +23,43 @@ import { CommandReqMapper } from '../../mappers/request/mt5/command-req.mapper';
 import { CommissionGroupMapper } from '../../mappers/response/mt5/commission-group.mapper';
 import { BalanceOperationReqMapper } from '../../mappers/request/mt5/balance-operation-req.mapper';
 
+import { Bar } from '../../models/bar';
+import { Order } from '../../models/order';
+import { Symbol } from '../../models/symbol';
+import { Account } from '../../models/account';
+import { Position } from '../../models/position';
+import { RiskPlan } from '../../models/risk-plan';
+import { UserGroup } from '../../models/user-group';
+import { SpreadGroup } from '../../models/spread-group';
+import { JournalEntry } from '../../models/journal-entry';
+import { AccountResult } from '../../models/account-result';
+import { PasswordResult } from '../../models/password-result';
+import { TradingHoliday } from '../../models/trading-holiday';
+import { TradingSessions } from '../../models/trading-session';
+import { CommissionGroup } from '../../models/commission-group';
+import { Balance, BalanceOperation } from '../../models/balance';
+import { TotalOnlineUsers } from '../../models/total-online-users';
+import { UpdateOrderResult } from '../../models/update-order-result';
+import { ClosePositionResult } from '../../models/close-position-result';
+import { UpdatePositionResult } from '../../models/update-position-result';
+import { CloseAllTradesResult } from '../../models/close-all-trades-result';
+import { MTCredentials, PlatformServer } from '../../models/platform-server';
+import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
+import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+
+import { Mt5Deal } from '../../types/mt5/trade/deal.type';
+import { Mt5Order } from '../../types/mt5/trade/order.type';
+import { Mt5User } from '../../types/mt5/account/user.type';
+import { Mt5Group } from '../../types/mt5/account/group.type';
+import { Mt5Candle } from '../../types/mt5/candle/candle.type';
+import { Mt5Symbol } from '../../types/mt5/symbol/symbol.type';
+import { Mt5Holiday } from '../../types/mt5/symbol/holiday.type';
+import { Mt5Account } from '../../types/mt5/account/account.type';
+import { Mt5Position } from '../../types/mt5/trade/position.type';
+import { Mt5CommandResponse } from '../../types/mt5/commands/send.type';
+import { Mt5BalanceUpdate } from '../../types/mt5/balance/balance-update.type';
+import { Mt5JournalEntry } from '../../types/mt5/statistics/journal-entry.type';
+
 import { AbstractMtService } from './abstract.mt.service';
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
@@ -38,43 +75,8 @@ import { UpdatePositionDto } from '../../dto/update-position.dto';
 import { CreateAccountDto, Mt5AdditionalCreateAccountData } from '../../dto/create-account.dto';
 import { UpdateAccountDto, Mt5AdditionalUpdateAccountData } from '../../dto/update-account.dto';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
 import { isOk } from '../../utils/http.utils';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { SpreadGroup } from '../../models/spread-group';
-import { Mt5Deal } from '../../types/mt5/trade/deal.type';
-import { JournalEntry } from '../../models/journal-entry';
-import { Mt5Order } from '../../types/mt5/trade/order.type';
-import { Mt5User } from '../../types/mt5/account/user.type';
-import { AccountResult } from '../../models/account-result';
-import { Mt5Group } from '../../types/mt5/account/group.type';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { Mt5Candle } from '../../types/mt5/candle/candle.type';
-import { Mt5Symbol } from '../../types/mt5/symbol/symbol.type';
-import { TradingSessions } from '../../models/trading-session';
-import { CommissionGroup } from '../../models/commission-group';
-import { Mt5Holiday } from '../../types/mt5/symbol/holiday.type';
-import { Balance, BalanceOperation } from '../../models/balance';
-import { Mt5Account } from '../../types/mt5/account/account.type';
-import { Mt5Position } from '../../types/mt5/trade/position.type';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { Mt5CommandResponse } from '../../types/mt5/commands/send.type';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { MTCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
-import { Mt5BalanceUpdate } from '../../types/mt5/balance/balance-update.type';
-import { Mt5JournalEntry } from '../../types/mt5/statistics/journal-entry.type';
 import { CredentialType, PlatformService } from '../../factory/platform.factory';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
 import {
   DuplicateAccountIdException,
   UnsupportedOperationException,
@@ -115,12 +117,10 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   async onlineTotal(): Promise<TotalOnlineUsers> {
     const { data } = await this.axios.get<{ data: number }>(`/online/total`);
 
-    return {
+    return new TotalOnlineUsers({
       totalOnlineUsers: data.data,
-      server: {
-        url: this._server.endpoint,
-      },
-    } as TotalOnlineUsers;
+      server: { url: this._server.endpoint },
+    });
   }
 
   /**

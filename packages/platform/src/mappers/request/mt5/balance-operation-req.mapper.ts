@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { BalanceOperation } from '../../../models/balance';
+
 import { UnprocessableResponseException } from '../../../exceptions';
 
 enum Mt5BalanceOperations {

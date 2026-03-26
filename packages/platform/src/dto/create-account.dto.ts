@@ -1,17 +1,7 @@
 import { Gender, Monetisation } from '@crm/types';
 
-export type Mt4AdditionalCreateAccountData = undefined;
 export type Mt5AdditionalCreateAccountData = undefined;
-export type TtAdditionalCreateAccountData = undefined;
 export type CtAdditionalCreateAccountData = undefined;
-export type TeAdditionalCreateAccountData = {
-  /** The name of the commission plan to assign to the account */
-  commissionPlan: string;
-  /** The name of the spread plan to assign to the account */
-  spreadPlan: string;
-  /** The risk plan id to assign to the account (overwrites the leverage property) */
-  riskPlanId?: number;
-};
 export type TlAdditionalCreateAccountData = {
   /** The risk plan id to assign to the account (overwrites the leverage property) */
   riskPlanId?: number;
@@ -20,11 +10,8 @@ export type TlAdditionalCreateAccountData = {
 };
 
 export type CreateAccountAdditionalData =
-  | Mt4AdditionalCreateAccountData
   | Mt5AdditionalCreateAccountData
-  | TtAdditionalCreateAccountData
   | CtAdditionalCreateAccountData
-  | TeAdditionalCreateAccountData
   | TlAdditionalCreateAccountData;
 
 export class CreateAccountDto<T extends CreateAccountAdditionalData> {

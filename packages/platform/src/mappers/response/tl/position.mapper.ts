@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Side, PositionStatus } from '@crm/types';
 
 import { Position } from '../../../models/position';
+
 import { TlPosition } from '../../../types/tl/trade/position.type';
 
 @Injectable()

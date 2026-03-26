@@ -1,10 +1,11 @@
 import Long from 'long';
 import { Injectable } from '@nestjs/common';
 
+import { BalanceOperation } from '../../../models/balance';
+
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 
 import { TraderReqMapper } from './trader-req.mapper';
-import { BalanceOperation } from '../../../models/balance';
 import { InvalidMethodParametersException } from '../../../exceptions';
 import {
   ProtoChangeBonusType,

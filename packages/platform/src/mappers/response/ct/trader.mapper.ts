@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
-import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
-
 import { Balance } from '../../../models/balance';
 import { Account } from '../../../models/account';
-import { CtCtid } from '../../../types/ct/user/ctid.type';
 import { AccountResult } from '../../../models/account-result';
-import { CtMapperHelper } from '../../helper/ct-mapper.helper';
+
+import { CtCtid } from '../../../types/ct/user/ctid.type';
 import { CtTrader } from '../../../types/ct/account/account.type';
+
+import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
+
+import { CtMapperHelper } from '../../helper/ct-mapper.helper';
 import { UnprocessableResponseException } from '../../../exceptions';
 import { ProtoTrader, ProtoAccessRights, ProtoManagerLightTrader } from '../../../services/ct/manager/proto/base/ts';
 

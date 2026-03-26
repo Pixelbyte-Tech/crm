@@ -7,12 +7,13 @@ import { DateTime } from 'luxon';
 import objectHash from 'object-hash';
 import { Logger } from '@nestjs/common';
 
+import { Tick } from '../../../models/tick';
+import { CTCredentials } from '../../../models/platform-server';
+
 import { Serializer } from '../../serializer.service';
 import { CtManagerApiService } from './ct-manager-api.service';
 
-import { Tick } from '../../../models/tick';
 import { UnknownSymbolException } from '../../../exceptions';
-import { CTCredentials } from '../../../models/platform-server';
 import {
   ProtoSpotEvent,
   ProtoPayloadType,

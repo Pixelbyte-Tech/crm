@@ -1,11 +1,5 @@
 import { Platform, Monetisation } from '@crm/types';
 
-export type TTCredentials = {
-  key: string;
-  unit: string;
-  group: string;
-};
-
 export type MTCredentials = {
   username: string;
   password: string;
@@ -14,11 +8,6 @@ export type MTCredentials = {
 export type TLCredentials = {
   apiKey: string;
   environment: 'live' | 'demo';
-};
-
-export type TECredentials = {
-  username: string;
-  password: string;
 };
 
 export type CTCredentials = {
@@ -46,7 +35,7 @@ export type CTCredentials = {
   };
 };
 
-export type Credentials = MTCredentials | TLCredentials | TECredentials | TTCredentials | CTCredentials;
+export type Credentials = MTCredentials | TLCredentials | CTCredentials;
 
 export class PlatformServer<T extends Credentials> {
   platform: Platform;

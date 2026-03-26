@@ -4,10 +4,11 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { Cryptography } from '@crm/utils';
 
+import { Mt5Group } from '../../../types/mt5/account/group.type';
+
 import { Serializer } from '../../../services/serializer.service';
 
 import { UnknownUserGroupException } from '../../../exceptions';
-import { Mt5Group } from '../../../types/mt5/account/group.type';
 
 @Injectable()
 export class GroupReqMapper {
