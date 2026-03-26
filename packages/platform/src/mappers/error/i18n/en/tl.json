@@ -1,0 +1,22 @@
+{
+  "DEFAULT": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "validation.badRequest": {
+    "code": "BAD_REQUEST",
+    "msg": "Malformed request query parameters.",
+    "status": 400
+  },
+  "notFound": {
+    "code": "BAD_REQUEST",
+    "msg": "Requested entity not found",
+    "status": 400
+  },
+  "conflict.userGroup.noUserGroupWithIdOrInvisible": {
+    "code": "BAD_REQUEST",
+    "msg": "API user has no visibility over the requested user group.",
+    "status": 400
+  }
+}

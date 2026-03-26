@@ -10,6 +10,7 @@ export * from './auth/role.enum';
 export * from './common/channel.enum';
 export * from './common/document-status.enum';
 export * from './common/document-type.enum';
+export * from './common/gender.enum';
 export * from './common/global-setting-key.enum';
 export * from './common/integration-name.enum';
 export * from './common/integration-type.enum';
@@ -34,6 +35,10 @@ export * from './platform/monetisation.enum';
 export * from './platform/platform.enum';
 export * from './platform/platform-client-type.enum';
 export * from './platform/trading-account-status.enum';
+
+export * from './trade/order-type.enum';
+export * from './trade/position-status.enum';
+export * from './trade/side.enum';
 
 export * from './trading-event/period.enum';
 export * from './trading-event/potency.enum';

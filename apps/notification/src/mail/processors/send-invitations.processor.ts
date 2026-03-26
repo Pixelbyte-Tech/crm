@@ -35,7 +35,7 @@ export class SendInvitationsProcessor {
 
         // Fetch the company name
         const setting = await this.settingRepo.findOne({ where: { key: GlobalSettingKey.COMPANY_NAME } });
-        const companyName = (setting?.value as string) || 'CRM';
+        const companyName = (setting?.value as string) || 'PixelByte CRM';
 
         try {
           // Fetch all invitations to mail

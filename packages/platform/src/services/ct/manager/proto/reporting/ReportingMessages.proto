@@ -1,0 +1,3559 @@
+syntax = "proto2";
+
+option java_multiple_files = true;
+
+option java_package = "com.spotware.cserver.reporting.proto";
+
+/**
+ * Assets
+ */
+message Assets {
+    /**
+     * Asset
+     */
+    repeated Asset asset = 1;
+}
+
+/**
+ * Asset classes
+ */
+message AssetClasses {
+    /**
+     * Asset class
+     */
+    repeated AssetClass assetClass = 1;
+}
+
+/**
+ * Authentications
+ */
+message Authentications {
+    /**
+     * Authentication
+     */
+    repeated Authentication authentication = 1;
+}
+
+/**
+ * Balance histories
+ */
+message BalanceHistories {
+    /**
+     * Balance history
+     */
+    repeated BalanceHistory balanceHistory = 1;
+}
+
+/**
+ * Bonus histories
+ */
+message BonusHistories {
+    /**
+     * Bonus history
+     */
+    repeated BonusHistory bonusHistory = 1;
+}
+
+/**
+ * Countries
+ */
+message Countries {
+    /**
+     * Country
+     */
+    repeated Country country = 1;
+}
+
+/**
+ * Deals
+ */
+message Deals {
+    /**
+     * Deal
+     */
+    repeated Deal deal = 1;
+}
+
+/**
+ * Deal offsets
+ */
+message DealOffsets {
+    /**
+     * Deal offsets
+     */
+    repeated DealOffset dealOffset = 1;
+}
+
+/**
+ * Dynamic Leverages
+ */
+message DynamicLeverageProfiles {
+    /**
+     * Dynamic Leverages
+     */
+    repeated DynamicLeverageProfile dynamicLeverage = 1;
+}
+
+/**
+ * Orders
+ */
+message Orders {
+    /**
+     * Order
+     */
+    repeated Order order = 1;
+}
+
+/**
+ * Positions
+ */
+message Positions {
+    /**
+     * Position
+     */
+    repeated Position position = 1;
+}
+
+/**
+ * Price snapshots
+ */
+message PriceSnapshots {
+    /**
+     * Prices snapshot
+     */
+    repeated PriceSnapshot priceSnapshot = 1;
+}
+
+/**
+ * Price streams
+ */
+message PriceStreams {
+    /**
+     * Price stream
+     */
+    repeated PriceStream priceStream = 1;
+}
+
+/**
+ * Symbols
+ */
+message Symbols {
+    /**
+     * Symbol
+     */
+    repeated Symbol symbol = 1;
+}
+
+/**
+ * Symbol categories
+ */
+message SymbolCategories {
+    /**
+     * Symbol category
+     */
+    repeated SymbolCategory symbolCategory = 1;
+}
+
+/**
+ * Traders
+ */
+message Traders {
+    /**
+     * Trader
+     */
+    repeated Trader trader = 1;
+}
+
+/**
+ * Trader groups
+ */
+message TraderGroups {
+    /**
+     * Trader group
+     */
+    repeated TraderGroup traderGroup = 1;
+}
+
+/**
+ * Order actions
+ */
+message OrderActions {
+    /**
+     * Order action
+     */
+    repeated OrderAction orderAction = 1;
+}
+
+/**
+ * Commission profiles
+ */
+message CommissionProfiles {
+    /**
+     * Commission profile
+     */
+    repeated CommissionProfile commissionProfile = 1;
+}
+
+/**
+ * Volume profiles
+ */
+message VolumeProfiles {
+    /**
+     * Volume profile
+     */
+    repeated VolumeProfile volumeProfile = 1;
+}
+
+/**
+ * Execution profiles
+ */
+message ExecutionProfiles {
+    /**
+     * Execution profile
+     */
+    repeated ExecutionProfile executionProfile = 1;
+}
+
+/**
+ * Protection profiles
+ */
+message ProtectionProfiles {
+    /**
+     * Protection profile
+     */
+    repeated ProtectionProfile protectionProfile = 1;
+}
+
+/**
+ * SwapFree profiles
+ */
+message SwapFreeProfiles {
+    /**
+     * SwapFree profile
+     */
+    repeated SwapFreeProfile swapFreeProfile = 1;
+}
+
+/**
+ * Schedule profiles
+ */
+message ScheduleProfiles {
+    /**
+     * Schedule profile
+     */
+    repeated ScheduleProfile scheduleProfile = 1;
+}
+
+/**
+ * SwapAndDividendProfile profiles
+ */
+message SwapAndDividendProfiles {
+    /**
+     * SwapAndDividendProfile profile
+     */
+    repeated SwapAndDividendProfile swapAndDividendProfile = 1;
+}
+
+/**
+ * Holiday
+ */
+message Holidays {
+    /**
+     * Holiday
+     */
+    repeated Holiday holiday = 1;
+}
+
+/**
+ * HolidayProfile profiles
+ */
+message HolidayProfiles {
+    /**
+     * HolidayProfile profile
+     */
+    repeated HolidayProfile holidayProfile = 1;
+}
+
+/**
+ * Asset event
+ */
+message AssetEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Asset
+     */
+    required Asset asset = 2;
+}
+
+/**
+ * Asset class event
+ */
+message AssetClassEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Asset class
+     */
+    required AssetClass assetClass = 2;
+}
+
+/**
+ * Authentication event
+ */
+message AuthenticationEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Authentication
+     */
+    required Authentication authentication = 2;
+}
+
+/**
+ * Balance history event
+ */
+message BalanceHistoryEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Balance history
+     */
+    required BalanceHistory balanceHistory = 2;
+}
+
+/**
+ * Bonus history event
+ */
+message BonusHistoryEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Bonus history
+     */
+    required BonusHistory bonusHistory = 2;
+}
+
+/**
+ * Deal event
+ */
+message DealEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Deal
+     */
+    required Deal deal = 2;
+}
+
+/**
+* DealOffsetsEvent - Event that returns DealOffsets for closing or reversing deals. Sent after a corresponding DealEvent
+*/
+message DealOffsetsEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * DealOffsets related to part of opening deals, that were offset by the executed closing deal
+     */
+    repeated DealOffset offsetting = 2;
+}
+
+/**
+* DynamicLeverageEvent - Event that returns DynamicLeverage. Sent after a corresponding DynamicLeverageEvent
+*/
+message DynamicLeverageProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * DynamicLeverage which affected by CRUD
+     */
+    required DynamicLeverageProfile dynamicLeverage = 2;
+}
+
+/**
+ * Order event
+ */
+message OrderEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Order
+     */
+    required Order order = 2;
+}
+
+/**
+ * Position event
+ */
+message PositionEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Position
+     */
+    required Position position = 2;
+}
+
+/**
+ * Price snapshot event
+ */
+message PriceSnapshotEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Price snapshot
+     */
+    required PriceSnapshot priceSnapshot = 2;
+}
+
+/**
+ * Swap calculation event
+ */
+message SwapCalculationEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Swap calculation
+     */
+    required SwapCalculation swapCalculation = 2;
+}
+
+/**
+ * Price stream event
+ */
+message PriceStreamEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Price stream
+     */
+    required PriceStream priceStream = 2;
+}
+
+/**
+ * Symbol event
+ */
+message SymbolEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Symbol
+     */
+    required Symbol symbol = 2;
+}
+
+/**
+ * Symbol category event
+ */
+message SymbolCategoryEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Symbol category
+     */
+    required SymbolCategory symbolCategory = 2;
+}
+
+/**
+ * Trader event
+ */
+message TraderEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Trader
+     */
+    required Trader trader = 2;
+}
+
+/**
+ * Trader group event
+ */
+message TraderGroupEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Trader group
+     */
+    required TraderGroup traderGroup = 2;
+}
+
+message GSLScheduleProfileEvent {
+    required DomainEventType type = 1;
+    required GSLScheduleProfile gslSchedule = 2;
+}
+
+message OCOOrdersLinkageEvent {
+    required DomainEventType type = 1;
+    required int64 orderId1 = 2;
+    required int64 orderId2 = 3;
+}
+
+message MarginCallEvent {
+    optional DomainEventType type = 1 [default = DOMAIN_EVENT_TYPE_CREATE];
+    required MarginCall marginCall = 2;
+}
+
+message CommissionProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Commission profile entity
+     */
+    required CommissionProfile commissionProfile = 2;
+}
+
+message VolumeProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Volume profile entity
+     */
+    required VolumeProfile volumeProfile = 2;
+}
+
+message ExecutionProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Execution profile entity
+     */
+    required ExecutionProfile executionProfile = 2;
+}
+
+message ProtectionProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Protection profile entity
+     */
+    required ProtectionProfile protectionProfile = 2;
+}
+
+message SwapFreeProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * SwapFree profile entity
+     */
+    required SwapFreeProfile swapFreeProfile = 2;
+}
+
+message ScheduleProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Schedule profile entity
+     */
+    required ScheduleProfile scheduleProfile = 2;
+}
+
+message SwapAndDividendProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * SwapAndDividendProfile profile entity
+     */
+    required SwapAndDividendProfile swapAndDividendProfile = 2;
+}
+
+message HolidayEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * Holiday entity
+     */
+    required Holiday holiday = 2;
+}
+
+message HolidayProfileEvent {
+    /**
+     * Domain event type
+     */
+    required DomainEventType type = 1;
+    /**
+     * HolidayProfile profile entity
+     */
+    required HolidayProfile holidayProfile = 2;
+}
+/**
+ * Asset
+ */
+message Asset {
+    /**
+     * ID of the asset
+     */
+    required int64 id = 1;
+    /**
+     * Asset name
+     */
+    optional string name = 2;
+    /**
+     * Asset is used as a deposit asset
+     */
+    optional bool deposit = 3;
+    /**
+     * Asset could be used as a deposit currency
+     */
+    optional bool depositable = 4;
+    /**
+     * Specifies Type of the Asset.
+     */
+    optional AssetType type = 5 [default = ASSET_TYPE_FOREX];
+    /**
+     * Name of the asset to be used on UI
+     */
+    optional string displayName = 6;
+}
+
+/**
+ * Asset class
+ */
+message AssetClass {
+    /**
+     * ID of the Asset Class
+     */
+    required int64 id = 1;
+    /**
+     * Asset Class name
+     */
+    optional string name = 2;
+    /**
+     * Specifies what is the default trading unit for the symbols of the Asset Class (1=Lots; 0=Units)
+     */
+    optional bool defaultLots = 3;
+}
+
+/**
+ * Authentication
+ */
+message Authentication {
+    /**
+     * ID of the Authentication
+     */
+    required int64 id = 1;
+    /**
+     * Trader login
+     */
+    optional int64 login = 2;
+    /**
+     * IP address of the Trader at the moment of authorization
+     */
+    optional string ipAddress = 3;
+    /**
+     * Error in case of invalid authorization
+     */
+    optional int32 errorCode = 4;
+    /**
+     * Date and time of authorization attempt
+     */
+    optional int64 createTimestamp = 5;
+    /**
+     * Session ID
+     */
+    optional string sessionId = 6;
+}
+
+/**
+ * Balance history
+ */
+message BalanceHistory {
+    /**
+     * ID of the Balance History event
+     */
+    required int64 id = 1;
+    /**
+     * ID of the trader
+     */
+    optional int64 traderId = 2;
+    /**
+     * Delta value of operation
+     */
+    optional int64 delta = 3;
+    /**
+     * Account's balance after current transaction event
+     */
+    optional int64 balance = 4;
+    /**
+     * Type of operation
+     */
+    optional BalanceOperationType operationType = 5 [default = BALANCE_OPERATION_TYPE_DEPOSIT];
+    /**
+     * Custom description for the transaction
+     */
+    optional string description = 6;
+    /**
+     * Date and time of the transaction
+     */
+    optional int64 createTimestamp = 7;
+    /**
+     * Custom description for the transaction, visible to the trader
+     */
+    optional string externalNote = 8;
+    /**
+     * Account's equity for the moment of the current Balance History event
+     */
+    optional int64 equity = 9;
+    /**
+     * Account's non-withdrawable bonus of the current Balance History event
+     */
+    optional int64 nonWithdrawableBonus = 10;
+    /**
+     * Source of payment
+     */
+    optional string source = 11;
+    /**
+     * External payment id
+     */
+    optional string externalId = 12;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects delta, balance, equity, nonWithdrawableBonus.
+     */
+    optional bool isPreciseMoney = 13;
+}
+
+/**
+ * Bonus history
+ */
+message BonusHistory {
+    /**
+     * ID of the Bonus History event
+     */
+    required int64 id = 1;
+    /**
+     * ID of the Trader
+     */
+    optional int64 traderId = 2;
+    /**
+     * Bonus delta, given by the Broker
+     */
+    optional int64 managerDelta = 3;
+    /**
+     * Total Bonus, given by the Broker
+     */
+    optional int64 managerBonus = 4;
+    /**
+     * Bonus delta, given by the IB
+     */
+    optional int64 ibDelta = 5;
+    /**
+     * Total Bonus, given by the IB
+     */
+    optional int64 ibBonus = 6;
+    /**
+     * Login of the IB, who gave the Bonus
+     */
+    optional int64 introducingBrokerId = 7;
+    /**
+     * Type of the Bonus transaction
+     */
+    optional BonusOperationType operationType = 8 [default = BONUS_OPERATION_TYPE_DEPOSIT];
+    /**
+     * Custom description for the transaction
+     */
+    optional string description = 9;
+    /**
+     * Custom description for the transaction, visible to the trader
+     */
+    optional string externalNote = 10;
+    /**
+     * Date and time of the transaction
+     */
+    optional int64 createTimestamp = 11;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects managerDelta, managerBonus, ibDelta, ibBonus.
+     */
+    optional bool isPreciseMoney = 12;
+}
+
+/**
+ * Country
+ */
+message Country {
+    /**
+     * ID of the Country
+     */
+    required int64 id = 1;
+    /**
+     * Name of the Country
+     */
+    optional string name = 2;
+}
+
+/**
+ * Deal
+ */
+message Deal {
+    /**
+     * ID
+     */
+    required int64 id = 1;
+    /**
+     * ID of corresponding trade order
+     */
+    optional int64 orderId = 2;
+    /**
+     * Requested volume
+     */
+    optional int64 volume = 3;
+    /**
+     * Limit price for Deals from Market-Range Orders
+     */
+    optional int64 limitPrice = 4;
+    /**
+     * Trade side of the Deal
+     */
+    optional TradeSide tradeSide = 5 [default = TRADE_SIDE_BUY];
+    /**
+     * Date and time of the Deal creation
+     */
+    optional int64 createTimestamp = 6;
+    /**
+     * Base asset to Deposit conversion rate
+     */
+    optional int64 marginRate = 7;
+    /**
+     * Type of the Book
+     */
+    optional BookType bookType = 8 [default = BOOK_TYPE_BOOK_A];
+    /**
+     * Status of the Deal
+     */
+    optional DealStatus status = 9 [default = DEAL_STATUS_FILLED];
+    /**
+     * Volume, filled under this Deal
+     */
+    optional int64 filledVolume = 10;
+    /**
+     * Execution price of the Deal, including all markups
+     */
+    optional int64 executionPrice = 11;
+    /**
+     * Execution price of the Deal, excluding all markups
+     */
+    optional int64 lpExecutionPrice = 12;
+    /**
+     * Date and time of the Deal execution
+     */
+    optional int64 executionTimestamp = 13;
+    /**
+     * Order ID in the LP's side
+     */
+    optional string lpOrderId = 14;
+    /**
+     * Type of the Deal
+     */
+    optional DealType type = 15 [default = DEAL_TYPE_MARKET];
+    /**
+     * Charged commission for the Deal
+     */
+    optional int64 tradingCommission = 16;
+    /**
+     * Date and time of the last update of the Deal
+     */
+    optional int64 lastUpdateTimestamp = 17;
+    /**
+     * ID of the related Price Snapshot (snapshot of the prices at the moment of creation of the Deal)
+     */
+    optional int64 priceSnapshotId = 18;
+    /**
+     * Base asset to USD conversion rate
+     */
+    optional double baseToUsdConversionRate = 19;
+    /**
+     * Additional commission which will be paid to the IB for the Deal
+     */
+    optional int64 ibCommission = 20;
+    /**
+     * Commission which Broker will pay to IB for the Deal. Always in USD (cents)
+     */
+    optional int64 pocketCommission = 21;
+    /**
+     * Markup (in terms of the price) which Broker will pay to IB for the Deal. Always in USD (cents)
+     */
+    optional int64 pocketMarkup = 22;
+    /**
+     * ID of the IB who will get IB commissions for the Deal
+     */
+    optional int64 parentIntroducingBrokerId = 23;
+    /**
+     * Amount of commission which trader pays to Spotware for providing some strategy in cMirror
+     */
+    optional int64 mirroringCommission = 24;
+    /**
+     * Markup value (in USD) of the Deal
+     */
+    optional int64 markup = 25;
+    /**
+     * Lot size of the symbol at the moment of the Deal creation
+     */
+    optional int64 lotSize = 26;
+    /**
+     * Stake, filled under this Deal
+     */
+    optional int64 stake = 27;
+    /**
+     * Price desired by the client as an execution price
+     */
+    optional int64 desiredVwap = 28;
+    /**
+     * Real market VWAP at the moment of execution of the Deal
+     */
+    optional int64 marketVwap = 29;
+    /**
+     * Reason of the rejection of the Deal
+     */
+    optional string rejectReason = 30;
+    /**
+     * Total USD volume of the Account from the beginning of time
+     */
+    optional int64 totalVolumeInUSD = 32;
+    /**
+     * related ClosePositionDetail
+     */
+    optional ClosePositionDetail closePositionDetail = 33;
+    /**
+     * ID of the Trader
+     */
+    optional int64 traderId = 34;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects tradingCommission, ibCommission, mirroringCommission.
+     */
+    optional bool isPreciseMoney = 35;
+
+    optional int64 symbolId = 36;
+
+    optional int64 positionId = 37;
+}
+
+message ClosePositionDetail {
+    /**
+    * ID of related deal
+    */
+    required int64 dealId = 1;
+    /**
+    * Opening VWAP of the position at the moment of filling the closing order
+    */
+    optional int64 entryPrice = 2;
+    /**
+     * Price of the Stop Loss
+     */
+    optional int64 stopLoss = 3;
+    /**
+     * Price of the Take Profit
+     */
+    optional int64 takeProfit = 4;
+    /**
+     * ID of the related BalanceHistory
+     */
+    optional int64 balanceHistoryId = 5;
+    /**
+     * Quote asset to deposit asset conversion rate
+     */
+    optional int64 quoteToDepositConversionRate = 6 [deprecated = true]; // Since 6.0 use field quoteToDeposit
+    /**
+     * Volume, closed by the  related Deal
+     */
+    optional int64 closedVolume = 7;
+    /**
+     * SWAP, realized by the  related Deal
+     */
+    optional int64 realizedSwap = 8;
+    /**
+     * Commission, realized by the related Deal
+     */
+    optional int64 realizedTradingCommission = 9;
+    /**
+     * IB commission, realized by the related Deal
+     */
+    optional int64 realizedIbCommission = 10;
+    /**
+     * Realized commission which Broker will pay to IB. Always in USD (cents)
+     */
+    optional int64 realizedPocketCommission = 11;
+    /**
+     * Realized markup (in money) which Broker will pay to IB. Always in USD (cents)
+     */
+    optional int64 realizedPocketMarkup = 12;
+    /**
+     * Realized commission which trader pays to Spotware for providing some strategy in cMirror
+     */
+    optional int64 realizedMirroringCommission = 13;
+    /**
+     * Deposit asset to IB Deposit asset conversion rate
+     */
+    optional int64 depositToIbDepositConversionRate = 14;
+    /**
+     * Rebate which will be returned to the trader
+     */
+    optional int64 rebate = 15;
+    /**
+     * Markup, realized by the related Deal. Always in USD (cents)
+     */
+    optional int64 realizedMarkup = 16;
+    /**
+     * Stake, realized by the related Deal
+     */
+    optional int64 closedStake = 17;
+    /**
+     * Specifies either IB received all commissions from the ClosePositionDetail or not
+     */
+    optional bool ibCommissionsPaid = 19;
+    /**
+     * Execution timestamp of the first offset opening Deal for the closing Deal
+     */
+    optional int64 offsetDealTimestamp = 20;
+    /**
+     * Realized value of Performance Fee
+     */
+    optional int64 performanceFee = 21 [deprecated = true]; // Since 7.0
+    /**
+     * Quote asset to deposit asset conversion rate as double value (e.g. 1.23456)
+     */
+    optional double quoteToDeposit = 22;
+    /**
+     * Gross realized profit related to the closing of offset part of opening deals
+     */
+    optional int64 profit = 23;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects realizedSwap, realizedTradingCommission, realizedIbCommission, realizedMirroringCommission, rebate, profit
+     */
+    optional bool isPreciseMoney = 24;
+    /**
+     * Charge for PnL conversion. This is actual fee, applied to the Deal in account's ccy.
+     */
+    optional int64 pnlConversionFee = 25;
+}
+
+message DealOffset {
+    /**
+    * ID
+    */
+    required int64 id = 1;
+    required int64 openDealId = 2;
+    required int64 closingDealId = 3;
+    required int64 volume = 4;
+    required int64 stake = 5;
+    required int64 swap = 6;
+}
+
+message DynamicLeverageProfile {
+    /**
+     * ID of related Dynamic Leverage
+     */
+    required int64 id = 1;
+    /**
+     * Name of the Dynamic Leverage
+     */
+    required string name = 2;
+    /**
+     * Description of the Dynamic Leverage
+     */
+    optional string description = 3;
+    /**
+     * Specifies either Group is deleted or not
+     */
+    optional bool deleted = 4;
+    /**
+     * Dynamic leverage tiers of the Dynamic Leverage
+     */
+    repeated DynamicLeverageTier tiers = 5;
+}
+
+message DynamicLeverageTier {
+    /**
+     * Volume of tier
+     */
+    required int64 volume = 1; // max USD volume of the Open position (per side) to apply specified leverage
+    /**
+     * Leverage of tier
+     */
+    required int32 leverage = 2;
+}
+
+/**
+ * Order
+ */
+message Order {
+    /**
+     * ID of the Order
+     */
+    required int64 id = 1;
+    /**
+     * ID of the related Position
+     */
+    optional int64 positionId = 2;
+    /**
+     * Type of the Order
+     */
+    optional OrderType type = 3 [default = ORDER_TYPE_MARKET];
+    /**
+     * Volume, requested in the Order
+     */
+    optional int64 volume = 4;
+    /**
+     * Limit price of the Order. Used for Orders with orderType=1 and 3
+     */
+    optional int64 limitPrice = 5;
+    /**
+     * Date and time of automatic cancellation of the pending Order
+     */
+    optional int64 expirationTimestamp = 6;
+    /**
+     * Date and time of the Order creation
+     */
+    optional int64 createTimestamp = 7;
+    /**
+     * Trade direction
+     */
+    optional TradeSide tradeSide = 8 [default = TRADE_SIDE_BUY];
+    /**
+     * Order status
+     */
+    optional OrderStatus status = 9 [default = ORDER_STATUS_CREATED];
+    /**
+     * Date and time of closing of the Order
+     */
+    optional int64 closeTimestamp = 10;
+    /**
+     * Specifies either Order is reduces volume of the position or not
+     */
+    optional bool closing = 11;
+    /**
+     * Stop price of the Order. Used for Orders with orderType=2 and 3
+     */
+    optional int64 stopPrice = 12;
+    /**
+     * Date and time of last Order modification
+     */
+    optional int64 lastUpdateTimestamp = 13;
+    /**
+     * Worst execution price, according to desired maximum slippage. Used for Orders with orderType=4
+     */
+    optional int64 slippagePrice = 14;
+    /**
+     * Maximum slippage in pips for the Order. Used for Orders with orderType=4
+     */
+    optional int32 slippage = 15;
+    /**
+     * Custom Order label. Usually used by the cBots
+     */
+    optional string label = 16;
+    /**
+     * Custom Order channel. Usually specifies way of Order creation
+     */
+    optional string channel = 17;
+    /**
+     * Custom Order comment. Usually used by the humans
+     */
+    optional string comment = 18;
+    /**
+     * Stop Loss price. Is a price of the Stop Loss which will be placed if the Order is filled.
+     */
+    optional int64 stopLoss = 19;
+    /**
+     * Take Profit price. Is a price of the Take Profit which will be placed if the Order is filled.
+     */
+    optional int64 takeProfit = 20;
+    /**
+     * Relative Stop Loss distance. Specifies distance between execution price of the order and placed Stop Loss.
+     */
+    optional int64 relativeStopLoss = 21;
+    /**
+     * Relative Take Profit distance. Specifies distance between execution price of the order and placed Take Profit.
+     */
+    optional int64 relativeTakeProfit = 22;
+    /**
+     * Internal Order ID
+     */
+    optional string clientOrderId = 23;
+    /**
+     * Time In Force of the Order
+     */
+    optional TimeInForce timeInForce = 24 [default = TIME_IN_FORCE_GOOD_TILL_DATE];
+    /**
+     * Book of the Order
+     */
+    optional BookType bookType = 26 [default = BOOK_TYPE_BOOK_A];
+    /**
+     * Lot size of the related Symbol at the moment of Order creation
+     */
+    optional int64 lotSize = 27;
+    /**
+     * Stake requested in the Order
+     */
+    optional int64 stake = 28;
+    /**
+     * Price desired by the client as an execution price
+     */
+    optional int64 desiredVwap = 29;
+    /**
+     * Specifies either related Stop Loss is guaranteed or not
+     */
+    optional bool guaranteedStopLoss = 30;
+    /**
+     * Specifies either tolerance check should be applied at the moment of execution or not
+     */
+    optional bool checkTolerance = 31;
+    /**
+     * Specifies either Order is Stop Out or not
+     */
+    optional bool stopOut = 32;
+    /**
+     * Specifies either related Stop Loss is trailing or not
+     */
+    optional bool trailingStopLoss = 33;
+    /**
+     * Trigger method for main pending order
+     */
+    optional OrderTriggerMethod stopTriggerMethod = 34;
+    /**
+     * Stop trigger method for SL/TP order
+     */
+    optional OrderTriggerMethod stopLossTriggerMethod = 35;
+    /**
+     * Maximum slippage in pips for the Order. Used for Orders with orderType=4
+     */
+    optional int32 slippageInPoints = 37;
+    /**
+     * Date and time for execution MOO order
+     */
+    optional int64 desiredOpenTimestamp = 38;
+    /**
+     * Id of linked OCO order
+     */
+    optional int64 ocoOrderId = 39;
+    /**
+     * ID of the Trader
+     */
+    optional int64 traderId = 40;
+}
+
+/**
+ * Position
+ */
+message Position {
+    /**
+     * ID of the Position
+     */
+    required int64 id = 1;
+    /**
+     * ID of the traded Symbol
+     */
+    optional int64 symbolId = 2;
+    /**
+     * Date and time of closing Position
+     */
+    optional int64 closeTimestamp = 3;
+    /**
+     * ID of the Trader
+     */
+    optional int64 traderId = 4;
+    /**
+     * Status of the Position
+     */
+    optional PositionStatus status = 5 [default = POSITION_STATUS_OPEN];
+    /**
+     * Applied Stop Loss
+     */
+    optional int64 stopLoss = 6;
+    /**
+     * Applied Take Profit
+     */
+    optional int64 takeProfit = 7;
+    /**
+     * Date and time of the last update of the Position
+     */
+    optional int64 lastUpdateTimestamp = 8;
+    /**
+     * Book of the Position
+     */
+    optional BookType bookType = 9 [default = BOOK_TYPE_BOOK_A];
+    /**
+     * Date and time of the opening of the Position
+     */
+    optional int64 openTimestamp = 10;
+    /**
+     * Specifies either Position is spread-betting or not
+     */
+    optional bool spreadBetting = 12;
+    /**
+     * Specifies either related Stop Loss is guaranteed or not
+     */
+    optional bool guaranteedStopLoss = 13;
+    /**
+     * Specifies either related Stop Loss is trailing or not
+     */
+    optional bool trailingStopLoss = 14;
+    /**
+     * Used margin in cents
+     */
+    optional int64 usedMargin = 16;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects usedMargin
+     */
+    optional bool isPreciseMoney = 17;
+}
+
+/**
+ * Price snapshot
+ */
+message PriceSnapshot {
+    /**
+     * ID of the Price Snapshot
+     */
+    required int64 id = 1;
+    /**
+     * ID of the Symbol
+     */
+    optional int64 symbolId = 2;
+    /**
+     * Price details
+     */
+    repeated Entry priceSnapshotEntry = 3;
+
+    /**
+     * Price snapshot entry
+     */
+    message Entry {
+        /**
+         * Available price
+         */
+        optional int64 price = 1;
+        /**
+         * Price direction
+         */
+        optional MarketDataEntryType type = 2 [default = MARKET_DATA_ENTRY_TYPE_BID];
+        /**
+         * Available volume at the specified price
+         */
+        optional int64 volume = 3;
+        /**
+         * Date and time of price appearing
+         */
+        optional int64 createTimestamp = 4;
+    }
+}
+
+/**
+ * Swap calculations
+ */
+message SwapCalculations {
+    /**
+     * Swap calculation
+     */
+    repeated SwapCalculation swapCalculation = 1;
+}
+
+/**
+ * Swap calculation
+ */
+message SwapCalculation {
+    /**
+     * ID of the SWAP calculation event
+     */
+    required int64 id = 2;
+    /**
+     * ID ot the relevant Position
+     */
+    required int64 positionId = 3;
+    /**
+     * Amount of SWAP charged for the specified Position
+     */
+    required int64 chargedSwap = 4;
+    /**
+     * Full amount of SWAP for the specified Position
+     */
+    required int64 currentSwap = 5;
+    /**
+     * Date and time of the calculation event
+     */
+    required int64 createTimestamp = 6;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects chargedSwap, currentSwap
+     */
+    optional bool isPreciseMoney = 13;
+}
+
+/**
+ * Price stream
+ */
+message PriceStream {
+    /**
+     * ID of the Price Stream
+     */
+    required int64 id = 1;
+    /**
+     * Name of the Price Stream
+     */
+    optional string name = 2;
+    /**
+     * Description for the Price Stream
+     */
+    optional string description = 3;
+    /**
+     * Specifies either Price Stream removed or not
+     */
+    optional bool deleted = 4;
+    /**
+     * Date and time of the last update of the Price Stream
+     */
+    optional int64 lastUpdateTimestamp = 5;
+    /**
+     * Price Stream Symbol
+     */
+    repeated Symbol priceStreamSymbol = 6;
+
+    /**
+     * Price stream symbol
+     */
+    message Symbol {
+        /**
+         * ID of the Price Stream Symbol
+         */
+        optional int64 symbolId = 1;
+        /**
+         * Bid markup value
+         */
+        optional int32 bidMarkup = 2;
+        /**
+         * Ask markup value
+         */
+        optional int32 askMarkup = 3;
+        /**
+         * Specifies type of the markup (1 = relative; 0 = absolute)
+         */
+        optional bool relativeMarkup = 4;
+    }
+}
+
+/**
+ * Symbol
+ */
+message Symbol {
+    /**
+     * ID of the Symbol
+     */
+    required int64 id = 1;
+    /**
+     * Name of the Symbol
+     */
+    optional string name = 2;
+    /**
+     * Description for the Symbol
+     */
+    optional string description = 3;
+    /**
+     * Amount of digits after comma in the price
+     */
+    optional int32 digits = 4;
+    /**
+     * Specifies digit which is used for determining pip position
+     */
+    optional int32 pipPosition = 5;
+    /**
+     * Specifies ether Symbol is turned on for price streaming or not
+     */
+    optional bool lpEnabled = 6;
+    /**
+     * Specifies ether Symbol is visible in cTrader or not
+     */
+    optional bool enabled = 7;
+    /**
+     * Date and time of the last update of the Symbol
+     */
+    optional int64 lastUpdateTimestamp = 9;
+    /**
+     * Bid markup value
+     */
+    optional int32 bidMarkup = 10;
+    /**
+     * Ask markup value
+     */
+    optional int32 askMarkup = 11;
+    /**
+     * Specifies which unit is traded under base asset
+     */
+    optional string measurementUnits = 12;
+    /**
+     * ID of the base asset
+     */
+    optional int64 baseAssetId = 13;
+    /**
+     * ID of the quote asset
+     */
+    optional int64 quoteAssetId = 14;
+    /**
+     * Timeout for last quote expiration
+     */
+    optional int32 quoteExpirationTimeout = 15;
+    /**
+     * Book of the Symbol
+     */
+    optional SymbolBookType symbolBookType = 16 [default = SYMBOL_BOOK_TYPE_BOOK_B, deprecated = true]; // Deprecated since 6.6, use book type from execution profile 
+    /**
+     * Amount of units of the base asset in one lot
+     */
+    optional int64 lotSize = 17;
+    /**
+     * Specifies either short selling is allowed or not
+     */
+    optional bool shortSellingEnabled = 18;
+    /**
+     * ID of the Symbol Category where Symbol is located
+     */
+    optional int64 symbolCategoryId = 19;
+    /**
+     * Specifies either Symbol is marked as popular or not
+     */
+    optional bool favorite = 20;
+    /**
+     * Specifies either guaranteed Stop Loss  is allowed or not
+     */
+    optional bool guaranteedStopLoss = 21 [deprecated = true]; // Deprecated since 6.5, use gslExecutionPolicy
+    /**
+     * Custom tags. Used for searching Symbols
+     */
+    optional string tags = 24;
+    /**
+     * Specified trading mode for the symbol that limits scope of trading operations
+     */
+    optional TradingMode tradingMode = 25 [default = TRADING_MODE_ENABLED];
+    /**
+     * Price alias specified for the current price liquidity feed of the Symbol
+     */
+    optional string priceAlias = 26;
+    /**
+     * Trade alias specified for the current trade liquidity feed of the Symbol
+     */
+    optional string tradeAlias = 27;
+    /**
+     * Gsl execution policy
+     */
+    optional GSLExecutionPolicy defaultGSLExecutionPolicy = 28 [deprecated = true, default = DISABLED]; // Deprecated since 6.6
+    /**
+     * Default commission profile for symbol
+     */
+    optional int64 defaultCommissionProfileId = 29;
+    /**
+     * Default volume profile for symbol
+     */
+    optional int64 defaultVolumeProfileId = 30;
+    /**
+     * Default execution profile for symbol
+     */
+    optional int64 defaultExecutionProfileId = 31;
+    /**
+     * Default protection profile for symbol
+     */
+    optional int64 defaultProtectionProfileId = 32;
+    /**
+     * Default swapFree profile for symbol
+     */
+    optional int64 defaultSwapFreeProfileId = 33;    
+    /**
+     * Default GSL schedule id for symbol
+     */
+    optional int64 defaultGSLScheduleId = 34;
+    /**
+     * Schedule profile for symbol
+     */
+    optional int64 scheduleProfileId = 35; 
+    /**
+     * Symbol holiday profile id
+     */
+    optional int64 holidayProfileId = 36;
+    /**
+     * Swap is calculated every swapPeriod hours
+     */
+    optional int32 defaultSwapPeriod = 37;
+    /**
+     * Time in minutes from 00:00 (UTC) from which swap period is calculated
+     */
+    optional int32 defaultSwapTime = 38;
+
+}
+
+/**
+ * Symbol category
+ */
+message SymbolCategory {
+    /**
+     * ID of the Symbol Category
+     */
+    required int64 id = 1;
+    /**
+     * ID of the Asset Class which contains Symbol category
+     */
+    optional int64 assetClassId = 2;
+    /**
+     * Name of the Symbol Category
+     */
+    optional string name = 3;
+}
+
+/**
+ * Trader
+ */
+message Trader {
+    /**
+     * ID of the account
+     */
+    required int64 id = 1;
+    /**
+     * ID of the Group where Trader is
+     */
+    optional int64 traderGroupId = 2;
+    /**
+     * Trader login
+     */
+    optional int64 login = 3;
+    /**
+     * Specifies either Trader is deleted or not
+     */
+    optional bool deleted = 4;
+    /**
+     * Trader's name
+     */
+    optional string name = 5;
+    /**
+     * Trader's country ID
+     */
+    optional int64 countryId = 6;
+    /**
+     * Trader's city
+     */
+    optional string city = 7;
+    /**
+     * Trader's state
+     */
+    optional string state = 8;
+    /**
+     * Trader's ZIP
+     */
+    optional string zipCode = 9;
+    /**
+     * Trader's address
+     */
+    optional string address = 10;
+    /**
+     * Trader's phone number
+     */
+    optional string phone = 11;
+    /**
+     * Trader's email
+     */
+    optional string email = 12;
+    /**
+     * Description for the Trader
+     */
+    optional string description = 13;
+    /**
+     * Trader's document ID
+     */
+    optional string documentId = 14;
+    /**
+     * Trader's status
+     */
+    optional string status = 15;
+    /**
+     * Date and time of the account's registration
+     */
+    optional int64 registrationTimestamp = 16;
+    /**
+     * Date and time of the Trader's last successful authorization
+     */
+    optional int64 lastConnectionTimestamp = 17;
+    /**
+     * CDate and time of the last update of the account
+     */
+    optional int64 lastUpdateTimestamp = 19;
+    /**
+     * Custom field to determine IB one
+     */
+    optional string introducingBroker1 = 20 [deprecated = true]; // Deprecated since 5.9
+    /**
+     * Custom field to determine IB two
+     */
+    optional string introducingBroker2 = 21 [deprecated = true]; // Deprecated since 5.9
+    /**
+     * Type of the account
+     */
+    optional AccountType accountType = 22 [default = ACCOUNT_TYPE_HEDGED];
+    /**
+     * Deposit asset
+     */
+    optional int64 depositAssetId = 23;
+    /**
+     * Specifies either account is IB or not
+     */
+    optional bool introducingBroker = 24;
+    /**
+     * Specifies ID of the account who introduced current account
+     */
+    optional int64 parentIntroducingBrokerId = 25;
+    /**
+     * Additional commission which trader will pay to IB
+     */
+    optional double ibCommissionRate = 26;
+    /**
+     * Commission which Broker will pay to IB for the Deal of the Trader
+     */
+    optional double pocketCommissionRate = 27;
+    /**
+     * Markup which Broker will pay to IB for the Deal of the Trader
+     */
+    optional double pocketMarkupRate = 28;
+    /**
+     * Last name of the Trader
+     */
+    optional string lastName = 29;
+    /**
+     * Specifies either account Broker will split markup and commission revenue with IB or not
+     */
+    optional bool splitRevenue = 30;
+    /**
+     * Amount of bonus, given by the Broker
+     */
+    optional int64 managerBonus = 31;
+    /**
+     * Amount of bonus, given by the IB
+     */
+    optional int64 ibBonus = 32;
+    /**
+     * Specifies either account is “limited risk” or not
+     */
+    optional bool limitedRisk = 33 [deprecated = true]; // Deprecated since 6.5, use isLimitedRisk and limitedRiskMarginCalculationStrategy
+    /**
+     * Type of the access of the account
+     */
+    optional AccessRights accessRights = 34 [default = ACCESS_RIGHTS_FULL_ACCESS];
+    /**
+     * Specifies either EOD statement should be send to the Trader or not
+     */
+    optional bool sendOwnStatement = 35;
+    /**
+     * Date and time of the last logout
+     */
+    optional int64 logoutTimestamp = 36;
+    /**
+     * Specifies either account is SWAP-free or not
+     */
+    optional bool swapFree = 37;
+    /**
+     * Amount of non-withdrawable bonus, given by the Broker
+     */
+    optional int64 nonWithdrawableBonus = 38;
+    /**
+     * Account's leverage in cents
+     */
+    optional uint32 leverageInCents = 39;
+    /**
+     * Total margin calculation type. Can be TYPE_MAX = 0, TYPE_SUM = 1 or TYPE_NET = 2
+     */
+    optional TotalMarginCalculationType totalMarginCalculationType = 40;
+    /**
+     * Specifies either account is “french risk” or not
+     */
+    optional bool frenchRisk = 41 [deprecated = true]; // Deprecated since 6.5, use isLimitedRisk and limitedRiskMarginCalculationStrategy
+    /**
+     * Determine parent account of account, if it is sub account. Used for copy service
+     */
+    optional int64 subAccountOf = 42;
+    /**
+     * Net Open Position limit or NOP. Value = 1 equals to 0.01%
+     */
+    optional uint32 maxNOP = 43;
+    /**
+     * Specifies either account is of limited risk type
+     */
+    optional bool isLimitedRisk = 44;
+    /**
+     * Limited risk type
+     */
+    optional LimitedRiskMarginCalculationStrategy limitedRiskMarginCalculationStrategy = 45 [default = ACCORDING_TO_LEVERAGE];
+    /**
+     * management fees - are part of annual percentage (management fee, specified by the Provider), calculated nightly by the
+     * Copy as part of the equity at the moment of nightly job
+     */
+    optional int64 managementFee = 46;
+    /**
+     * Send statement to broker
+     */
+    optional bool sendStatementToBroker = 47;
+    /**
+     * Determines how ibCommissionRate and pocketCommissionRate will be treated
+     */
+    optional CommissionType ibCommissionsType = 48;
+    /**
+     * Balance of the account
+     */
+    optional int64 balance = 49;
+}
+
+/**
+ * Trader group
+ */
+message TraderGroup {
+    /**
+     * ID of the Group
+     */
+    required int64 id = 1;
+    /**
+     * Name of the Group
+     */
+    optional string name = 2;
+    /**
+     * Group description
+     */
+    optional string description = 3;
+    /**
+     * Specifies either Group is deleted or not
+     */
+    optional bool deleted = 4;
+    /**
+     * Specifies either Group is enabled (trader's login are allowed) or not
+     */
+    optional bool enabled = 5;
+    /**
+     * Specifies either SWAP charging is enabled or not
+     */
+    optional bool swapEnabled = 7;
+    /**
+     * Level of the Stop Out
+     */
+    optional double stopOutLevel = 8;
+    /**
+     * Date and time of the last Group modification
+     */
+    optional int64 lastUpdateTimestamp = 9;
+    /**
+     * ID of the related Price Stream
+     */
+    optional int64 priceStreamId = 10;
+    /**
+     * Specifies bonus conversion strategy (1 – Lots into USD; 0 – USD volume into USD)
+     */
+    optional BonusConversionType bonusConversionType = 11 [default = BONUS_CONVERSION_TYPE_USD];
+    /**
+     * Amount of traded lots to convert one bonus USD into one deposit USD. Used if bonusConvertLots=1
+     */
+    optional double bonusUsdConversionRate = 12;
+    /**
+     * Amount of traded USD volume to convert one bonus USD into one deposit USD. Used if bonusConvertLots=0
+     */
+    optional double bonusLotsConversionRate = 13;
+    /**
+     * Specifies either Group is Dealing Desk or not
+     */
+    optional bool dealingDesk = 14;
+    /**
+     * Parameters of the related Group Symbol
+     */
+    repeated Symbol traderGroupSymbol = 15;
+    /**
+     * Parameters of the related Dynamic Commissions
+     */
+    repeated DynamicCommission traderGroupDynamicCommission = 16;
+    /**
+     * If TRUE then traders of the Group are unable to create sub-accounts
+     */
+    optional bool copyDisabled = 17 [default = false];
+    /**
+     * Grace period in days during which an inactivity fee is not charged for a account since last filled deal
+     */
+    optional int32 inactivityGracePeriod = 30;
+    /**
+     * Period in days after which an inactivity fee is charged
+     */
+    optional int32 inactivityChargePeriod = 31;
+    /**
+     * Inactivity fee amount in cents, specified in USD and converted to Deposit CCY of an account
+     */
+    optional int32 inactivityFeeAmount = 32;
+    /**
+     * If TRUE then traders of the group are unable to become copy provider. Logic is on JM side
+     */
+    optional bool copyProvidingDisabled = 33 [default = false];
+    /**
+     * If TRUE then traders are allowed to increase risk for Positions with Guaranteed Stop Loss
+     */
+    optional bool allowWorseGSL = 34 [default = true];
+    /**
+     * Id of Swap and Dividend profile
+     */
+    optional int64 swapAndDividendProfileId = 35;
+    /**
+     * Enable/disable Negative Balance Protection
+     */
+    optional bool negativeBalanceProtection = 36;
+    /**
+     * If the account balance is lower than negativeBalanceProtectionLimitUsd, then negativeBalanceProtection is not applied and the operation of type BALANCE_DEPOSIT_NEGATIVE_BALANCE_PROTECTION, which sets the balance to 0, is not executed. If negativeBalanceProtection<>TRUE then negativeBalanceProtectionLimitUsd will be set to unspecified
+     */
+    optional sint32 negativeBalanceProtectionLimitUsd = 43;
+    
+    /**
+     * Trader group symbol
+     */
+    message Symbol {
+        /**
+         * ID of the Group Symbol
+         */
+        optional int64 symbolId = 1;
+        /**
+         * Specifies if Symbol is available for the traders of the Group
+         */
+        optional bool enabled = 2;
+        /**
+         * Commission for the Symbol
+         */
+        optional double tradingCommissionRate = 3 [deprecated = true]; // Deprecated since 6.6, use commission profiles
+        /**
+         * Day of the week when SWAP charge amount will be tripled. Doesn't impact rollover commission
+         */
+        optional DayOfWeek swapRollover3Days = 4 [default = DAY_OF_WEEK_NONE, deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * SWAP value for long positions
+         */
+        optional int64 swapLong = 5 [deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * SWAP value for short positions
+         */
+        optional int64 swapShort = 6 [deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * Minimal order volume
+         */
+        optional int64 minVolume = 8 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Maximum order volume
+         */
+        optional int64 maxVolume = 9 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Tolerance distance
+         */
+        optional int32 tolerance = 10 [deprecated = true]; // Deprecated since 6.7, use value protectionProfileId with ProtectionProfiles
+        /**
+         * Minimal order stake
+         */
+        optional int64 minStake = 11 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Maximum order stake
+         */
+        optional int64 maxStake = 12 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Date and time of charging dividends
+         */
+        optional int64 dividendTime = 14 [deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * Charge for Guaranteed Stop Loss placement
+         */
+        optional int64 gslCharge = 15 [deprecated = true]; // Deprecated since 6.7, use value protectionProfileId with ProtectionProfiles
+        /**
+         * Minimal distance for placing Stop Loss
+         */
+        optional int32 slDistance = 16 [deprecated = true]; // Deprecated since 6.7, use value protectionProfileId with ProtectionProfiles
+        /**
+         * Minimal distance for placing Take Profit
+         */
+        optional int32 tpDistance = 17 [deprecated = true]; // Deprecated since 6.7, use value protectionProfileId with ProtectionProfiles
+        /**
+         * Minimal distance for placing Guaranteed Stop Loss
+         */
+        optional int32 gslDistance = 18 [deprecated = true]; // Deprecated since 6.7, use value protectionProfileId with ProtectionProfiles
+        /**
+         * Commission Type
+         */
+        optional CommissionType commissionType = 19 [default = USD_PER_MILLION_USD, deprecated = true]; // Deprecated since 6.6, use commission profiles
+        /**
+         * Amount of minimal commission to be paid for each order
+         */
+        optional int64 minCommission = 20 [deprecated = true]; // Deprecated since 6.6, use commission profiles
+        /**
+         * Type of minimal commission
+         */
+        optional MinCommissionType minCommissionType = 21 [default = MIN_COMMISSION_TYPE_QUOTE_CURRENCY, deprecated = true]; // Deprecated since 6.6, use commission profiles
+        /**
+         * Asset of the minimal commission. Used when minCommissionType=0
+         */
+        optional int64 minCommissionAssetId = 22 [deprecated = true]; // Deprecated since 6.6, use commission profiles
+        /**
+         * Kind of swap for swap-free accounts (USD per million USD in cents)
+         */
+        optional int64 rolloverCommission = 25 [deprecated = true]; // Deprecated since 6.7
+        /**
+         * Count of nights before first rolloverCommission charge
+         */
+        optional int32 skipRolloverDays = 26 [deprecated = true]; // Deprecated since 6.7
+        /**
+         * Step for incremental change of the volume of the trade Order
+         */
+        optional int64 stepVolume = 23 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Step for incremental change of the stake of the trade Order
+         */
+        optional int64 stepStake = 24 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Total USD volume of ALL open positions allowed for the account for this symbol
+         */
+        optional uint64 maxExposure = 27 [deprecated = true]; // Deprecated since 6.6, use volume volumeProfileId with VolumeProfiles
+        /**
+         * Id of Dynamic leverage
+         */
+        optional uint64 leverageId = 29;
+        /**
+         * Amount of dividends Long
+         */
+        optional int64 dividendsLong = 30 [deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * Amount of dividends Short
+         */
+        optional int64 dividendsShort = 31 [deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * Id of GSL Schedule
+         */
+        optional uint64 gslScheduleId = 32;
+        /**
+         * BookType of GroupSymbol
+         */
+        optional BookType bookType = 33 [default = BOOK_TYPE_BOOK_A, deprecated = true]; // Deprecated since 6.6, use book type from execution profile 
+        /**
+         * Payment period of rolloverCommission in days (default = 1). 1 (or 0) means daily payments, 2 each second day.
+         * 3x rollover is applied only for daily payments
+         */
+        optional int32 rolloverChargePeriod = 34 [deprecated = true]; // Deprecated since 6.7
+        /**
+         * Day of the week (in UTC) when Administrative Fee charge amount will be tripled. Applied only if rollover charge period = 0 or 1
+         */
+        optional DayOfWeek rolloverCommission3Days = 35 [default = DAY_OF_WEEK_NONE, deprecated = true]; // Deprecated since 6.7
+        /**
+         * Specifies type of SWAP computation as PIPS (0) or PERCENTAGE (1, annual, in percent)
+         */
+        optional SwapCalculationType swapCalculationType = 40 [default = PIPS, deprecated = true]; // Deprecated since 7.0, use Swap and Dividend profiles
+        /**
+         * Gsl execution policy
+         */
+        optional GSLExecutionPolicy gslExecutionPolicy = 41 [default = DISABLED, deprecated = true]; // Deprecated since 6.6, use policy from execution profile 
+        /**
+         * Id of commission profile
+         */
+        optional int64 commissionProfileId = 42;
+        /**
+         * Id of volume profile
+         */
+        optional int64 volumeProfileId = 43;
+        /**
+         * Id of execution profile
+         */
+        optional int64 executionProfileId = 44;
+        /**
+         * Id of protection profile
+         */
+        optional int64 protectionProfileId = 45;
+        /**
+         * Id of swapFree profile
+         */
+        optional int64 swapFreeProfileId = 46;        
+    }
+
+    /**
+     * Trader group dynamic commission
+     */
+    message DynamicCommission {
+        /**
+         * Monthly USD volume which should be reached in order to get related discount for paid commission
+         */
+        optional int64 monthlyVolume = 1;
+        /**
+         * Discount applied to the basic commission after reaching related monthlyVolume
+         */
+        optional double discount = 2;
+    }
+}
+
+message GSLScheduleProfiles {
+    repeated GSLScheduleProfile gslSchedule = 1;
+}
+
+message GSLScheduleProfile {
+    /**
+     *   Id of this GSL schedule
+     */
+    required int64 id = 1;
+    /**
+     *   Name of this GSL schedule
+     */
+    required string name = 2;
+    /**
+     *   List of (time -> multiplier) schedule tiers
+     */
+    repeated GSLScheduleTier tiers = 3;
+    /**
+     * Specifies either schedule is deleted or not
+     */
+    optional bool isDeleted = 4 [default = false, deprecated = true];// Deprecated since 6.7
+    /**
+     * Specifies either schedule is default or not
+     */
+    optional bool isDefault = 5 [default = false, deprecated = true];// Deprecated since 6.7
+}
+
+message GSLScheduleTier {
+    /**
+     *   This tier is active from startTime (Count of seconds from 00:00:00)
+     */
+    required int32 startTime = 1;
+    /**
+     *   Tier's multiplier (in percents)
+     */
+    required int32 multiplier = 2;
+}
+
+message OrderAction {
+    /**
+     * Action id
+     */
+    required int64 id = 1;
+    /**
+     * Order id
+     */
+    optional int64 orderId = 2;
+    /**
+     * Action type
+     */
+    required ActionType actionType = 3;
+    /**
+     * Action type
+     */
+    required ActionStatus actionStatus = 4;
+    /**
+     * Date and time of automatic cancellation of the pending Order
+     */
+    optional int64 expirationTimestamp = 5;
+    /**
+     * Order volume
+     */
+    optional int64 volume = 6;
+    /**
+     * Order execution price
+     */
+    optional int64 price = 7;
+    /**
+     * Price of the Stop Loss
+     */
+    optional int64 stopLoss = 8;
+    /**
+     * Price of the Take Profit
+     */
+    optional int64 takeProfit = 9;
+    /**
+     * Session Id
+     */
+    optional string sessionId = 10;
+    /**
+     * Client request id
+     */
+    optional string clientRequestId = 11;
+    /**
+     * Custom Order label
+     */
+    optional string label = 12;
+    /**
+     * Custom Order comment
+     */
+    optional string comment = 13;
+    /**
+     * Custom Order channel
+     */
+    optional string channel = 14;
+    /**
+     * Action execution timestamp
+     */
+    optional int64 executeTimestamp = 15;
+    /**
+     * Relative Stop Loss distance
+     */
+    optional int64 relativeStopLoss = 16;
+    /**
+     * Relative Take Profit distance
+     */
+    optional int64 relativeTakeProfit = 17;
+    /**
+     * Trigger method for main pending order
+     */
+    optional OrderTriggerMethod stopTriggerMethod = 18;
+    /**
+     * Stop trigger method for SL/TP order
+     */
+    optional OrderTriggerMethod stopLossTriggerMethod = 19;
+    /**
+     * Date and time for execution MOO order
+     */
+    optional int64 desiredOpenTimestamp = 20;
+    /**
+     * Id of linked OCO order
+     */
+    optional int64 ocoOrderId = 21;
+}
+
+message EndOfDayTradersReport {
+
+    /**
+     * Snapshot of Account's financial info
+     */
+    repeated EndOfDayTraderReportData tradersReportData = 1;
+
+    message EndOfDayTraderReportData {
+        /**
+         * Date and time of Report generation
+         */
+        required int64 reportTimestamp = 1;
+        /**
+         * Account's login
+         */
+        required int64 login = 2;
+        /**
+         * Balance of the Account
+         */
+        required int64 balance = 3;
+        /**
+         * Gross unrealized P&L on Book A
+         */
+        required int64 grossUnrealizedPnlA = 4;
+        /**
+         * Net unrealized P&L on Book A
+         */
+        required int64 netUnrealizedPnlA = 5;
+        /**
+         * Gross unrealized P&L on Book B
+         */
+        required int64 grossUnrealizedPnlB = 6;
+        /**
+         * Net unrealized P&L on Book B
+         */
+        required int64 netUnrealizedPnlB = 7;
+        /**
+         * Equity of the Account
+         */
+        required int64 equity = 8;
+        /**
+         * Used margin of the Account
+         */
+        required int64 margin = 9;
+        /**
+         * Free margin of the Account
+         */
+        required int64 freeMargin = 10;
+        /**
+         * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects balance, grossUnrealizedPnlA, netUnrealizedPnlA, grossUnrealizedPnlB, netUnrealizedPnlB, equity, margin, freeMargin
+         */
+        optional bool isPreciseMoney = 11;
+        /**
+         * Non-withdrawable bonus of the Account
+         */
+        optional int64 nonWithdrawableBonus = 12;
+    }
+}
+
+
+message EndOfDaySpotSnapshotReport {
+
+    /**
+     * Snapshot of spot prices
+     */
+    repeated EndOfDaySpotSnapshotReportData endOfDaySpotSnapshotReportData = 1;
+
+    message EndOfDaySpotSnapshotReportData {
+        /**
+         * Date and time of snapshot
+         */
+        required int64 reportTimestamp = 1;
+        /**
+         * Price
+         */
+        required int64 price = 2;
+        /**
+         * Price direction
+         */
+        required TradeSide side = 3;
+        /**
+         * Date and time of the price in snapshot
+         */
+        required int64 createTimestamp = 4;
+        /**
+         * ID of the Symbol
+         */
+        required int64 symbolId = 5;
+    }
+}
+
+message EndOfDayOpenPositionsReport {
+
+    /**
+     * Snapshot of all open Positions
+     */
+    repeated EndOfDayOpenPositionsReportData endOfDayOpenPositionsReportData = 1;
+
+    message EndOfDayOpenPositionsReportData {
+        /**
+         * Date and time of snapshot
+         */
+        required int64 reportTimestamp = 1;
+        /**
+         * ID of the Account
+         */
+        required int64 traderId = 2;
+        /**
+         * ID of the Position
+         */
+        required int64 positionId = 3;
+        /**
+         * Position opening date and time
+         */
+        required int64 openTimestamp = 4;
+        /**
+         * ID of the Symbol
+         */
+        required int64 symbolId = 5;
+        /**
+         * Stake of the Position
+         */
+        optional int64 stake = 6;
+        /**
+         * Volume of the Position
+         */
+        optional int64 volume = 7;
+        /**
+         * Lot Size, applicable to the Position
+         */
+        required int64 lotSize = 8;
+        /**
+         * Trade side of the Position
+         */
+        required TradeSide tradeSide = 9;
+        /**
+         * Open VWAP of the Position
+         */
+        required int64 vwapPrice = 10;
+        /**
+         * Margin, used by Position
+         */
+        required int64 margin = 11;
+        /**
+         * Gross unrealized P&L of the Position
+         */
+        required int64 grossUnrealizedPnl = 12;
+        /**
+         * Net unrealized P&L of the Position
+         */
+        required int64 netUnrealizedPnl = 13;
+        /**
+         * Quote to Deposit conversion rate
+         */
+        required int64 quoteToDepositRate = 14 [deprecated = true]; // Deprecated since 6.0, use quoteToDeposit
+        /**
+         * Last spot price used to calculate P&L
+         */
+        required int64 lastSpot = 15;
+        /**
+         * Quote to Deposit conversion rate as double value (e.g. 1.23456)
+         */
+        required double quoteToDeposit = 16;
+        /**
+         * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects margin, grossUnrealizedPnl, netUnrealizedPnl
+         */
+        optional bool isPreciseMoney = 17;
+    }
+}
+
+message SpotEvent {
+    /**
+     * Id of the symbol
+     */
+    required int64 symbolId = 2;
+    /**
+     * Represented in units equal to 1/10^5 of a price (e.g. EURJPY 128.134 = 12813400)
+     */
+    optional uint64 bid = 3;
+    /**
+     * Represented in units equal to 1/10^5 of a price
+     */
+    optional uint64 ask = 4;
+    /**
+     * Timestamp when a spotEvent was generated, equal to the time of the last quote.
+     * SpotEvent can be also generated if a quote in DOM become obsolete and dropped.
+     */
+    optional int64 timestamp = 9;
+} 
+
+message Ticks {
+
+    /**
+     * ID of the Symbol
+     */
+    required int64 symbolId = 1;
+    /**
+     * Requested type of ticks
+     */
+    required MarketDataEntryType type = 2;
+    /**
+     * Historical ticks for a period
+     */
+    repeated TickData tickData = 3;
+
+    message TickData {
+        /**
+         * Tick timestamp
+         */
+        required int64 timestamp = 1;
+        /**
+         * Tick value
+         */
+        required int64 tick = 2;
+    }
+}
+
+message MarginCall {
+    /**
+     * ID of the Trader
+     */
+    required int64 traderId = 2;
+    /**
+     * Account's equity for the moment of the margin call event
+     */
+    required int64 equity = 3;
+    /**
+     * Account's balance for the moment of the margin call event
+     */
+    optional int64 balance = 4;
+    /**
+     * Server's date and time when margin call was triggered
+     */
+    optional int64 reachedUtcTimestamp = 5;
+    /**
+     * Account's margin level for the moment of the margin call event
+     */
+    optional double marginLevel = 6;
+    /**
+     * Margin level threshold that triggered this margin call event
+     */
+    optional double marginLevelThreshold = 7;
+    /**
+     * Shows if monetary values were multiplied by 10^8 (TRUE) or by 10^2 (FALSE). Affects equity, balance
+     */
+    optional bool isPreciseMoney = 8;
+}
+
+message CommissionProfile {
+    /**
+     * ID of the commission profile
+     */
+    required int64 commissionProfileId = 1;
+    /**
+     * Name of the commission profile
+     */
+    required string name = 2;
+    /**
+     * Description of commission profile
+     */
+    optional string description = 3;
+    /**
+     * Commission for the Profile
+     */
+    required double tradingCommissionRate = 4;
+    /**
+     * Commission Type
+     */
+    required CommissionType commissionType = 5 [default = USD_PER_MILLION_USD];
+    /**
+     * Amount of minimal commission to be paid for each order
+     */
+    required int64 minCommission = 6 [deprecated = true]; // Since 6.9 use preciseMinCommission
+    /**
+     * Asset of the minimal commission. Used when minCommissionType=0
+     */
+    required MinCommissionType minCommissionType = 7 [default = MIN_COMMISSION_TYPE_CURRENCY];
+    /**
+     * Asset of the minimal commission. Used when minCommissionType=0
+     */
+    required int64 minCommissionAssetId = 8;
+    /**
+     * Amount of minimal commission to be paid for each order, multiplied by 10^8
+     */
+    optional double preciseMinCommission = 9;
+    /**
+     * This is percentage, so 1 protocol value = 0.01% 
+     */
+    optional int32 pnlConversionFeeRate = 10;
+}
+
+message VolumeProfile {
+    /**
+     * ID of the volume profile
+     */
+    required int64 volumeProfileId = 1;
+    /**
+     * Name of the volume profile
+     */
+    required string name = 2;
+    /**
+     * Description of volume profile
+     */
+    optional string description = 3;
+    /**
+     * Minimal volume
+     */
+    required int64 minVolume = 4;
+    /**
+     * Step for volume
+     */
+    required int64 stepVolume = 5;
+    /**
+     * Maximum volume
+     */
+    required int64 maxVolume = 6;
+    /**
+     * Minimal stake
+     */
+    required int64 minStake = 7;
+    /**
+     * Step of stake
+     */
+    required int64 stepStake = 8;
+    /**
+     * Maximum stake
+     */
+    required int64 maxStake = 9;
+    /**
+     * Maximum exposure
+     */
+    required uint64 maxExposure = 10;
+}
+
+message ExecutionProfile {
+    /**
+     * ID of the execution profile
+     */
+    required int64 executionProfileId = 1;
+    /**
+     * Name of the execution profile
+     */
+    required string name = 2;
+    /**
+     * Description of execution profile
+     */
+    optional string description = 3;
+    /**
+     * Minimal book B execution delay
+     */
+    required uint32 minBookBDelay = 4;
+    /**
+     * Maximum book B execution delay
+     */
+    required uint32 maxBookBDelay = 5;
+    /**
+     * Execution book type
+     */
+    optional BookType bookType = 6  [deprecated = true]; // Since 7.6. Use executionPolicy instead
+    /**
+     * Gsl execution policy
+     */
+    required GSLExecutionPolicy gslExecutionPolicy = 7;
+    /**
+     * Determines execution policy for all opening Orders
+     */
+    required ExecutionPolicy executionPolicy = 8;
+    /**
+     * Used only if executionPolicy = BOOK_A_WITH_CONDITION
+     */
+    optional int64 conditionVolumeUsd = 9;
+}
+
+message ProtectionProfile {
+    /**
+     * ID of the protection profile
+     */
+    required int64 protectionProfileId = 1;
+    /**
+     * Name of the protection profile
+     */
+    required string name = 2;
+    /**
+     * Description of protection profile
+     */
+    optional string description = 3;
+    /**
+     * Charge for Guaranteed Stop Loss placement
+     */
+    required int64 gslCharge = 4;
+    /**
+     * Minimal distance for placing Stop Loss
+     */
+    required int32 slDistance = 5;
+    /**
+     * Minimal distance for placing Take Profit
+     */
+    required int32 tpDistance = 6;
+    /**
+     * Minimal distance for placing Guaranteed Stop Loss
+     */
+    required int32 gslDistance = 7;
+    /**
+     * Distance in points or percentage
+     */
+    required SymbolDistanceType distanceSetIn = 8 [default = SYMBOL_DISTANCE_IN_POINTS];
+    /**
+     * Tolerance distance
+     */
+    required int32 tolerance = 9;
+}
+
+message SwapFreeProfile {
+    /**
+     * ID of the swapFree profile
+     */
+    required int64 swapFreeProfileId = 1;
+    /**
+     * Name of the swapFree profile
+     */
+    required string name = 2;
+    /**
+     * Description of swapFree profile
+     */
+    optional string description = 3;
+    /**
+     * Kind of swap for swap-free accounts (USD per million USD in cents)
+     */
+    optional int64 rolloverCommission = 4;
+    /**
+     * Count of nights before first rolloverCommission charge
+     */
+    optional int32 skipRolloverDays = 5;
+    /**
+     * Payment period of rolloverCommission in days (default = 1). 1 (or 0) means daily payments, 2 each second day.
+     * 3x rollover is applied only for daily payments
+     */
+    optional int32 rolloverChargePeriod = 6;
+    /**
+     * Day of the week (in UTC) when Administrative Fee charge amount will be tripled. Applied only if rollover charge period = 0 or 1
+     */
+    optional DayOfWeek rolloverCommission3Days = 7 [default = DAY_OF_WEEK_NONE];
+}
+
+message ScheduleProfile {
+    /**
+    * ID of the schedule profile
+    */
+    required int64 scheduleProfileId = 1;
+    /**
+    * Name of the schedule profile
+    */
+    required string name = 2;
+    /**
+    * Description of schedule profile
+    */
+    optional string description = 3;
+    /**
+    * Profile time zone
+    */
+    required string scheduleTimeZone = 4;
+    /**
+    * Schedule profile intervals
+    */
+    repeated Interval interval = 5;
+}
+
+/**
+  * Represents time frame of symbol session
+  */
+message Interval {
+    /**
+     * Seconds from the beginning of Sunday 00:00:00
+     */
+    required uint32 startSecond = 3;
+    /**
+     * Seconds from the beginning of Sunday 00:00:00
+     */
+    required uint32 endSecond = 4;
+    /**
+     * If TRUE then session start is considered as a start of the Global session. Used for MOO desired timestamp validation
+     */
+    optional bool isGlobalSessionStart = 5;
+    /**
+     * If TRUE then session end is considered as end of the Global session. SpotEvent.sessionClose, high, low will be generated
+     */
+    optional bool isGlobalSessionEnd = 6;
+}
+
+message SwapAndDividendProfile {
+    /**
+     * ID of SwapAndDividendProfile profile
+     */
+    required int64 swapAndDividendProfileId = 1;
+    /**
+     * Description of SwapAndDividendProfile profile
+     */
+    required string name = 2;
+    /**
+     * Description
+    */
+    optional string description = 3;
+    /**
+     * Modification time in the milliseconds
+     */
+    optional int64 utcLastUpdateTimestamp = 4;
+    /**
+     * List of associated symbols
+     */
+    repeated SwapAndDividendSymbol symbol = 5;
+}
+
+message SwapAndDividendSymbol {
+    /**
+     * ID of swapAndDividendSymbol
+     */
+    required int64 symbolId = 1;
+    /**
+     * Day of the week when SWAP charge amount will be tripled. Doesn't impact rollover commission
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional DayOfWeek swapRollover3Days = 2;
+    /**
+     * SWAP value for long positions
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional double swapLong = 3;
+    /**
+     * SWAP value for short positions
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional double swapShort = 4;
+    /**
+     * Specifies type of SWAP computation as PIPS (0) or PERCENTAGE (1, annual, in percent)
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional SwapCalculationType swapCalculationType = 5 [default = PIPS];
+    /**
+     * Amount of dividends Long
+     * If unspecified, default parameter from Symbol is used
+     */    
+    optional int64 dividendsLong = 6;
+    /**
+     * Amount of dividends Short
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional int64 dividendsShort = 7;
+    /**
+     * Date and time of charging dividends
+     */
+    optional int64 dividendTime = 8;
+    /**
+     * swap is calculated every swapPeriod hours
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional int32 swapPeriod = 9;
+    /**
+     * from which swap period is calculated, in minutes from 00:00.
+     * If unspecified, default parameter from Symbol is used
+     */
+    optional int32 swapTime = 10;
+    /**
+     * Count of swapPeriods before the first SWAP charge
+     */
+    optional int32 skipSWAPPeriods = 11;
+    /**
+     * If enabled, SWAP will be charged for all days of the week, including Saturday and Sunday
+     */
+    optional bool chargeSwapAtWeekends = 12;
+}
+
+message Holiday {
+    /**
+     * ID of holiday
+     */
+    required int64 holidayId = 1;
+    /**
+     * Name of the holiday
+     */
+    required string name = 2;
+    /**
+     * Description of the holiday
+     */
+    optional string description = 3;
+    /**
+     * Timezone of the holiday
+     */
+    required string scheduleTimeZone = 4;
+    /**
+     * Holiday date. EpochMillis / 86400000 (ms * sec * min * hours)
+     */
+    required int64 holidayDate = 5;
+    /**
+     * if this TRUE  then holidayDate  considered as annual event at the same date, so year is not important any more.
+     */
+    required bool isRecurring = 6;
+    /**
+     * amount of seconds from 00:00:00 of the holiday day when holiday actually starts
+     */
+    optional int32 startSecond = 7;
+    /**
+     * amount of seconds from 00:00:00 of the holiday day when holiday actually finished
+     */
+    optional int32 endSecond = 8; 
+}
+
+message HolidayProfile {
+    required int64 holidayProfileId = 1;
+    /**
+     * Name of the holiday profile
+     */
+    required string name = 2;
+    /**
+     * Description of the holiday profile
+     */
+    optional string description = 3;
+    /**
+     * Ids of holiday
+     */
+    repeated int64 holidayId = 4 [packed = true];
+}
+
+/**
+ * Domain event type
+ */
+enum DomainEventType {
+    /**
+     * Create
+     */
+    DOMAIN_EVENT_TYPE_CREATE = 0;
+    /**
+     * Update
+     */
+    DOMAIN_EVENT_TYPE_UPDATE = 1;
+    /**
+     * Delete
+     */
+    DOMAIN_EVENT_TYPE_DELETE = 2;
+    /**
+     * Update diff (incremental)
+     */
+    DOMAIN_EVENT_TYPE_UPDATE_DIFF = 3;
+}
+
+/**
+ * Access rights
+ */
+enum AccessRights {
+    /**
+     * Full access
+     */
+    ACCESS_RIGHTS_FULL_ACCESS = 0;
+    /**
+     * Close only
+     */
+    ACCESS_RIGHTS_CLOSE_ONLY = 1;
+    /**
+     * No trading
+     */
+    ACCESS_RIGHTS_NO_TRADING = 2;
+    /**
+     * No login
+     */
+    ACCESS_RIGHTS_NO_LOGIN = 3;
+}
+
+/**
+ * Account type
+ */
+enum AccountType {
+    /**
+     * Hedged
+     */
+    ACCOUNT_TYPE_HEDGED = 0;
+    /**
+     * Netted
+     */
+    ACCOUNT_TYPE_NETTED = 1;
+    /**
+     * Spread betting
+     */
+    ACCOUNT_TYPE_SPREAD_BETTING = 2;
+}
+
+enum TotalMarginCalculationType {
+    TYPE_MAX = 0;
+    TYPE_SUM = 1;
+    TYPE_NET = 2;
+}
+
+/**
+ * Asset type
+ */
+enum AssetType {
+    /**
+     * Forex
+     */
+    ASSET_TYPE_FOREX = 0;
+    /**
+     * Metals
+     */
+    ASSET_TYPE_METALS = 1;
+    /**
+     * Indices
+     */
+    ASSET_TYPE_INDICES = 2;
+    /**
+     * Commodity
+     */
+    ASSET_TYPE_COMMODITY = 3;
+    /**
+     * Stock
+     */
+    ASSET_TYPE_STOCK = 4;
+    /**
+     * Crypto
+     */
+    ASSET_TYPE_CRYPTO = 5;
+    /**
+     * Other
+     */
+    ASSET_TYPE_OTHER = 6;
+}
+
+/**
+ * Balance operation type
+ */
+enum BalanceOperationType {
+    /**
+     * Deposit
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT = 0;
+    /**
+     * Withdraw
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW = 1;
+    /**
+     * Close position
+     */
+    BALANCE_OPERATION_TYPE_CLOSE_POSITION = 2;
+    /**
+     * Deposit strategy commission inner
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_STRATEGY_COMMISSION_INNER = 3;
+    /**
+     * Withdraw strategy commission inner
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_STRATEGY_COMMISSION_INNER = 4;
+    /**
+     * Deposit IB commissions
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_IB_COMMISSIONS = 5;
+    /**
+     * Withdraw IB shared percentage
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_IB_SHARED_PERCENTAGE = 6;
+    /**
+     * Deposit IB shared percentage from sub IB
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_IB_SHARED_PERCENTAGE_FROM_SUB_IB = 7;
+    /**
+     * Deposit IB shared percentage from broker
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_IB_SHARED_PERCENTAGE_FROM_BROKER = 8;
+    /**
+     * Deposit rebate
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_REBATE = 9;
+    /**
+     * Withdraw rebate
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_REBATE = 10;
+    /**
+     * Deposit strategy commission outer
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_STRATEGY_COMMISSION_OUTER = 11;
+    /**
+     * Withdraw strategy commission outer
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_STRATEGY_COMMISSION_OUTER = 12;
+    /**
+     * Withdraw bonus compensation
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_BONUS_COMPENSATION = 13;
+    /**
+     * Withdraw IB shared percentage to broker
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_IB_SHARED_PERCENTAGE_TO_BROKER = 14;
+    /**
+     * Deposit dividends
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_DIVIDENDS = 15;
+    /**
+     * Withdraw dividends
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_DIVIDENDS = 16;
+    /**
+     * Withdraw GSL charge
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_GSL_CHARGE = 17;
+    /**
+     * Withdraw rollover
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_ROLLOVER = 18;
+    /**
+     * Deposit non-withdrawable bonus
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_NONWITHDRAWABLE_BONUS = 19;
+    /**
+     * Withdraw non-withdrawable bonus
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_NONWITHDRAWABLE_BONUS = 20;
+    /**
+     * Swap deposit for limited risk account
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_SWAP = 21;
+    /**
+     * Swap withdraw for limited risk account
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_SWAP = 22;
+    /**
+     * Withdrawal in case of trading to investment strategy
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_INVESTMENT_TO_STRATEGY = 23;
+    /**
+     * Deposit to investment strategy's account in case of trading to this strategy
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_FROM_INVESTOR = 24;
+    /**
+     * Deposit in case of returning investments from strategy
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_RETURNED_INVESTMENT = 25;
+    /**
+     * Withdrawal from investment strategy's account
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_BY_INVESTOR = 26;
+    /**
+     * Deposit to the owner of an investment strategy from its account
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_MANAGEMENT_FEE = 27;
+    /**
+     * Withdrawal from investment strategy's account to its owner
+     */
+    BALANCE_OPERATION_TYPE_WITHDRAW_MANAGEMENT_FEE = 28 [deprecated = true];
+    /**
+     * Deposit performance fee to the owner of an investment strategy
+     */
+    BALANCE_OPERATION_TYPE_DEPOSIT_PERFORMANCE_FEE = 29;
+    /**
+     * Withdrawal from account to subaccount
+     */
+    BALANCE_WITHDRAW_FOR_SUBACCOUNT = 30;
+    /**
+     * Deposit to subaccount
+     */
+    BALANCE_DEPOSIT_TO_SUBACCOUNT = 31;
+    /**
+     * Withdraw from subaccount
+     */
+    BALANCE_WITHDRAW_FROM_SUBACCOUNT = 32;
+    /**
+     * Deposit from subaccount
+     */
+    BALANCE_DEPOSIT_FROM_SUBACCOUNT = 33;
+    /**
+     * Withdrawal fees to Strategy Provider
+     */
+    BALANCE_WITHDRAW_COPY_FEE = 34;
+    /**
+     * Withdraw of inactivity fee from the balance
+     */
+    BALANCE_WITHDRAW_INACTIVITY_FEE = 35;
+    /**
+     * Deposit from internal transfer
+     */
+    BALANCE_DEPOSIT_TRANSFER = 36;
+    /**
+     * Withdrawal from internal transfer
+     */
+    BALANCE_WITHDRAW_TRANSFER = 37;
+    /**
+     * Deposit converted Bonus
+     */
+    BALANCE_DEPOSIT_CONVERTED_BONUS = 38;
+    /**
+     * Negative Balance Protection
+     */
+    BALANCE_DEPOSIT_NEGATIVE_BALANCE_PROTECTION = 39;
+
+}
+
+/**
+ * Bonus conversion type
+ */
+enum BonusConversionType {
+    /**
+     * USD
+     */
+    BONUS_CONVERSION_TYPE_USD = 0;
+    /**
+     * Lots
+     */
+    BONUS_CONVERSION_TYPE_LOTS = 1;
+}
+
+/**
+ * Bonus operation type
+ */
+enum BonusOperationType {
+    /**
+     * Deposit
+     */
+    BONUS_OPERATION_TYPE_DEPOSIT = 0;
+    /**
+     * Withdraw
+     */
+    BONUS_OPERATION_TYPE_WITHDRAW = 1;
+}
+
+/**
+ * Book type
+ */
+enum BookType {
+    /**
+     * Book A
+     */
+    BOOK_TYPE_BOOK_A = 0;
+    /**
+     * Book B
+     */
+    BOOK_TYPE_BOOK_B = 1;
+}
+
+/**
+ * Commission type
+ */
+enum CommissionType {
+    /**
+     * USD per million USD volume - usually used for FX. Example: 50 USD for 1 mil USD of trading volume. In cents.
+     */
+    USD_PER_MILLION_USD = 0;
+    /**
+     * USD per 1 lot - usually used for CFDs and futures for commodities, and indices. Example: 15 USD for 1 contract. In cents.
+     */
+    USD_PER_LOT = 1;
+    /**
+     * Percentage of trading volume - usually used for Equities. Example: 0.005% of notional trading volume. Multiplied by 100,000.
+     */
+    PERCENTAGE_OF_VALUE = 2;
+    /**
+     * Quote ccy of Symbol per 1 lot - will be used for CFDs and futures for commodities, and indices. Example: 15 EUR for 1 contract of DAX. In cents.
+     */
+    QUOTE_CCY_PER_LOT = 3;
+}
+
+/**
+ * Day of week
+ */
+enum DayOfWeek {
+    /**
+     * None
+     */
+    DAY_OF_WEEK_NONE = 0;
+    /**
+     * Monday
+     */
+    DAY_OF_WEEK_MONDAY = 1;
+    /**
+     * Tuesday
+     */
+    DAY_OF_WEEK_TUESDAY = 2;
+    /**
+     * Wednesday
+     */
+    DAY_OF_WEEK_WEDNESDAY = 3;
+    /**
+     * Thursday
+     */
+    DAY_OF_WEEK_THURSDAY = 4;
+    /**
+     * Friday
+     */
+    DAY_OF_WEEK_FRIDAY = 5;
+    /**
+     * Saturday
+     */
+    DAY_OF_WEEK_SATURDAY = 6;
+    /**
+     * Sunday
+     */
+    DAY_OF_WEEK_SUNDAY = 7;
+}
+
+/**
+ * Deal status
+ */
+enum DealStatus {
+    /**
+     * Filled
+     */
+    DEAL_STATUS_FILLED = 0;
+    /**
+     * Partially filled
+     */
+    DEAL_STATUS_PARTIALLY_FILLED = 1;
+    /**
+     * Rejected
+     */
+    DEAL_STATUS_REJECTED = 2;
+    /**
+     * Internally rejected
+     */
+    DEAL_STATUS_INTERNALLY_REJECTED = 3;
+    /**
+     * Error
+     */
+    DEAL_STATUS_ERROR = 4;
+    /**
+     * Missed
+     */
+    DEAL_STATUS_MISSED = 5;
+}
+
+/**
+ * Deal type
+ */
+enum DealType {
+    /**
+     * Market
+     */
+    DEAL_TYPE_MARKET = 0;
+    /**
+     * Limit
+     */
+    DEAL_TYPE_LIMIT = 1;
+}
+
+/**
+ * Market data entry type
+ */
+enum MarketDataEntryType {
+    /**
+     * Bid
+     */
+    MARKET_DATA_ENTRY_TYPE_BID = 0;
+    /**
+     * Ask
+     */
+    MARKET_DATA_ENTRY_TYPE_ASK = 1;
+}
+
+/**
+ * Min commission type
+ */
+enum MinCommissionType {
+    /**
+     * Currency
+     */
+    MIN_COMMISSION_TYPE_CURRENCY = 0;
+    /**
+     * Quote currency
+     */
+    MIN_COMMISSION_TYPE_QUOTE_CURRENCY = 1;
+}
+
+/**
+ * Order status
+ */
+enum OrderStatus {
+    /**
+     * Created
+     */
+    ORDER_STATUS_CREATED = 0;
+    /**
+     * Accepted
+     */
+    ORDER_STATUS_ACCEPTED = 1;
+    /**
+     * Filled
+     */
+    ORDER_STATUS_FILLED = 2;
+    /**
+     * Rejected
+     */
+    ORDER_STATUS_REJECTED = 3;
+    /**
+     * Expired
+     */
+    ORDER_STATUS_EXPIRED = 4;
+    /**
+     * Cancelled
+     */
+    ORDER_STATUS_CANCELLED = 5;
+    /**
+     * Reserved
+     */
+    ORDER_STATUS_RESERVED = 6;
+}
+
+/**
+ * Order type
+ */
+enum OrderType {
+    /**
+     * Market
+     */
+    ORDER_TYPE_MARKET = 0;
+    /**
+     * Limit
+     */
+    ORDER_TYPE_LIMIT = 1;
+    /**
+     * Stop
+     */
+    ORDER_TYPE_STOP = 2;
+    /**
+     * Stop loss take profit
+     */
+    ORDER_TYPE_STOP_LOSS_TAKE_PROFIT = 3;
+    /**
+     * Market range
+     */
+    ORDER_TYPE_MARKET_RANGE = 4;
+    /**
+     * Stop Limit
+     */
+    ORDER_TYPE_STOP_LIMIT = 5;
+}
+
+/**
+ * Order trigger method
+ */
+enum OrderTriggerMethod {
+    /**
+     * Trade
+     */
+    ORDER_TRIGGER_METHOD_TRADE = 1;
+    /**
+     * Opposite
+     */
+    ORDER_TRIGGER_METHOD_OPPOSITE = 2;
+    /**
+     * Double Trade
+     */
+    ORDER_TRIGGER_METHOD_DOUBLE_TRADE = 3;
+    /**
+     * Double Opposite
+     */
+    ORDER_TRIGGER_METHOD_DOUBLE_OPPOSITE = 4;
+}
+
+/**
+ * Position effect
+ */
+enum PositionEffect {
+    /**
+     * New
+     */
+    POSITION_EFFECT_NEW = 0;
+    /**
+     * Alter
+     */
+    POSITION_EFFECT_ALTER = 1;
+}
+
+/**
+ * Position status
+ */
+enum PositionStatus {
+    /**
+     * Open
+     */
+    POSITION_STATUS_OPEN = 0;
+    /**
+     * Closed
+     */
+    POSITION_STATUS_CLOSED = 1;
+    /**
+     * Created
+     */
+    POSITION_STATUS_CREATED = 2;
+    /**
+     * Error
+     */
+    POSITION_STATUS_ERROR = 3;
+}
+
+/**
+ * Symbol book type
+ */
+enum SymbolBookType {
+    /**
+     * Book A
+     */
+    SYMBOL_BOOK_TYPE_BOOK_A = 1;
+    /**
+     * Book B
+     */
+    SYMBOL_BOOK_TYPE_BOOK_B = 2;
+}
+
+/**
+ * Time in force
+ */
+enum TimeInForce {
+    /**
+     * Good till date
+     */
+    TIME_IN_FORCE_GOOD_TILL_DATE = 0;
+    /**
+     * Good till cancel
+     */
+    TIME_IN_FORCE_GOOD_TILL_CANCEL = 1;
+    /**
+     * Immediate or cancel
+     */
+    TIME_IN_FORCE_IMMEDIATE_OR_CANCEL = 2;
+    /**
+     * Fill or kill
+     */
+    TIME_IN_FORCE_FILL_OR_KILL = 3;
+    /**
+     * Market on open
+     */
+    TIME_IN_FORCE_MARKET_ON_OPEN = 4;
+}
+
+/**
+ * Trade side
+ */
+enum TradeSide {
+    /**
+     * Buy
+     */
+    TRADE_SIDE_BUY = 0;
+    /**
+     * Sell
+     */
+    TRADE_SIDE_SELL = 1;
+}
+
+/**
+ * Trading mode
+ */
+enum TradingMode {
+    TRADING_MODE_ENABLED = 0;
+    TRADING_MODE_DISABLED_WITHOUT_PENDINGS_EXECUTION = 1;
+    TRADING_MODE_DISABLED_WITH_PENDINGS_EXECUTION = 2;
+    TRADING_MODE_CLOSE_ONLY_MODE = 3;
+}
+
+/**
+ * Type of OrderAction
+ */
+enum ActionType {
+    ACTION_TYPE_CREATE_STOP_LOSS_TAKE_PROFIT = 0;
+    ACTION_TYPE_AMEND_STOP_LOSS_TAKE_PROFIT = 1;
+    ACTION_TYPE_CANCEL_STOP_LOSS_TAKE_PROFIT = 2;
+    ACTION_TYPE_CREATE_CLOSING_ORDER = 3;
+    ACTION_TYPE_CREATE_ORDER = 4;
+    ACTION_TYPE_CANCEL_PENDING_ORDER = 5;
+    ACTION_TYPE_AMEND_OPEN_PENDING_ORDER = 6;
+    ACTION_TYPE_CREATE_OCO_LINK = 7;
+    ACTION_TYPE_CANCEL_OCO_LINK = 8;
+}
+
+/**
+ * Status of OrderAction
+ */
+enum ActionStatus {
+    ACTION_STATUS_PENDING = 0;
+    ACTION_STATUS_STARTED = 1;
+    ACTION_STATUS_PASSED = 2;
+    ACTION_STATUS_FAILED = 3;
+    ACTION_STATUS_ERROR = 4;
+}
+
+/**
+ * Specifies type of SWAP computation as PIPS (0) or PERCENTAGE (1, annual, in percent)
+ */
+enum SwapCalculationType {
+    PIPS = 0;
+    PERCENTAGE = 1;
+    POINTS = 2; // Specifies type of SWAP computation as POINTS (2)
+}
+
+enum GSLExecutionPolicy {
+    DISABLED = 0;
+    ENABLED_DECLINE_IF_A_BOOK = 1;
+    ENABLED_FORCE_B_BOOK = 2;
+    ENABLED_EXECUTE_INTO_SYMBOL_BOOK = 3;
+}
+
+/**
+ * Limited risk types
+ */
+enum LimitedRiskMarginCalculationStrategy {
+    ACCORDING_TO_LEVERAGE = 0;
+    ACCORDING_TO_GSL = 1;
+    ACCORDING_TO_GSL_AND_LEVERAGE = 2;
+}
+
+enum SymbolDistanceType {
+    SYMBOL_DISTANCE_IN_POINTS = 1;
+    SYMBOL_DISTANCE_IN_PERCENTAGE = 2;
+}
+
+enum ExecutionPolicy {
+    BOOK_A = 1;
+    BOOK_B = 2;
+    BOOK_A_WITH_CONDITION = 3;
+}

@@ -25,6 +25,7 @@
     "@crm/http": "workspace:^",
     "@crm/kafka": "workspace:^",
     "@crm/logger": "workspace:^",
+    "@crm/platform": "workspace:^",
     "@crm/swagger": "workspace:^",
     "@crm/types": "workspace:^",
     "@crm/utils": "workspace:^",

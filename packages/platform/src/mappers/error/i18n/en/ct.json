@@ -1,0 +1,102 @@
+{
+  "DEFAULT": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "UNKNOWN_ERROR:": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "INVALID_REQUEST": {
+    "code": "BAD_REQUEST",
+    "msg": "Invalid data submitted to the trading platform.",
+    "status": 400
+  },
+  "NOT_ENOUGH_RIGHTS": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to connect to the trading platform due to insufficient rights.",
+    "status": 409
+  },
+  "CH_BROKER_NOT_FOUND":  {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to perform request due to the invalid broker.",
+    "status": 400
+  },
+  "REQUEST_FREQUENCY_EXCEEDED": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Velocity of requests is too high.",
+    "status": 503
+  },
+  "TRADER_NOT_FOUND": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to perform request due to the invalid account data.",
+    "status": 400
+  },
+  "CH_PLANT_INVALID": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to perform request due invalid plant setting.",
+    "status": 400
+  },
+  "NOT_ENOUGH_MONEY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to insufficient balance.",
+    "status": 400
+  },
+  "CHANGE_BALANCE_BAD_AMOUNT": {
+    "code": "BAD_REQUEST",
+    "msg": "The amount for the requested balance operation is not valid.",
+    "status": 400
+  },
+  "TRADER_GROUP_NOT_FOUND": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to perform request due invalid user group.",
+    "status": 400
+  },
+  "WRONG_PASSWORD": {
+    "code": "BAD_REQUEST",
+    "msg": "Invalid account password.",
+    "status": 400
+  },
+  "CID_DEFAULT_REGION_NOT_FOUND": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request, region not found.",
+    "status": 400
+  },
+  "CH_CTID_ALREADY_CONFIRMED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request, ctid already confirmed.",
+    "status": 400
+  },
+  "CANT_ROUTE_REQUEST": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to perform request due invalid route.",
+    "status": 400
+  },
+  "INSUFFICIENT_PERMISSIONS": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to perform request due to insufficient permissions.",
+    "status": 409
+  },
+  "CH_CTID_TRADER_ACCOUNT_ALREADY_EXISTS": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to account already existing.",
+    "status": 400
+  },
+  "CH_TRADER_ACCOUNT_CANNOT_BE_LINKED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request, account cannot be linked.",
+    "status": 400
+  },
+  "CH_TRADER_ACCOUNT_NOT_FOUND": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to invalid account.",
+    "status": 400
+  },
+  "CH_CTID_TRADER_ACCOUNT_NOT_FOUND": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to invalid account.",
+    "status": 400
+  }
+}

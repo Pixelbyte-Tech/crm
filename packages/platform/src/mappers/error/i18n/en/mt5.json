@@ -1,0 +1,442 @@
+{
+  "DEFAULT": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "ECONNREFUSED": {
+    "code": "NETWORK_ERROR",
+    "msg": "A network error occurred while processing your request.",
+    "status": 502
+  },
+  "MT_RET_ERR_NETWORK": {
+    "code": "NETWORK_ERROR",
+    "msg": "A network error occurred while processing your request.",
+    "status": 502
+  },
+  "MT_RET_ERR_TIMEOUT": {
+    "code": "TIMEOUT_ERROR",
+    "msg": "A timeout occurred while processing your request.",
+    "status": 408
+  },
+  "MT_RET_ERROR": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request with the trading platform.",
+    "status": 500
+  },
+  "MT_RET_ERR_PARAMS": {
+    "code": "BAD_REQUEST",
+    "msg": "Malformed request query parameters.",
+    "status": 400
+  },
+  "MT_RET_ERR_DATA": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to perform request due to bad data.",
+    "status": 500
+  },
+  "MT_RET_ERR_DISK": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Unable to perform request due to the trading platform being unavailable.",
+    "status": 503
+  },
+  "MT_RET_ERR_MEM": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Unable to perform request due to the trading platform being unavailable.",
+    "status": 503
+  },
+  "MT_RET_ERR_PERMISSIONS": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to perform request due to insufficient permissions.",
+    "status": 409
+  },
+  "MT_RET_ERR_NOSERVICE": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Unable to perform request due to the trading platform being unavailable.",
+    "status": 502
+  },
+  "MT_RET_ERR_CONNECTION": {
+    "code": "NETWORK_ERROR",
+    "msg": "A network error occurred while processing your request.",
+    "status": 502
+  },
+  "MT_RET_ERR_FREQUENT": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Velocity of requests is too high.",
+    "status": 503
+  },
+  "MT_RET_ERR_NOTFOUND": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to process request due to invalid trading platform endpoint.",
+    "status": 409
+  },
+  "MT_RET_ERR_PARTIAL": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due to partial trading platform error.",
+    "status": 500
+  },
+  "MT_RET_ERR_SHUTDOWN": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Unable to process request due to trading platform shutdown in progress.",
+    "status": 503
+  },
+  "MT_RET_ERR_CANCEL": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request, Operation has been canceled.",
+    "status": 500
+  },
+  "MT_RET_ERR_DUPLICATE": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to duplicate data.",
+    "status": 400
+  },
+  "MT_RET_AUTH_ACCOUNT_INVALID": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to invalid account.",
+    "status": 400
+  },
+  "MT_RET_USR_LAST_ADMIN": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request.",
+    "status": 400
+  },
+  "MT_RET_USR_LOGIN_EXHAUSTED": {
+    "code": "BAD_REQUEST",
+    "msg": "Logins exhausted.",
+    "status": 400
+  },
+  "MT_RET_USR_LOGIN_PROHIBITED": {
+    "code": "BAD_REQUEST",
+    "msg": "Account login unavailable due to being reserved on another trading platform server.",
+    "status": 400
+  },
+  "MT_RET_USR_LOGIN_EXIST": {
+    "code": "BAD_REQUEST",
+    "msg": "Account login already exists.",
+    "status": 400
+  },
+  "MT_RET_USR_SUICIDE": {
+    "code": "BAD_REQUEST",
+    "msg": "Account self deletion not allowed.",
+    "status": 400
+  },
+  "MT_RET_USR_INVALID_PASSWORD": {
+    "code": "BAD_REQUEST",
+    "msg": "Invalid account password.",
+    "status": 400
+  },
+  "MT_RET_USR_LIMIT_REACHED": {
+    "code": "BAD_REQUEST",
+    "msg": "Account limit reached, unable to proceed.",
+    "status": 400
+  },
+  "MT_RET_USR_HAS_TRADES": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to account having open trades.",
+    "status": 400
+  },
+  "MT_RET_USR_DIFFERENT_SERVERS": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to move account to different trading platform server.",
+    "status": 500
+  },
+  "MT_RET_USR_DIFFERENT_CURRENCY": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to move account to different currency group.",
+    "status": 500
+  },
+  "MT_RET_USR_IMPORT_BALANCE": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Account balance import error.",
+    "status": 500
+  },
+  "MT_RET_USR_IMPORT_GROUP": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Account import found invalid group.",
+    "status": 500
+  },
+  "MT_RET_USR_ACCOUNT_EXIST": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to account already existing.",
+    "status": 400
+  },
+  "MT_RET_TRADE_LIMIT_REACHED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to limit reached.",
+    "status": 400
+  },
+  "MT_RET_TRADE_ORDER_EXHAUSTED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Trade orders range exhausted.",
+    "status": 500
+  },
+  "MT_RET_TRADE_DEAL_EXHAUSTED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Trade deals range exhausted.",
+    "status": 500
+  },
+  "MT_RET_TRADE_MAX_MONEY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to money limit reached.",
+    "status": 400
+  },
+  "MT_RET_TRADE_DEAL_EXIST": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to trade already existing.",
+    "status": 400
+  },
+  "MT_RET_TRADE_ORDER_EXIST": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to trade already existing.",
+    "status": 400
+  },
+  "MT_RET_TRADE_ORDER_PROHIBITED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to trade ticket reserved at another trading platform server.",
+    "status": 400
+  },
+  "MT_RET_TRADE_DEAL_PROHIBITED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to trade ticket reserved at another trading platform server.",
+    "status": 400
+  },
+  "MT_RET_REPORT_SNAPSHOT": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Base snapshot error.",
+    "status": 500
+  },
+  "MT_RET_REPORT_NOTSUPPORTED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to unsupported report.",
+    "status": 400
+  },
+  "MT_RET_REPORT_NODATA": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due to no report data.",
+    "status": 500
+  },
+  "MT_RET_REPORT_TEMPLATE_BAD": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to bad report template.",
+    "status": 400
+  },
+  "MT_RET_REPORT_INVALID_ROW": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to invalid row.",
+    "status": 400
+  },
+  "MT_RET_REPORT_LIMIT_REPEAT": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to tag repeat limit reached.",
+    "status": 400
+  },
+  "MT_RET_REPORT_LIMIT_REPORT": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to report size limit reached.",
+    "status": 400
+  },
+  "MT_RET_HST_SYMBOL_NOTFOUND": {
+    "code": "BAD_REQUEST",
+    "msg": "Symbol not found.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_REJECT": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due trading platform request rejection.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_CANCEL": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due trading platform request cancellation.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_ERROR": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred on the trading platform while processing your request.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_TIMEOUT": {
+    "code": "TIMEOUT_ERROR",
+    "msg": "A trading platform timeout occurred while processing your request.",
+    "status": 408
+  },
+  "MT_RET_REQUEST_INVALID": {
+    "code": "BAD_REQUEST",
+    "msg": "Invalid request, rejected by trading platform.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_INVALID_VOLUME": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to bad volume.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_INVALID_PRICE": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to bad prices.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_INVALID_STOPS": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to bad stops.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_TRADE_DISABLED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to disallowed trading.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_MARKET_CLOSED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to market closed.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_NO_MONEY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to insufficient balance.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_PRICE_CHANGED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due to price change.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_PRICE_OFF": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due to no price.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_INVALID_EXP": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process request due to invalid order expiration",
+    "status": 400
+  },
+  "MT_RET_REQUEST_ORDER_CHANGED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Unable to process request due to order having been changed already.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_TOO_MANY": {
+    "code": "SERVICE_UNAVAILABLE",
+    "msg": "Unable to process request due to to many requests.",
+    "status": 503
+  },
+  "MT_RET_REQUEST_NO_CHANGES": {
+    "code": "BAD_REQUEST",
+    "msg": "Request does not contain changes.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_AT_DISABLED_SERVER": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Auto trading disabled by the trading platform.",
+    "status": 409
+  },
+  "MT_RET_REQUEST_AT_DISABLED_CLIENT": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Auto trading disabled by the client.",
+    "status": 409
+  },
+  "MT_RET_REQUEST_LOCKED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Request blocked by the dealer.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_FROZEN": {
+    "code": "INTERNAL_ERROR",
+    "msg": "Modification failed due to order or position being close to market. Order or position frozen.",
+    "status": 500
+  },
+  "MT_RET_REQUEST_INVALID_FILL": {
+    "code": "BAD_REQUEST",
+    "msg": "Filling mode is not supported.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_CONNECTION": {
+    "code": "NETWORK_ERROR",
+    "msg": "Unable to process due to bad connection.",
+    "status": 502
+  },
+  "MT_RET_REQUEST_ONLY_REAL": {
+    "code": "BAD_REQUEST",
+    "msg": "Allowed only for real accounts.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_LIMIT_ORDERS": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process due to limit on the number of orders reached.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_LIMIT_VOLUME": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process due to limit volume of orders reached.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_INVALID_ORDER": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process due to invalid or prohibited order type.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_POSITION_CLOSED": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process, position is already closed or doesn't exist.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_INVALID_CLOSE_VOLUME": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process, volume to be closed exceeds the current volume of the position.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_CLOSE_ORDER_EXIST": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process, order to close the position already exists.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_LIMIT_POSITIONS": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process due to orders limit reached.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_LONG_ONLY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to only BUY orders being allowed.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_SHORT_ONLY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to only SELL orders being allowed.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_CLOSE_ONLY": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to only closing orders being allowed.",
+    "status": 400
+  },
+  "MT_RET_REQUEST_PROHIBITED_BY_FIFO": {
+    "code": "BAD_REQUEST",
+    "msg": "Unable to process trade due to order being prohibited by fifo rule.",
+    "status": 400
+  },
+  "MT_RET_ERR_NOTIMPLEMENT": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "MT_RET_ERR_NOTMAIN": {
+    "code": "CONFIGURATION_ERROR",
+    "msg": "Unable to proceed, operation must be performed on main trading platform server.",
+    "status": 409
+  },
+  "MT_RET_ERR_NOTSUPPORTED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request.",
+    "status": 500
+  },
+  "MT_RET_ERR_DEADLOCK": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request, deadlock detected.",
+    "status": 500
+  },
+  "MT_RET_ERR_LOCKED": {
+    "code": "INTERNAL_ERROR",
+    "msg": "An error occurred while processing your request, locked entity detected.",
+    "status": 500
+  }
+}

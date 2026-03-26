@@ -80,7 +80,18 @@ export default [
         {
           type: 'line-length',
           order: 'asc',
-          groups: ['builtin', 'external', 'project', 'config', 'services', 'dtos'],
+          groups: [
+            'builtin',
+            'external',
+            'project',
+            'config',
+            'mt5_mapper',
+            'tl_mapper',
+            'ct_mapper',
+            'dx_mapper',
+            'services',
+            'dtos',
+          ],
           customGroups: [
             {
               groupName: 'project',
@@ -93,6 +104,22 @@ export default [
             {
               groupName: 'services',
               elementNamePattern: ['.+\\.service'],
+            },
+            {
+              groupName: 'mt5_mapper',
+              elementNamePattern: ['.+mt5.+\\.mapper'],
+            },
+            {
+              groupName: 'tl_mapper',
+              elementNamePattern: ['.+tl.+\\.mapper'],
+            },
+            {
+              groupName: 'ct_mapper',
+              elementNamePattern: ['.+ct.+\\.mapper'],
+            },
+            {
+              groupName: 'dx_mapper',
+              elementNamePattern: ['.+dx.+\\.mapper'],
             },
             {
               groupName: 'dtos',
