@@ -6,7 +6,7 @@ import { isUUID, ValidatorConstraint, ValidatorConstraintInterface } from 'class
 import { TradingAccountSchemaEntity } from '@crm/database';
 
 @Injectable()
-@ValidatorConstraint({ name: 'tradingAccountSchemaId', async: true })
+@ValidatorConstraint({ name: 'schemaId', async: true })
 export class TradingAccountSchemaIdValidator implements ValidatorConstraintInterface, PipeTransform {
   constructor(
     @InjectRepository(TradingAccountSchemaEntity)
@@ -24,12 +24,12 @@ export class TradingAccountSchemaIdValidator implements ValidatorConstraintInter
 
   async #exec(value: string): Promise<boolean> {
     if (!isUUID(value)) {
-      throw new BadRequestException('tradingAccountSchemaId must be a valid uuid');
+      throw new BadRequestException('schemaId must be a valid uuid');
     }
 
     const entity = await this.repo.findOne({ where: { id: value } });
     if (!entity) {
-      throw new BadRequestException(`tradingAccountSchemaId must reference an existing entity, ${value} provided.`);
+      throw new BadRequestException(`schemaId must reference an existing entity, ${value} provided.`);
     }
 
     return true;
