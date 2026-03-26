@@ -23,20 +23,20 @@ export class IntegrationController {
   @Auth(Action.READ, IntegrationSubject)
   @OpenApi({ type: Integration })
   @Get(':integrationId')
-  public async list(
+  public async get(
     @Param('integrationId', IntegrationIdValidator) integrationId: string,
   ): Promise<{ data: Integration }> {
     return { data: await this.service.get(integrationId) };
   }
 
   /**
-   * Fetches all integrations
+   * Lists integrations based on filter criteria.
    * @param dto The payload dto
    */
   @Auth(Action.READ, IntegrationSubject)
   @OpenApi({ type: Integration, isPaginated: true })
   @Get()
-  public async get(@Query() dto: ListIntegrationsDto): Promise<PaginatedResDto<Integration>> {
+  public async list(@Query() dto: ListIntegrationsDto): Promise<PaginatedResDto<Integration>> {
     return await this.service.list(dto);
   }
 

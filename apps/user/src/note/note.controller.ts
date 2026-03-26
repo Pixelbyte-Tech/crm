@@ -24,7 +24,7 @@ export class NoteController {
   @Auth(Action.READ, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note })
   @Get(':userId/notes/:noteId')
-  public async list(
+  public async get(
     @Param('userId', UserIdValidator) userId: string,
     @Param('noteId', UserNoteIdValidator) noteId: string,
   ): Promise<{ data: Note }> {
@@ -32,14 +32,14 @@ export class NoteController {
   }
 
   /**
-   * Fetches all user notes belonging to a user
+   * Lists user notes belonging to a specific user based on filter criteria.
    * @param userId The user id to fetch
    * @param dto The payload dto
    */
   @Auth(Action.READ, UserNoteSubject, { in: 'params', use: 'userId', findBy: 'userId' })
   @OpenApi({ type: Note, isPaginated: true })
   @Get(':userId/notes')
-  public async get(
+  public async list(
     @Param('userId', UserIdValidator) userId: string,
     @Query() dto: ListNotesDto,
   ): Promise<PaginatedResDto<Note>> {

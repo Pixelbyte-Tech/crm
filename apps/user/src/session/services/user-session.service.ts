@@ -67,7 +67,7 @@ export class UserSessionService {
   }
 
   /**
-   * Fetches all auth sessions for a user
+   * Lists auth sessions belonging to a specific user based on filter criteria.
    * @param userId The id of the user to fetch
    @param dto The list dto
    */

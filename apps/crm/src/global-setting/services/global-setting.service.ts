@@ -51,7 +51,7 @@ export class GlobalSettingService {
   }
 
   /**
-   * Fetches all global settings
+   * Lists global settings based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListGlobalSettingsDto): Promise<PaginatedResDto<GlobalSetting>> {

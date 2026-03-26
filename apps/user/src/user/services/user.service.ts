@@ -66,7 +66,7 @@ export class UserService {
   }
 
   /**
-   * Lists all users
+   * Lists all users based on filter criteria
    * @param dto The list dto
    */
   async list(dto: ListUsersDto): Promise<PaginatedResDto<User>> {
@@ -80,14 +80,25 @@ export class UserService {
       qb.leftJoinAndSelect(UserSetting, 's');
     }
 
+    if (dto.from && dto.to) {
+      qb.where('u."createdAt" BETWEEN :from AND :to', { from: dto.from, to: dto.to });
+    } else {
+      if (dto.from) {
+        qb.where('u."createdAt" >= :from', { from: dto.from });
+      }
+      if (dto.to) {
+        qb.where('u."createdAt" <= :to', { to: dto.to });
+      }
+    }
+
     // Find the resources paginated
-    const traders = await paginate(qb, { limit: dto.limit, page: dto.page });
+    const users = await paginate(qb, { limit: dto.limit, page: dto.page });
 
     return {
-      data: traders.items.map(this.userMapper.toUser),
-      page: traders.meta.currentPage,
-      limit: traders.meta.itemsPerPage,
-      total: traders.meta.totalItems,
+      data: users.items.map(this.userMapper.toUser),
+      page: users.meta.currentPage,
+      limit: users.meta.itemsPerPage,
+      total: users.meta.totalItems,
     };
   }
 

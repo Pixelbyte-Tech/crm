@@ -98,6 +98,9 @@ importers:
 
   apps/audit:
     dependencies:
+      '@crm/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@crm/database':
         specifier: workspace:^
         version: link:../../packages/database

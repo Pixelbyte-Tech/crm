@@ -23,18 +23,18 @@ export class ServerController {
   @Auth(Action.READ, ServerSubject)
   @OpenApi({ type: Server })
   @Get(':serverId')
-  public async list(@Param('serverId', ServerIdValidator) serverId: string): Promise<{ data: Server }> {
+  public async get(@Param('serverId', ServerIdValidator) serverId: string): Promise<{ data: Server }> {
     return { data: await this.service.get(serverId) };
   }
 
   /**
-   * Fetches all servers
+   * Lists servers based on filter criteria.
    * @param dto The payload dto
    */
   @Auth(Action.READ, ServerSubject)
   @OpenApi({ type: Server, isPaginated: true })
   @Get()
-  public async get(@Query() dto: ListServersDto): Promise<PaginatedResDto<Server>> {
+  public async list(@Query() dto: ListServersDto): Promise<PaginatedResDto<Server>> {
     return await this.service.list(dto);
   }
 

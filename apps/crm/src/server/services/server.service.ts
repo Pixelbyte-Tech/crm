@@ -55,7 +55,7 @@ export class ServerService {
   }
 
   /**
-   * Fetches all servers
+   * Lists platform clients based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListServersDto): Promise<PaginatedResDto<Server>> {

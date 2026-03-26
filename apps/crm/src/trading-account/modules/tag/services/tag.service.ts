@@ -51,7 +51,7 @@ export class TagService {
   }
 
   /**
-   * Fetches all tags
+   * Lists tags based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListTagsDto): Promise<PaginatedResDto<Tag>> {

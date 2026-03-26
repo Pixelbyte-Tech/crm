@@ -10,6 +10,7 @@
     "lint": "eslint \"{src,test}/**/*.ts\""
   },
   "dependencies": {
+    "@crm/auth": "workspace:^",
     "@crm/database": "workspace:^",
     "@crm/http": "workspace:^",
     "@crm/kafka": "workspace:^",

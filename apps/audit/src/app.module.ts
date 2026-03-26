@@ -10,6 +10,7 @@ import { DatabaseModule } from '@crm/database';
 import { ValidationModule } from '@crm/validation';
 
 import appConfig from './config/app/app.config';
+import authConfig from './config/auth/auth.config';
 import databaseConfig from './config/database/database.config';
 
 import { AuditModule } from './audit/audit.module';
@@ -53,7 +54,7 @@ import { DatabaseConfig } from './config/database/database-config.type';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig],
       envFilePath: ['.env'],
     }),
     CommonModule,

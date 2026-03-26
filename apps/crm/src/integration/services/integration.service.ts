@@ -53,7 +53,7 @@ export class IntegrationService {
   }
 
   /**
-   * Fetches all integrations
+   * Lists integrations based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListIntegrationsDto): Promise<PaginatedResDto<Integration>> {

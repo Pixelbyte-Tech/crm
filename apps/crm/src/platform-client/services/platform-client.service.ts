@@ -52,7 +52,7 @@ export class PlatformClientService {
   }
 
   /**
-   * Fetches all platform clients
+   * Lists platform clients based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListPlatformClientsDto): Promise<PaginatedResDto<PlatformClient>> {

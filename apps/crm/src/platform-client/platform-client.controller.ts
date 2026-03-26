@@ -23,18 +23,18 @@ export class PlatformClientController {
   @Auth(Action.READ, PlatformClientSubject)
   @OpenApi({ type: PlatformClient })
   @Get(':clientId')
-  public async list(@Param('clientId', PlatformClientIdValidator) clientId: string): Promise<{ data: PlatformClient }> {
+  public async get(@Param('clientId', PlatformClientIdValidator) clientId: string): Promise<{ data: PlatformClient }> {
     return { data: await this.service.get(clientId) };
   }
 
   /**
-   * Fetches all platform clients
+   * Lists platform clients based on filter criteria.
    * @param dto The payload dto
    */
   @Auth(Action.READ, PlatformClientSubject)
   @OpenApi({ type: PlatformClient, isPaginated: true })
   @Get()
-  public async get(@Query() dto: ListPlatformClientsDto): Promise<PaginatedResDto<PlatformClient>> {
+  public async list(@Query() dto: ListPlatformClientsDto): Promise<PaginatedResDto<PlatformClient>> {
     return await this.service.list(dto);
   }
 

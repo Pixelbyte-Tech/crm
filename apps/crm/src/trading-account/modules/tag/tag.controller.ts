@@ -23,18 +23,18 @@ export class TagController {
   @Auth(Action.READ, TagSubject)
   @OpenApi({ type: Tag })
   @Get(':tagId')
-  public async list(@Param('tagId', TagIdValidator) tagId: string): Promise<{ data: Tag }> {
+  public async get(@Param('tagId', TagIdValidator) tagId: string): Promise<{ data: Tag }> {
     return { data: await this.service.get(tagId) };
   }
 
   /**
-   * Fetches all tags
+   * Lists tags based on filter criteria.
    * @param dto The payload dto
    */
   @Auth(Action.READ, TagSubject)
   @OpenApi({ type: Tag, isPaginated: true })
   @Get()
-  public async get(@Query() dto: ListTagsDto): Promise<PaginatedResDto<Tag>> {
+  public async list(@Query() dto: ListTagsDto): Promise<PaginatedResDto<Tag>> {
     return await this.service.list(dto);
   }
 

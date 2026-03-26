@@ -29,7 +29,7 @@ export class InvitationController {
   }
 
   /**
-   * Lists all invitations
+   * Lists all invitations based on filter criteria
    * @param dto The filter dto
    */
   @OpenApi({ type: Invitation, isPaginated: true })

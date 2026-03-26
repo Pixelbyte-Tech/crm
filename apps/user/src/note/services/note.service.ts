@@ -53,7 +53,7 @@ export class NoteService {
   }
 
   /**
-   * Fetches all notes belonging to a user
+   * Lists user notes belonging to a specific user based on filter criteria.
    * @param userId The id of the user to fetch
    * @param dto The list dto
    */

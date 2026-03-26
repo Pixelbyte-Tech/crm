@@ -23,18 +23,18 @@ export class GlobalSettingController {
   @Auth(Action.READ, GlobalSettingSubject)
   @OpenApi({ type: GlobalSetting })
   @Get(':settingId')
-  public async list(@Param('settingId', GlobalSettingIdValidator) settingId: string): Promise<{ data: GlobalSetting }> {
+  public async get(@Param('settingId', GlobalSettingIdValidator) settingId: string): Promise<{ data: GlobalSetting }> {
     return { data: await this.service.get(settingId) };
   }
 
   /**
-   * Fetches all global settings
+   * Lists global settings based on filter criteria.
    * @param dto The payload dto
    */
   @Auth(Action.READ, GlobalSettingSubject)
   @OpenApi({ type: GlobalSetting, isPaginated: true })
   @Get()
-  public async get(@Query() dto: ListGlobalSettingsDto): Promise<PaginatedResDto<GlobalSetting>> {
+  public async list(@Query() dto: ListGlobalSettingsDto): Promise<PaginatedResDto<GlobalSetting>> {
     return await this.service.list(dto);
   }
 

@@ -1,3 +1,4 @@
+export * from './audit.controller';
 export * from './global-setting.controller';
 export * from './integration.controller';
 export * from './platform-client.controller';
