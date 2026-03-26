@@ -2,9 +2,9 @@ import { PlatformException } from './platform.exception';
 
 export class UserNotFoundException extends PlatformException {
   constructor(
-    readonly brandUserId: unknown,
+    readonly platformUserId: unknown,
     cause?: unknown,
   ) {
-    super(`User with brandUserId '${brandUserId}' does not exist on the platform server.`, cause);
+    super(`User with platformUserId '${platformUserId}' does not exist on the platform server.`, cause);
   }
 }
