@@ -5,11 +5,12 @@ import { Logger } from '@nestjs/common';
 import { Cache } from '@nestjs/cache-manager';
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+import { getTimezoneOffset } from '@crm/utils';
+
 import { TLCredentials, PlatformServer } from '../../models/platform-server';
 
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
-import { getTimezoneOffset } from '../../utils/time.utils';
 import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';

@@ -1,5 +1,6 @@
 import { validateSync } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+
 import { ClassConstructor } from 'class-transformer/types/interfaces';
 
 export function validateConfig<T extends object>(

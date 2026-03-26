@@ -6,11 +6,12 @@ import { Cache } from '@nestjs/cache-manager';
 import { cloneDeep, isBoolean } from 'lodash';
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
+import { getTimezoneOffset } from '@crm/utils';
+
 import { MTCredentials, PlatformServer } from '../../models/platform-server';
 
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
-import { getTimezoneOffset } from '../../utils/time.utils';
 import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
