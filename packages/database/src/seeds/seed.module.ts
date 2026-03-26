@@ -8,6 +8,7 @@ import { UserNoteSeedService } from './services/user-note-seed.service';
 import { IntegrationSeedService } from './services/integration-seed.service';
 import { GlobalSettingSeedService } from './services/global-setting-seed.service';
 import { PlatformClientSeedService } from './services/platform-client-seed.service';
+import { TradingAccountSchemaSeedService } from './services/trading-account-schema-seed.service';
 
 import { TagEntity } from '../entities/tag.entity';
 import { UserEntity } from '../entities/user.entity';
@@ -16,6 +17,7 @@ import { UserNoteEntity } from '../entities/user-note.entity';
 import { IntegrationEntity } from '../entities/integration.entity';
 import { GlobalSettingEntity } from '../entities/global-setting.entity';
 import { PlatformClientEntity } from '../entities/platform-client.entity';
+import { TradingAccountSchemaEntity } from '../entities/trading-account-schema.entity';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { PlatformClientEntity } from '../entities/platform-client.entity';
       PlatformClientEntity,
       ServerEntity,
       TagEntity,
+      TradingAccountSchemaEntity,
       UserEntity,
       UserNoteEntity,
     ]),
@@ -46,6 +49,7 @@ import { PlatformClientEntity } from '../entities/platform-client.entity';
     PlatformClientSeedService,
     ServerSeedService,
     TagSeedService,
+    TradingAccountSchemaSeedService,
     UserSeedService,
     UserNoteSeedService,
   ],

@@ -7,6 +7,7 @@ import { UserNoteSeedService } from './services/user-note-seed.service';
 import { IntegrationSeedService } from './services/integration-seed.service';
 import { GlobalSettingSeedService } from './services/global-setting-seed.service';
 import { PlatformClientSeedService } from './services/platform-client-seed.service';
+import { TradingAccountSchemaSeedService } from './services/trading-account-schema-seed.service';
 
 import { SeedModule } from './seed.module';
 
@@ -15,6 +16,7 @@ const runSeed = async () => {
   await app.get(GlobalSettingSeedService).run();
   await app.get(IntegrationSeedService).run();
   await app.get(ServerSeedService).run();
+  await app.get(TradingAccountSchemaSeedService).run();
   await app.get(PlatformClientSeedService).run();
   await app.get(TagSeedService).run();
   await app.get(UserSeedService).run();
