@@ -4,6 +4,7 @@ export enum AuditTarget {
   NOTE = 'note',
   WALLET = 'wallet',
   TRADING_ACCOUNT = 'trading_account',
+  TRADING_ACCOUNT_SCHEMA = 'trading_account_schema',
   SESSION = 'session',
   SETTING = 'setting',
   INTEGRATION = 'integration',

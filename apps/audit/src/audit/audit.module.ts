@@ -17,6 +17,7 @@ import {
   IntegrationController,
   GlobalSettingController,
   PlatformClientController,
+  TradingAccountSchemaController,
 } from './controllers';
 
 @Module({
@@ -38,6 +39,7 @@ import {
     PlatformClientController,
     ServerController,
     TagController,
+    TradingAccountSchemaController,
     UserController,
     UserNoteController,
   ],
