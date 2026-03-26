@@ -75,6 +75,8 @@ export class CreateSchemaDto {
 
   /** The minimum deposit amount allowed for accounts created with this schema. Leave null for no limit */
   @IsOptional()
+  @IsNumber()
+  @IsPositive()
   @Type(() => Number)
   minDepositAmountUsd?: number | null;
 
