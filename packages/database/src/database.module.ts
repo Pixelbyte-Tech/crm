@@ -36,10 +36,10 @@ import { WalletTransactionEntity } from './entities/wallet-transaction.entity';
 import { TradingAccountTagEntity } from './entities/trading-account-tag.entity';
 import { PaymentTransactionEntity } from './entities/payment-transaction.entity';
 import { TradingAccountNoteEntity } from './entities/trading-account-note.entity';
-import { TradingAccountTypeEntity } from './entities/trading-account-type.entity';
+import { TradingAccountSchemaEntity } from './entities/trading-account-schema.entity';
 import { UserInAppNotificationEntity } from './entities/user-in-app-notification.entity';
 import { WalletTransactionHistoryEntity } from './entities/wallet-transaction-history.entity';
-import { TradingAccountTypeLeverageEntity } from './entities/trading-account-type-leverage.entity';
+import { TradingAccountSchemaLeverageEntity } from './entities/trading-account-schema-leverage.entity';
 
 export interface DatabaseModuleOptions {
   host: string;
@@ -134,8 +134,8 @@ export class DatabaseModule {
         TradingAccountEntity,
         TradingAccountNoteEntity,
         TradingAccountTagEntity,
-        TradingAccountTypeEntity,
-        TradingAccountTypeLeverageEntity,
+        TradingAccountSchemaEntity,
+        TradingAccountSchemaLeverageEntity,
         TradingEventEntity,
         UserEntity,
         UserAuthSessionEntity,

@@ -1,4 +1,5 @@
 export * from './other/boolean.validator';
+export * from './other/iso4217-or-crypto.validator';
 export * from './other/password.validator';
 
 export * from './entity/alert-id.validator';
@@ -19,8 +20,8 @@ export * from './entity/tag-id.validator';
 export * from './entity/trading-account-id.validator';
 export * from './entity/trading-account-note-id.validator';
 export * from './entity/trading-account-tag-id.validator';
-export * from './entity/trading-account-type-id.validator';
-export * from './entity/trading-account-type-leverage-id.validator';
+export * from './entity/trading-account-schema-id-validator.service';
+export * from './entity/trading-account-schema-leverage-id-validator.service';
 export * from './entity/trading-event-id.validator';
 export * from './entity/user-auth-session-id.validator';
 export * from './entity/user-avatar-id.validator';

@@ -23,6 +23,11 @@ export * from './tag-created.dto';
 export * from './tag-deleted.dto';
 export * from './tag-updated.dto';
 
+// Trading account schema
+export * from './trading-account-schema-created.dto';
+export * from './trading-account-schema-deleted.dto';
+export * from './trading-account-schema-updated.dto';
+
 // User
 export * from './user-created.dto';
 export * from './user-deleted.dto';

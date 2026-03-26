@@ -33,9 +33,9 @@ import {
   TradingAccountTagSubject,
   PaymentTransactionSubject,
   TradingAccountNoteSubject,
-  TradingAccountTypeSubject,
+  TradingAccountSchemaSubject,
   WalletTransactionHistorySubject,
-  TradingAccountTypeLeverageSubject,
+  TradingAccountSchemaLeverageSubject,
 } from '../subjects';
 
 @Injectable()
@@ -67,8 +67,8 @@ export class CaslAbilityFactory {
           can(Action.MANAGE, TradingAccountSubject);
           can(Action.MANAGE, TradingAccountNoteSubject);
           can(Action.MANAGE, TradingAccountTagSubject);
-          can(Action.MANAGE, TradingAccountTypeSubject);
-          can(Action.MANAGE, TradingAccountTypeLeverageSubject);
+          can(Action.MANAGE, TradingAccountSchemaSubject);
+          can(Action.MANAGE, TradingAccountSchemaLeverageSubject);
           can(Action.READ, TradingEventSubject);
           can(Action.MANAGE, UserSubject);
           can(Action.READ, UserAuthSessionSubject);
@@ -107,8 +107,8 @@ export class CaslAbilityFactory {
 
           can(Action.MANAGE, TradingAccountTagSubject);
 
-          can(Action.READ, TradingAccountTypeSubject);
-          can(Action.READ, TradingAccountTypeLeverageSubject);
+          can(Action.READ, TradingAccountSchemaSubject);
+          can(Action.READ, TradingAccountSchemaLeverageSubject);
 
           can(Action.READ, TradingEventSubject);
 

@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 import { isUUID, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
-import { TradingAccountTypeLeverageEntity } from '@crm/database';
+import { TradingAccountSchemaEntity } from '@crm/database';
 
 @Injectable()
-@ValidatorConstraint({ name: 'tradingAccountTypeLeverageId', async: true })
-export class TradingAccountTypeLeverageIdValidator implements ValidatorConstraintInterface, PipeTransform {
+@ValidatorConstraint({ name: 'tradingAccountSchemaId', async: true })
+export class TradingAccountSchemaIdValidator implements ValidatorConstraintInterface, PipeTransform {
   constructor(
-    @InjectRepository(TradingAccountTypeLeverageEntity)
-    private readonly repo: Repository<TradingAccountTypeLeverageEntity>,
+    @InjectRepository(TradingAccountSchemaEntity)
+    private readonly repo: Repository<TradingAccountSchemaEntity>,
   ) {}
 
   async validate(value: string): Promise<boolean> {
@@ -24,14 +24,12 @@ export class TradingAccountTypeLeverageIdValidator implements ValidatorConstrain
 
   async #exec(value: string): Promise<boolean> {
     if (!isUUID(value)) {
-      throw new BadRequestException('tradingAccountTypeLeverageId must be a valid uuid');
+      throw new BadRequestException('tradingAccountSchemaId must be a valid uuid');
     }
 
     const entity = await this.repo.findOne({ where: { id: value } });
     if (!entity) {
-      throw new BadRequestException(
-        `tradingAccountTypeLeverageId must reference an existing entity, ${value} provided.`,
-      );
+      throw new BadRequestException(`tradingAccountSchemaId must reference an existing entity, ${value} provided.`);
     }
 
     return true;

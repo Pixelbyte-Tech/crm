@@ -29,9 +29,9 @@ import {
   WalletTransactionSubject,
   PaymentTransactionSubject,
   TradingAccountNoteSubject,
-  TradingAccountTypeSubject,
+  TradingAccountSchemaSubject,
   WalletTransactionHistorySubject,
-  TradingAccountTypeLeverageSubject,
+  TradingAccountSchemaLeverageSubject,
 } from '../subjects';
 
 export type Subject = InferSubjects<
@@ -51,8 +51,8 @@ export type Subject = InferSubjects<
   | typeof TradingAccountSubject
   | typeof TradingAccountNoteSubject
   | typeof TradingAccountTagSubject
-  | typeof TradingAccountTypeSubject
-  | typeof TradingAccountTypeLeverageSubject
+  | typeof TradingAccountSchemaSubject
+  | typeof TradingAccountSchemaLeverageSubject
   | typeof TradingEventSubject
   | typeof UserSubject
   | typeof UserAuthSessionSubject

@@ -2,20 +2,31 @@ import { Module } from '@nestjs/common';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { AuthModule } from '@crm/auth';
 import { SwaggerModule } from '@crm/swagger';
 import { DatabaseModule } from '@crm/database';
 import { ValidationModule } from '@crm/validation';
+import { PlatformModule } from '@crm/platform/dist/platform.module';
 
 import appConfig from './config/app/app.config';
 import databaseConfig from './config/database/database.config';
 
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
+import { AppConfig } from './config/app/app-config.type';
+import { AuthConfig } from './config/auth/auth-config.type';
 import { DatabaseConfig } from './config/database/database-config.type';
 
 @Module({
   imports: [
     SentryModule.forRoot(),
+    AuthModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (c: ConfigService<{ auth: AuthConfig }>) => ({
+        jwtSecret: c.getOrThrow<string>('auth.secret', { infer: true }),
+        refreshSecret: c.getOrThrow<string>('auth.refreshSecret', { infer: true }),
+      }),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig],
@@ -44,6 +55,13 @@ import { DatabaseConfig } from './config/database/database-config.type';
       }),
     }),
     HealthModule,
+    PlatformModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (c: ConfigService<{ app: AppConfig }>) => ({
+        redisHost: c.getOrThrow('app.redisHost', { infer: true }),
+        redisPort: c.getOrThrow('app.redisPort', { infer: true }),
+      }),
+    }),
     SwaggerModule,
     ValidationModule,
   ],

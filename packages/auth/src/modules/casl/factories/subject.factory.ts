@@ -21,7 +21,7 @@ import {
   WalletTransactionEntity,
   PaymentTransactionEntity,
   TradingAccountNoteEntity,
-  TradingAccountTypeEntity,
+  TradingAccountSchemaEntity,
   UserInAppNotificationEntity,
   WalletTransactionHistoryEntity,
 } from '@crm/database';
@@ -58,9 +58,9 @@ import {
   WalletTransactionSubject,
   PaymentTransactionSubject,
   TradingAccountNoteSubject,
-  TradingAccountTypeSubject,
+  TradingAccountSchemaSubject,
   WalletTransactionHistorySubject,
-  TradingAccountTypeLeverageSubject,
+  TradingAccountSchemaLeverageSubject,
 } from '../subjects';
 
 @Injectable()
@@ -130,11 +130,11 @@ export class SubjectFactory {
       case TradingAccountTagSubject.name:
         return new TradingAccountTagSubject();
 
-      case TradingAccountTypeSubject.name:
-        return new PaymentTransactionSubject(await this.#find(TradingAccountTypeEntity, ['userId'], req, filter));
+      case TradingAccountSchemaSubject.name:
+        return new PaymentTransactionSubject(await this.#find(TradingAccountSchemaEntity, ['userId'], req, filter));
 
-      case TradingAccountTypeLeverageSubject.name:
-        return new TradingAccountTypeLeverageSubject();
+      case TradingAccountSchemaLeverageSubject.name:
+        return new TradingAccountSchemaLeverageSubject();
 
       case TradingEventSubject.name:
         return new TradingEventSubject();

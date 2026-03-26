@@ -2,7 +2,7 @@ import { Type, Transform } from 'class-transformer';
 import { Min, IsInt, IsEnum, Validate, IsOptional, IsISO31661Alpha2 } from 'class-validator';
 
 import { IntegrationName } from '@crm/types';
-import { toArray, toBoolean } from '@crm/validation';
+import { toArray, toBoolean, toUpperCase } from '@crm/validation';
 
 import { IntegrationSetting } from '../../types';
 import { SettingsValidator } from '../../validators';
@@ -34,11 +34,13 @@ export class CreateIntegrationDto {
   @IsOptional()
   @IsISO31661Alpha2({ each: true })
   @Transform(toArray(String))
+  @Transform(toUpperCase)
   allowedCountries?: string[] | null;
 
   /** Countries to exclude from using the integration, empty excludes none */
   @IsOptional()
   @IsISO31661Alpha2({ each: true })
   @Transform(toArray(String))
+  @Transform(toUpperCase)
   excludedCountries?: string[] | null;
 }

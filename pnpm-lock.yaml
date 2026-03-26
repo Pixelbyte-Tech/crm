@@ -616,6 +616,9 @@ importers:
 
   apps/payment:
     dependencies:
+      '@crm/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@crm/database':
         specifier: workspace:^
         version: link:../../packages/database
@@ -625,6 +628,9 @@ importers:
       '@crm/logger':
         specifier: workspace:^
         version: link:../../packages/logger
+      '@crm/platform':
+        specifier: workspace:^
+        version: link:../../packages/platform
       '@crm/swagger':
         specifier: workspace:^
         version: link:../../packages/swagger
@@ -713,6 +719,9 @@ importers:
 
   apps/prop:
     dependencies:
+      '@crm/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@crm/database':
         specifier: workspace:^
         version: link:../../packages/database
@@ -722,6 +731,9 @@ importers:
       '@crm/logger':
         specifier: workspace:^
         version: link:../../packages/logger
+      '@crm/platform':
+        specifier: workspace:^
+        version: link:../../packages/platform
       '@crm/swagger':
         specifier: workspace:^
         version: link:../../packages/swagger
@@ -825,6 +837,9 @@ importers:
       '@crm/logger':
         specifier: workspace:^
         version: link:../../packages/logger
+      '@crm/platform':
+        specifier: workspace:^
+        version: link:../../packages/platform
       '@crm/swagger':
         specifier: workspace:^
         version: link:../../packages/swagger

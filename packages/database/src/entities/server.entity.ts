@@ -15,7 +15,7 @@ import { Platform, Monetisation } from '@crm/types';
 
 import { IntegrationEntity } from './integration.entity';
 import { TradingAccountEntity } from './trading-account.entity';
-import { TradingAccountTypeEntity } from './trading-account-type.entity';
+import { TradingAccountSchemaEntity } from './trading-account-schema.entity';
 
 @Entity({ name: 'server' })
 @Unique(['name'])
@@ -65,9 +65,9 @@ export class ServerEntity {
   @JoinColumn()
   tradingAccounts: TradingAccountEntity[];
 
-  @OneToMany(() => TradingAccountTypeEntity, (e) => e.server)
+  @OneToMany(() => TradingAccountSchemaEntity, (e) => e.server)
   @JoinColumn()
-  tradingAccountTypes: TradingAccountTypeEntity[];
+  tradingAccountSchemas: TradingAccountSchemaEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

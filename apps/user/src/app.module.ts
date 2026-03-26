@@ -8,6 +8,7 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
 import { SwaggerModule } from '@crm/swagger';
 import { DatabaseModule } from '@crm/database';
 import { ValidationModule } from '@crm/validation';
+import { PlatformModule } from '@crm/platform/dist/platform.module';
 
 import appConfig from './config/app/app.config';
 import databaseConfig from './config/database/database.config';
@@ -85,6 +86,13 @@ import { DatabaseConfig } from './config/database/database-config.type';
     HealthModule,
     InvitationModule,
     NoteModule,
+    PlatformModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (c: ConfigService<{ app: AppConfig }>) => ({
+        redisHost: c.getOrThrow('app.redisHost', { infer: true }),
+        redisPort: c.getOrThrow('app.redisPort', { infer: true }),
+      }),
+    }),
     SwaggerModule,
     UserModule,
     UserSessionModule,

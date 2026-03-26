@@ -12,11 +12,12 @@ import {
 } from 'typeorm';
 
 import { ServerEntity } from './server.entity';
-import { TradingAccountTypeLeverageEntity } from './trading-account-type-leverage.entity';
+import { TradingAccountSchemaLeverageEntity } from './trading-account-schema-leverage.entity';
 
-@Entity({ name: 'trading_account_type' })
+@Entity({ name: 'trading_account_schema' })
 @Unique(['name'])
-export class TradingAccountTypeEntity {
+@Unique(['serverId', 'platformUserGroupId'])
+export class TradingAccountSchemaEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -50,22 +51,19 @@ export class TradingAccountTypeEntity {
   @Column({ type: 'decimal', nullable: true })
   maxDepositAmountUsd?: number | null;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'smallint', nullable: true })
   maxAccountsPerUser?: number | null;
-
-  @Column({ type: 'text', nullable: true })
-  userGroupName?: string | null;
 
   @Column({ type: 'text' })
   platformUserGroupId: string;
 
   /** One-to-many relations */
-  @OneToMany(() => TradingAccountTypeLeverageEntity, (e) => e.tradingAccountType)
+  @OneToMany(() => TradingAccountSchemaLeverageEntity, (e) => e.tradingAccountSchema, { cascade: true })
   @JoinColumn()
-  tradingAccountTypeLeverages: TradingAccountTypeLeverageEntity[];
+  leverageOverwrites: TradingAccountSchemaLeverageEntity[];
 
   /** Many-to-many relations */
-  @ManyToOne(() => ServerEntity, (e) => e.tradingAccountTypes, {
+  @ManyToOne(() => ServerEntity, (e) => e.tradingAccountSchemas, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
