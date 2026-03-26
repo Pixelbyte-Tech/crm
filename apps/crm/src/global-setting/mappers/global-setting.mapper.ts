@@ -11,9 +11,9 @@ export class GlobalSettingMapper {
     model.key = data.key;
 
     // Parse the value type
-    if (['1', 'true'].includes(data.value.toLowerCase())) {
+    if (['1', 'true', true].includes(data.value.toLowerCase())) {
       model.value = true;
-    } else if (['0', 'false'].includes(data.value.toLowerCase())) {
+    } else if (['0', 'false', false].includes(data.value.toLowerCase())) {
       model.value = false;
     } else if (this.#isNumeric(data.value)) {
       model.value = Number(data.value);

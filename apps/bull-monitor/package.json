@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "rm -f tsconfig.build.tsbuildinfo && tsc --project ./tsconfig.build.json",
+    "build": "nest build",
     "lint": "eslint \"{src,test}/**/*.ts\""
   },
   "dependencies": {

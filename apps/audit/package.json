@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "nest build",
     "lint": "eslint \"{src,test}/**/*.ts\""
   },
   "dependencies": {

@@ -11,7 +11,7 @@ import { ServerService } from './services';
 import { ListServersDto, UpdateServerDto, CreateServerDto } from './dto';
 
 @ApiTags('Server')
-@ApiExtraModels(CreateServerDto, ListServersDto, UpdateServerDto)
+@ApiExtraModels(Server, CreateServerDto, ListServersDto, UpdateServerDto)
 @Controller({ path: 'servers', version: '1' })
 export class ServerController {
   constructor(private readonly service: ServerService) {}

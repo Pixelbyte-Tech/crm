@@ -11,7 +11,7 @@ import { TradingAccountSchema } from './domain';
 import { ListSchemasDto, UpdateSchemaDto, CreateSchemaDto } from './dto';
 
 @ApiTags('Trading Account')
-@ApiExtraModels(CreateSchemaDto, ListSchemasDto, UpdateSchemaDto)
+@ApiExtraModels(TradingAccountSchema, CreateSchemaDto, ListSchemasDto, UpdateSchemaDto)
 @Controller({ path: 'servers', version: '1' })
 export class SchemaController {
   constructor(private readonly service: SchemaService) {}

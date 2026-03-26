@@ -1,5 +1,5 @@
 import { set } from 'lodash';
-import { Type, applyDecorators } from '@nestjs/common';
+import { applyDecorators } from '@nestjs/common';
 import { SchemaObject, ReferenceObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import {
   ApiBody,
@@ -18,11 +18,14 @@ export interface SwaggerResponseOptions extends ApiResponseCommonMetadata {
   schema?: SchemaObject & Partial<ReferenceObject>;
 }
 
+const extraModels: any[] = [];
+
 export function OpenApi(arg?: SwaggerResponseOptions) {
   const decorators: [ClassDecorator | MethodDecorator | PropertyDecorator] = [ApiOkResponse(apiResponse(arg))];
 
-  if (arg && arg.type) {
-    decorators.push(ApiExtraModels(arg.type as () => Type<unknown>));
+  if (arg && arg.type && !extraModels.includes(arg.type)) {
+    extraModels.push(arg.type);
+    decorators.push(ApiExtraModels(() => arg.type));
   }
 
   if (arg && arg.tags) {
