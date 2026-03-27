@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Balance } from '../../../models/balance';
-import { Account } from '../../../models/account';
-import { AccountResult } from '../../../models/account-result';
+import { Balance, Account, AccountResult } from '../../../models';
 
 import { CtCtid } from '../../../types/ct/user/ctid.type';
 import { CtTrader } from '../../../types/ct/account/account.type';
