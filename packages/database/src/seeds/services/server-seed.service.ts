@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger, Injectable } from '@nestjs/common';
 
+import { Cryptography } from '@crm/utils';
 import { Platform, Monetisation, DxServerSettingsDto, TlServerSettingsDto, Mt5ServerSettingsDto } from '@crm/types';
 
 import { toPlatform } from '../helper/to-platform';
@@ -55,7 +56,7 @@ export class ServerSeedService {
         entity.platform = platform;
         entity.isEnabled = true;
         entity.monetisation = Monetisation.DEMO;
-        entity.settings = settings;
+        entity.settings = Cryptography.encrypt(settings);
         entity.timezone = 'utc';
         entity.offsetHours = 0;
 

@@ -126,7 +126,7 @@ export default [
             },
             {
               groupName: 'models',
-              elementNamePattern: ['.+models.+'],
+              elementNamePattern: ['.+models.?'],
             },
             {
               groupName: 'types',

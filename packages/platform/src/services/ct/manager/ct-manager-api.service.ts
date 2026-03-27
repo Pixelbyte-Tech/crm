@@ -12,7 +12,7 @@ import { Platform, Monetisation } from '@crm/types';
 
 import { CtErrorMapper } from '../../../mappers/error/ct-error.mapper';
 
-import { CTCredentials, PlatformServer } from '../../../models/platform-server';
+import { CTCredentials, PlatformServer } from '../../../models';
 
 import { CtMarketPriceService } from './ct-market-price-service';
 import { CtManagerApiException } from './ct-manager-api.exception';

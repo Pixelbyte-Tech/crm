@@ -1,4 +1,4 @@
-import { UserExperience, UserEmploymentStatus } from '../enums';
+import { Gender, UserExperience, UserEmploymentStatus } from '../enums';
 
 export class UserDetail {
   /** User detail unique identifier */
@@ -13,7 +13,9 @@ export class UserDetail {
   postcode?: string | null;
   state?: string | null;
   country?: string | null;
+  language?: string | null;
   taxId?: string | null;
+  gender?: Gender;
 
   isPoaVerified: boolean;
   isPoiVerified: boolean;
@@ -45,7 +47,9 @@ export class UserDetail {
       this.postcode = data.postcode;
       this.state = data.state;
       this.country = data.country;
+      this.language = data.language;
       this.taxId = data.taxId;
+      this.gender = data.gender;
 
       this.isPoaVerified = data.isPoaVerified;
       this.isPoiVerified = data.isPoiVerified;

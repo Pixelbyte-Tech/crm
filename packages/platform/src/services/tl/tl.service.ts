@@ -20,28 +20,28 @@ import { AccountReqMapper } from '../../mappers/request/tl/account-req.mapper';
 import { SpreadPlanMapper } from '../../mappers/response/tl/spread-plan.mapper';
 import { CommissionPlanMapper } from '../../mappers/response/tl/commission-plan.mapper';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { SpreadGroup } from '../../models/spread-group';
-import { AccountResult } from '../../models/account-result';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { TradingSessions } from '../../models/trading-session';
-import { CommissionGroup } from '../../models/commission-group';
-import { Balance, BalanceOperation } from '../../models/balance';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { TLCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+import { Bar } from '../../models';
+import { Order } from '../../models';
+import { Symbol } from '../../models';
+import { Account } from '../../models';
+import { Position } from '../../models';
+import { RiskPlan } from '../../models';
+import { UserGroup } from '../../models';
+import { SpreadGroup } from '../../models';
+import { AccountResult } from '../../models';
+import { PasswordResult } from '../../models';
+import { TradingHoliday } from '../../models';
+import { TradingSessions } from '../../models';
+import { CommissionGroup } from '../../models';
+import { TotalOnlineUsers } from '../../models';
+import { UpdateOrderResult } from '../../models';
+import { ClosePositionResult } from '../../models';
+import { UpdatePositionResult } from '../../models';
+import { CloseAllTradesResult } from '../../models';
+import { CancelAllOrdersResult } from '../../models';
+import { Balance, BalanceOperation } from '../../models';
+import { UserGroupAggregateBalance } from '../../models';
+import { TLCredentials, PlatformServer } from '../../models';
 
 import { TlUser } from '../../types/tl/user/user.type';
 import { TlGroup } from '../../types/tl/account/group.type';
@@ -71,7 +71,6 @@ import { UpdateAccountDto, TlAdditionalUpdateAccountData } from '../../dto/updat
 import { CreateAccountDto, TlAdditionalCreateAccountData } from '../../dto/create-account.dto';
 
 import { isOk } from '../../utils/http.utils';
-import { CredentialType } from '../../factory/platform.factory';
 import { PlatformService } from '../platform-service.interface';
 import { UnsupportedOperationException } from '../../exceptions';
 
@@ -79,14 +78,13 @@ export class TlService extends AbstractService implements PlatformService {
   constructor(
     readonly axios: CircuitBreakerAxios,
     readonly _server: PlatformServer<TLCredentials>,
-    readonly credentialType: CredentialType,
     readonly cache: Cache,
     readonly redis: Redis,
     readonly resMapper: TlResponseMapper,
     readonly reqMapper: TlRequestMapper,
     readonly errorMapper: TlErrorMapper,
   ) {
-    super(axios, _server, credentialType, cache, redis, resMapper, reqMapper, errorMapper, 1);
+    super(axios, _server, cache, redis, resMapper, reqMapper, errorMapper, 1);
   }
 
   /** The logger for this service */
@@ -336,7 +334,7 @@ export class TlService extends AbstractService implements PlatformService {
     });
 
     const nextAccount = (accounts.data.length ?? 0) + 1;
-    const accountName = `${dto.brandUid}#${dto.projectUserId}#${nextAccount}#${nextAccount}`;
+    const accountName = `${dto.tenantUserId}#${nextAccount}#${nextAccount}`;
 
     // Determine the correct risk plan id based on the leverage or additional data
     const riskPlanId = await this.reqMapper
@@ -358,7 +356,7 @@ export class TlService extends AbstractService implements PlatformService {
         currency: dto.currency,
         groupId: group.id,
         riskPlanId: riskPlanId,
-        externalId: dto.projectUserId,
+        externalId: dto.tenantUserId,
       },
       {
         headers: dto.additionalData?.idempotencyKey ? { 'Idempotency-Key': dto.additionalData?.idempotencyKey } : {},

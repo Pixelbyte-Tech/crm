@@ -47,6 +47,12 @@ export class TradingAccountEntity {
   @Column({ type: 'enum', enum: TradingAccountStatus })
   status: TradingAccountStatus;
 
+  @Column({ type: 'smallint' })
+  leverage: number;
+
+  @Column({ type: 'varchar', length: 3 })
+  currency: string;
+
   @Column({ type: 'timestamp' })
   registeredAt: Date;
 

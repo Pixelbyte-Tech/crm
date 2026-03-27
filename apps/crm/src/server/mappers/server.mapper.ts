@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { Cryptography } from '@crm/utils';
 import { ServerEntity } from '@crm/database';
 
 import { Server } from '../domain';
@@ -13,7 +14,7 @@ export class ServerMapper {
     model.platform = data.platform;
     model.monetisation = data.monetisation;
     model.isEnabled = data.isEnabled;
-    model.settings = data.settings;
+    model.settings = JSON.parse(Cryptography.decrypt(data.settings));
     model.timezone = data.timezone;
     model.offsetHours = data.offsetHours;
     model.integrationId = data.integrationId;

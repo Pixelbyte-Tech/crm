@@ -12,7 +12,7 @@ echo -e "${YELLOW}Starting cleanup of node_modules, .turbo, and dist folders...$
 echo ""
 
 # Get the script's directory (workspace root)
-WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../"
 
 # Count folders before deletion
 NODE_MODULES_COUNT=$(find "$WORKSPACE_ROOT" -type d -name "node_modules" | wc -l | tr -d ' ')
@@ -55,6 +55,15 @@ find "$WORKSPACE_ROOT" -type f -name "tsconfig.tsbuildinfo" -prune -exec rm -rf 
 
 echo ""
 echo -e "${GREEN}✓ Cleanup complete!${NC}"
+
+
+# Ask for confirmation
+read -p "Do you want to install and build? (y/N) " -n 1 -r
+echo ""
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 0
+fi
 
 pnpm i
 pnpm build

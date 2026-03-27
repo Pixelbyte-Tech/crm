@@ -14,7 +14,7 @@ export class AccountResult {
   platformUserId?: string;
 
   /** The master credential for the account */
-  masterCredential?: AccountCredential;
+  masterCredential: AccountCredential;
 
   /** The phone credential for the account */
   phoneCredential?: AccountCredential;

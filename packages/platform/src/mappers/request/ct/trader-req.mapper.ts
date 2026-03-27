@@ -52,12 +52,14 @@ export class TraderReqMapper {
    * Creates a ManagerAPI ProtoTrader object
    * @param managerApi The ManagerAPI service
    * @param dto The details to create the trader with
+   * @param brokerName The name of the broker to create the trader under
    * @param groupId The group id to create the trader under
    * @throws UnknownCurrencyException If the currency is not found
    */
   async toProtoTrader(
     managerApi: CtManagerApiService,
     dto: CreateAccountDto<CtAdditionalCreateAccountData>,
+    brokerName: string,
     groupId: string | number,
   ): Promise<ProtoTrader> {
     // Get the asset id map for the currency
@@ -72,7 +74,7 @@ export class TraderReqMapper {
       login: Long.fromValue(0),
       groupId: Long.fromValue(Number(groupId)),
       balance: Long.fromValue(0),
-      brokerName: dto.brandUid,
+      brokerName: brokerName,
       leverageInCents: dto.leverage * 100,
       accountType: ProtoAccountType.HEDGED,
       accessRights: ProtoAccessRights.FULL_ACCESS,

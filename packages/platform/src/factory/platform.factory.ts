@@ -23,7 +23,7 @@ import { CtErrorMapper } from '../mappers/error/ct-error.mapper';
 import { CtRequestMapper } from '../mappers/request/ct-request.mapper';
 import { CtResponseMapper } from '../mappers/response/ct-response.mapper';
 
-import { Credentials, CTCredentials, MTCredentials, TLCredentials, PlatformServer } from '../models/platform-server';
+import { Credentials, CTCredentials, MTCredentials, TLCredentials, PlatformServer } from '../models';
 
 import { TlService } from '../services/tl/tl.service';
 import { CtService } from '../services/ct/ct.service';
@@ -38,8 +38,6 @@ import { PlatformService } from '../services/platform-service.interface';
 import { CtMarketPriceService } from '../services/ct/manager/ct-market-price-service';
 
 export { PlatformService } from '../services/platform-service.interface';
-
-export type CredentialType = number | `${number}` | 'prop' | 'log' | 'default' | `custom-${number}`;
 
 @Injectable()
 export class PlatformFactory {
@@ -67,16 +65,12 @@ export class PlatformFactory {
   /**
    * Gets a platform service based on the parameters provided.
    * @param platformServer The platform server to get the service for
-   * @param credentialType The type of credentials to use (default, log, or a brand id)
    * @throws PlatformServerNotFoundException
    * @throws PlatformNotSupportedException
    */
-  get<R extends PlatformService = PlatformService>(
-    platformServer: PlatformServer<Credentials>,
-    credentialType: CredentialType = 'default',
-  ): R {
+  get<R extends PlatformService = PlatformService>(platformServer: PlatformServer<Credentials>): R {
     // Create a unique key for this server and credential type
-    const key = `${platformServer.endpoint}-${platformServer.monetisation}-${credentialType}-${objectHash(platformServer.credentials)}`;
+    const key = `${platformServer.endpoint}-${platformServer.monetisation}-${objectHash(platformServer.credentials)}`;
 
     // If we have an existing service, return it.
     if (this.#services.has(key)) {
@@ -108,7 +102,6 @@ export class PlatformFactory {
           instance = new Mt5Service(
             axiosInstance,
             platformServer as PlatformServer<MTCredentials>,
-            credentialType,
             this.cache,
             this.redis,
             this.mt5ResMapper,
@@ -121,7 +114,6 @@ export class PlatformFactory {
           instance = new TlService(
             axiosInstance,
             platformServer as PlatformServer<TLCredentials>,
-            credentialType,
             this.cache,
             this.redis,
             this.tlResMapper,
@@ -134,7 +126,6 @@ export class PlatformFactory {
           instance = new CtService(
             axiosInstance,
             platformServer as PlatformServer<CTCredentials>,
-            credentialType,
             this.cache,
             this.redis,
             this.ctResMapper,

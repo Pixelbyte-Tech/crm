@@ -1,6 +1,6 @@
 import { Index, Entity, Column, OneToOne, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-import { UserExperience, UserEmploymentStatus } from '@crm/types';
+import { Gender, UserExperience, UserEmploymentStatus } from '@crm/types';
 
 import { UserEntity } from './user.entity';
 
@@ -34,8 +34,14 @@ export class UserDetailEntity {
   @Column({ type: 'varchar', length: 3, nullable: true })
   country?: string | null;
 
+  @Column({ type: 'varchar', length: 3, nullable: true })
+  language?: string | null;
+
   @Column({ type: 'text', nullable: true })
   taxId?: string | null;
+
+  @Column({ type: 'enum', enum: Gender, nullable: true })
+  gender?: Gender;
 
   @Index()
   @Column({ type: 'boolean', default: false })

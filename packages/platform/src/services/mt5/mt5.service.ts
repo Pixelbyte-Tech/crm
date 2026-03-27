@@ -23,29 +23,29 @@ import { CommandReqMapper } from '../../mappers/request/mt5/command-req.mapper';
 import { CommissionGroupMapper } from '../../mappers/response/mt5/commission-group.mapper';
 import { BalanceOperationReqMapper } from '../../mappers/request/mt5/balance-operation-req.mapper';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { SpreadGroup } from '../../models/spread-group';
-import { JournalEntry } from '../../models/journal-entry';
-import { AccountResult } from '../../models/account-result';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { TradingSessions } from '../../models/trading-session';
-import { CommissionGroup } from '../../models/commission-group';
-import { Balance, BalanceOperation } from '../../models/balance';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { MTCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+import { Bar } from '../../models';
+import { Order } from '../../models';
+import { Symbol } from '../../models';
+import { Account } from '../../models';
+import { Position } from '../../models';
+import { RiskPlan } from '../../models';
+import { UserGroup } from '../../models';
+import { SpreadGroup } from '../../models';
+import { JournalEntry } from '../../models';
+import { AccountResult } from '../../models';
+import { PasswordResult } from '../../models';
+import { TradingHoliday } from '../../models';
+import { CommissionGroup } from '../../models';
+import { TradingSessions } from '../../models';
+import { TotalOnlineUsers } from '../../models';
+import { UpdateOrderResult } from '../../models';
+import { ClosePositionResult } from '../../models';
+import { UpdatePositionResult } from '../../models';
+import { CloseAllTradesResult } from '../../models';
+import { CancelAllOrdersResult } from '../../models';
+import { Balance, BalanceOperation } from '../../models';
+import { UserGroupAggregateBalance } from '../../models';
+import { MTCredentials, PlatformServer } from '../../models';
 
 import { Mt5Deal } from '../../types/mt5/trade/deal.type';
 import { Mt5Order } from '../../types/mt5/trade/order.type';
@@ -76,7 +76,7 @@ import { CreateAccountDto, Mt5AdditionalCreateAccountData } from '../../dto/crea
 import { UpdateAccountDto, Mt5AdditionalUpdateAccountData } from '../../dto/update-account.dto';
 
 import { isOk } from '../../utils/http.utils';
-import { CredentialType, PlatformService } from '../../factory/platform.factory';
+import { PlatformService } from '../platform-service.interface';
 import {
   DuplicateAccountIdException,
   UnsupportedOperationException,
@@ -88,14 +88,13 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   constructor(
     readonly axios: CircuitBreakerAxios,
     readonly _server: PlatformServer<MTCredentials>,
-    readonly credentialType: CredentialType,
     readonly cache: Cache,
     readonly redis: Redis,
     readonly resMapper: Mt5ResponseMapper,
     readonly reqMapper: Mt5RequestMapper,
     readonly errorMapper: Mt5ErrorMapper,
   ) {
-    super(axios, _server, credentialType, cache, redis, resMapper, reqMapper, errorMapper);
+    super(axios, _server, cache, redis, resMapper, reqMapper, errorMapper);
   }
 
   /**

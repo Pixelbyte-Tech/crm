@@ -15,10 +15,8 @@ export type CreateAccountAdditionalData =
   | TlAdditionalCreateAccountData;
 
 export class CreateAccountDto<T extends CreateAccountAdditionalData> {
-  /** The UID of the brand on which to create the account */
-  brandUid: string;
-  /** The id of the user on the project */
-  projectUserId: string;
+  /** The id of the user on the tenant side */
+  tenantUserId: string;
   /** The leverage to create the account with */
   leverage: number;
   /** The currency to assign to the created account */
@@ -68,8 +66,7 @@ export class CreateAccountDto<T extends CreateAccountAdditionalData> {
   additionalData?: T;
 
   constructor(data: CreateAccountDto<T>) {
-    this.brandUid = data.brandUid;
-    this.projectUserId = data.projectUserId;
+    this.tenantUserId = data.tenantUserId;
     this.leverage = data.leverage;
     this.currency = data.currency;
     this.firstName = data.firstName;

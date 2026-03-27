@@ -52,7 +52,9 @@ export class UserMapper {
     userDetail.postcode = data.postcode;
     userDetail.state = data.state;
     userDetail.country = data.country;
+    userDetail.language = data.language;
     userDetail.taxId = data.taxId;
+    userDetail.gender = data.gender;
 
     userDetail.isPoaVerified = data.isPoaVerified;
     userDetail.isPoiVerified = data.isPoiVerified;

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Balance } from '../../../models/balance';
-import { Account } from '../../../models/account';
-import { AccountResult } from '../../../models/account-result';
+import { Balance, Account, AccountResult } from '../../../models';
 
 import { TlAccount } from '../../../types/tl/account/account.type';
 
@@ -11,6 +9,7 @@ export class AccountMapper {
   toAccount(data: TlAccount): Account {
     return new Account({
       platformAccountId: data.accountId,
+      platformUserGroupId: data.userGroupId,
       currency: data.currency,
       isTradingAllowed: 'ACTIVE' === data.status,
       isSuspended: 'SUSPENDED' === data.status,
@@ -29,7 +28,7 @@ export class AccountMapper {
       platformAccountId: accountId,
       platformAccountName: accountName,
       platformUserId: userId,
-      masterCredential: password ? { login: email, password: password } : undefined,
+      masterCredential: { login: email, password: password },
       readonlyCredential: undefined,
       phoneCredential: undefined,
     };

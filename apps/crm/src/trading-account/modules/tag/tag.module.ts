@@ -11,5 +11,6 @@ import { TagController } from './tag.controller';
   imports: [TypeOrmModule.forFeature([TagEntity])],
   providers: [TagMapper, TagService],
   controllers: [TagController],
+  exports: [TagMapper],
 })
 export class TagModule {}

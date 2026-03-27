@@ -13,6 +13,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
+import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
 import { ServerEntity } from '@crm/database';
@@ -55,7 +56,7 @@ export class ServerService {
   }
 
   /**
-   * Lists platform clients based on filter criteria.
+   * Lists servers based on filter criteria.
    * @param dto The list dto
    */
   async list(dto: ListServersDto): Promise<PaginatedResDto<Server>> {
@@ -65,8 +66,8 @@ export class ServerService {
       { limit: dto.limit, page: dto.page },
       {
         where: {
-          ...(dto.platform ? { name: In(dto.platform) } : {}),
-          ...(dto.monetisation ? { type: In(dto.monetisation) } : {}),
+          ...(dto.platform ? { platform: In(dto.platform) } : {}),
+          ...(dto.monetisation ? { monetisation: In(dto.monetisation) } : {}),
           ...(dto.integrationId ? { integrationId: dto.integrationId } : {}),
           ...(!isNil(dto.enabled) ? { isEnabled: dto.enabled } : {}),
         },
@@ -106,7 +107,7 @@ export class ServerService {
       platform: dto.platform,
       monetisation: dto.monetisation,
       isEnabled: dto.isEnabled,
-      settings: dto.settings,
+      settings: Cryptography.encrypt(JSON.stringify(dto.settings)),
       timezone: dto.timezone,
       offsetHours: dto.offsetHours,
       integrationId: dto.integrationId,
@@ -173,7 +174,7 @@ export class ServerService {
         ...(dto.platform ? { platform: dto.platform } : {}),
         ...(dto.monetisation ? { monetisation: dto.monetisation } : {}),
         ...(!isNil(dto.isEnabled) ? { isEnabled: dto.isEnabled } : {}),
-        ...(dto.settings ? { settings: dto.settings as any } : {}),
+        ...(dto.settings ? { settings: Cryptography.encrypt(JSON.stringify(dto.settings)) } : {}),
         ...(dto.timezone ? { timezone: dto.timezone } : {}),
         ...(undefined !== dto.offsetHours ? { offsetHours: dto.offsetHours ?? 0 } : {}),
         ...(dto.integrationId ? { integrationId: dto.integrationId } : {}),

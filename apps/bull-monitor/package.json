@@ -28,7 +28,7 @@
     "@crm/types": "workspace:^",
     "bull": "^4.16.5",
     "class-transformer": "0.5.1",
-    "class-validator": "0.14.3",
+    "class-validator": "^0.15.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

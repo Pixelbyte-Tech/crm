@@ -37,8 +37,8 @@ export class ServerEntity {
   @Column({ type: 'boolean', default: false })
   isEnabled: boolean;
 
-  @Column({ type: 'jsonb' })
-  settings: Record<string, any>;
+  @Column({ type: 'text' })
+  settings: string;
 
   /** The server timezone */
   @Column({ type: 'text', default: 'utc' })

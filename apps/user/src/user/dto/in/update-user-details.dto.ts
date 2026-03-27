@@ -5,14 +5,15 @@ import {
   IsString,
   Validate,
   IsNumber,
+  IsISO6391,
   IsNotEmpty,
   IsOptional,
   IsPositive,
   IsISO31661Alpha2,
 } from 'class-validator';
 
-import { UserExperience, UserEmploymentStatus } from '@crm/types';
 import { toArray, toBoolean, BooleanValidator } from '@crm/validation';
+import { Gender, UserExperience, UserEmploymentStatus } from '@crm/types';
 
 export class UpdateUserDetailsDto {
   @IsOptional()
@@ -54,10 +55,17 @@ export class UpdateUserDetailsDto {
   @IsISO31661Alpha2()
   country?: string | null;
 
+  @IsISO6391()
+  language?: string | null;
+
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   taxId?: string | null;
+
+  @IsOptional()
+  @IsEnum(Gender)
+  gender?: Gender;
 
   @IsOptional()
   @Validate(BooleanValidator)

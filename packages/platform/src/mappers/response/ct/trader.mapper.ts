@@ -31,6 +31,7 @@ export class TraderMapper {
 
     return {
       platformAccountId: trader.traderId.toString(),
+      platformUserGroupId: trader.groupId.toString(),
       platformAccountName: trader.login.toString(),
       currency: currency.name,
       isTradingAllowed: trader.accessRights !== ProtoAccessRights.NO_TRADING,

@@ -1,9 +1,9 @@
 import { Axios } from 'axios';
 import { Injectable } from '@nestjs/common';
 
-import { Account } from '../../../models/account';
-import { Balance } from '../../../models/balance';
-import { AccountResult } from '../../../models/account-result';
+import { Account } from '../../../models';
+import { Balance } from '../../../models';
+import { AccountResult } from '../../../models';
 
 import { Mt5User } from '../../../types/mt5/account/user.type';
 import { Mt5Account } from '../../../types/mt5/account/account.type';
@@ -26,6 +26,7 @@ export class AccountMapper {
 
     return new Account({
       platformAccountId,
+      platformUserGroupId: mt5User.group,
       currency,
       isTradingAllowed: !rights.includes('USER_RIGHT_TRADE_DISABLED'),
       isSuspended: !rights.includes('USER_RIGHT_ENABLED'),
@@ -34,7 +35,7 @@ export class AccountMapper {
 
   toAccountResult(
     data: Mt5Account,
-    password?: string,
+    password: string,
     readonlyPassword?: string,
     phonePassword?: string,
   ): AccountResult {
@@ -44,7 +45,7 @@ export class AccountMapper {
       platformAccountId: login,
       platformAccountName: undefined,
       platformUserId: undefined,
-      masterCredential: password ? { login, password: password } : undefined,
+      masterCredential: { login, password },
       readonlyCredential: readonlyPassword ? { login, password: readonlyPassword } : undefined,
       phoneCredential: phonePassword ? { login, password: phonePassword } : undefined,
     });

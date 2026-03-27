@@ -24,29 +24,29 @@ import { PositionReqMapper } from '../../mappers/request/ct/position-req.mapper'
 import { TrendbarReqMapper } from '../../mappers/request/ct/trendbar-req.mapper';
 import { TraderGroupMapper } from '../../mappers/response/ct/trader-group.mapper';
 
-import { Bar } from '../../models/bar';
-import { Order } from '../../models/order';
-import { Symbol } from '../../models/symbol';
-import { Account } from '../../models/account';
-import { Position } from '../../models/position';
-import { RiskPlan } from '../../models/risk-plan';
-import { UserGroup } from '../../models/user-group';
-import { SpreadGroup } from '../../models/spread-group';
-import { JournalEntry } from '../../models/journal-entry';
-import { AccountResult } from '../../models/account-result';
-import { PasswordResult } from '../../models/password-result';
-import { TradingHoliday } from '../../models/trading-holiday';
-import { TradingSessions } from '../../models/trading-session';
-import { CommissionGroup } from '../../models/commission-group';
-import { Balance, BalanceOperation } from '../../models/balance';
-import { TotalOnlineUsers } from '../../models/total-online-users';
-import { UpdateOrderResult } from '../../models/update-order-result';
-import { ClosePositionResult } from '../../models/close-position-result';
-import { UpdatePositionResult } from '../../models/update-position-result';
-import { CloseAllTradesResult } from '../../models/close-all-trades-result';
-import { CTCredentials, PlatformServer } from '../../models/platform-server';
-import { CancelAllOrdersResult } from '../../models/close-all-orders-result';
-import { UserGroupAggregateBalance } from '../../models/user-group-aggregate-balance';
+import { Bar } from '../../models';
+import { Order } from '../../models';
+import { Symbol } from '../../models';
+import { Account } from '../../models';
+import { Position } from '../../models';
+import { RiskPlan } from '../../models';
+import { UserGroup } from '../../models';
+import { SpreadGroup } from '../../models';
+import { JournalEntry } from '../../models';
+import { AccountResult } from '../../models';
+import { TradingHoliday } from '../../models';
+import { PasswordResult } from '../../models';
+import { CommissionGroup } from '../../models';
+import { TradingSessions } from '../../models';
+import { TotalOnlineUsers } from '../../models';
+import { UpdateOrderResult } from '../../models';
+import { ClosePositionResult } from '../../models';
+import { UpdatePositionResult } from '../../models';
+import { CloseAllTradesResult } from '../../models';
+import { CancelAllOrdersResult } from '../../models';
+import { Balance, BalanceOperation } from '../../models';
+import { UserGroupAggregateBalance } from '../../models';
+import { CTCredentials, PlatformServer } from '../../models';
 
 import { CtCtid } from '../../types/ct/user/ctid.type';
 import { CtTrader } from '../../types/ct/account/account.type';
@@ -69,7 +69,7 @@ import { UpdatePositionDto } from '../../dto/update-position.dto';
 import { CreateAccountDto, CtAdditionalCreateAccountData } from '../../dto/create-account.dto';
 import { UpdateAccountDto, CtAdditionalUpdateAccountData } from '../../dto/update-account.dto';
 
-import { CredentialType, PlatformService } from '../../factory/platform.factory';
+import { PlatformService } from '../platform-service.interface';
 import {
   ActionRejectedException,
   UnknownPositionException,
@@ -105,7 +105,6 @@ export class CtService extends AbstractCtService implements PlatformService {
   constructor(
     readonly axios: CircuitBreakerAxios,
     readonly _server: PlatformServer<CTCredentials>,
-    readonly credentialType: CredentialType,
     readonly cache: Cache,
     readonly redis: Redis,
     readonly resMapper: CtResponseMapper,
@@ -114,7 +113,7 @@ export class CtService extends AbstractCtService implements PlatformService {
     private readonly _managerApi: CtManagerApiService,
     private readonly _snapshotApi: CtSnapshotApiService,
   ) {
-    super(axios, _server, credentialType, cache, redis, resMapper, reqMapper, errorMapper);
+    super(axios, _server, cache, redis, resMapper, reqMapper, errorMapper);
 
     // Bootstrap the manager and snapshot APIs
     void this._managerApi.bootstrap(this._server);
@@ -309,7 +308,7 @@ export class CtService extends AbstractCtService implements PlatformService {
         operation: ProtoCrudOperation.PROTO_CREATE,
         trader: await this.reqMapper
           .get<TraderReqMapper>('TraderReqMapper')
-          .toProtoTrader(this._managerApi, dto, group.id),
+          .toProtoTrader(this._managerApi, dto, this._server.credentials.brokerName, group.id),
       },
     );
 
@@ -337,7 +336,7 @@ export class CtService extends AbstractCtService implements PlatformService {
 
     // Create a CTID for the account (User)
     const { data: ctCtid } = await this.axios.post<CtCtid>(`/cid/ctid/create`, {
-      brokerName: this._server.credentials.brokerName ?? dto.brandUid,
+      brokerName: this._server.credentials.brokerName,
       email: dto.email.toLowerCase().trim(),
       preferredLanguage: dto.language.slice(0, 2).toLowerCase(),
     });
@@ -347,7 +346,7 @@ export class CtService extends AbstractCtService implements PlatformService {
       traderLogin: lightTrader.login.toNumber(),
       traderPasswordHash: Cryptography.hashMd5(dto.password),
       userId: ctCtid.userId,
-      brokerName: this._server.credentials.brokerName ?? dto.brandUid,
+      brokerName: this._server.credentials.brokerName,
       environmentName: Monetisation.DEMO === this._server.monetisation ? 'demo' : 'live',
       returnAccountDetails: false,
     });

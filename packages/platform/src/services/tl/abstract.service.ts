@@ -7,11 +7,10 @@ import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 import { getTimezoneOffset } from '@crm/utils';
 
-import { TLCredentials, PlatformServer } from '../../models/platform-server';
+import { TLCredentials, PlatformServer } from '../../models';
 
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
-import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
 import { ResponseMapper } from '../../mappers/response/response-mapper.interface';
@@ -25,7 +24,6 @@ export abstract class AbstractService {
   protected constructor(
     protected readonly axios: CircuitBreakerAxios,
     protected readonly _server: PlatformServer<TLCredentials>,
-    protected readonly credentialType: CredentialType,
     protected readonly cache: Cache,
     protected readonly redis: Redis,
     protected readonly resMapper: ResponseMapper,

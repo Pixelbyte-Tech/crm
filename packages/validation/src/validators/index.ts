@@ -1,5 +1,5 @@
 export * from './other/boolean.validator';
-export * from './other/iso4217-or-crypto.validator';
+export * from './other/iso-4217-or-crypto.validator';
 export * from './other/password.validator';
 
 export * from './entity/alert-id.validator';

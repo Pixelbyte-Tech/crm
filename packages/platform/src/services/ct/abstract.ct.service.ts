@@ -8,12 +8,11 @@ import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { Cryptography } from '@crm/utils';
 
-import { CTCredentials, PlatformServer } from '../../models/platform-server';
+import { CTCredentials, PlatformServer } from '../../models';
 
 import { CircuitBreakerAxios } from '../internal/circuit-breaker-axios.service';
 
 import { InvalidServerUrlException } from '../../exceptions';
-import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
 import { ResponseMapper } from '../../mappers/response/response-mapper.interface';
@@ -22,7 +21,6 @@ type CtToken = {
   webservToken: string;
   webservTokenLifeTime: number;
   created_at: number;
-  type: CredentialType;
 };
 
 const KEY_TOKEN = '{platforms}:ct_auth:token';
@@ -32,7 +30,6 @@ export abstract class AbstractCtService {
   protected constructor(
     protected readonly axios: CircuitBreakerAxios,
     protected readonly _server: PlatformServer<CTCredentials>,
-    protected readonly credentialType: CredentialType,
     protected readonly cache: Cache,
     protected readonly redis: Redis,
     protected readonly resMapper: ResponseMapper,

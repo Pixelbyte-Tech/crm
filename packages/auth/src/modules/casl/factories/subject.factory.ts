@@ -206,7 +206,7 @@ export class SubjectFactory {
       (await this.dataSource
         .createQueryBuilder()
         .from(target, 'e')
-        .select(select.map((s) => `e."${s}"`))
+        .select(select.map((s) => `e."${s}" AS '${s}'`))
         .where(`e."${filter.findBy.toString()}" = :value`, { value })
         .getRawOne()) ?? {};
 
