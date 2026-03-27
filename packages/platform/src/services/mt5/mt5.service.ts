@@ -95,7 +95,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
     readonly reqMapper: Mt5RequestMapper,
     readonly errorMapper: Mt5ErrorMapper,
   ) {
-    super(axios, _server, credentialType, cache, redis, resMapper, reqMapper, errorMapper, 5);
+    super(axios, _server, credentialType, cache, redis, resMapper, reqMapper, errorMapper);
   }
 
   /**

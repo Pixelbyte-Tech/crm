@@ -1,11 +1,14 @@
+import { createHash, randomBytes } from 'node:crypto';
+
 import Redis from 'ioredis';
 import { DateTime } from 'luxon';
 import objectHash from 'object-hash';
 import { Logger } from '@nestjs/common';
 import { Cache } from '@nestjs/cache-manager';
 import { cloneDeep, isBoolean } from 'lodash';
-import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+import { Platform } from '@crm/types';
 import { getTimezoneOffset } from '@crm/utils';
 
 import { MTCredentials, PlatformServer } from '../../models/platform-server';
@@ -16,35 +19,32 @@ import { CredentialType } from '../../factory/platform.factory';
 import { ErrorMapper } from '../../mappers/error/error-mapper.interface';
 import { RequestMapper } from '../../mappers/request/request-mapper.interface';
 import { ResponseMapper } from '../../mappers/response/response-mapper.interface';
-import {
-  InvalidServerUrlException,
-  PlatformNotSupportedException,
-  InvalidServerCredentialsException,
-} from '../../exceptions';
+import { InvalidServerUrlException, InvalidServerCredentialsException } from '../../exceptions';
 
-type MtToken = {
-  scope: string;
-  token_type: string;
-  access_token: string;
-  expires_in: number;
-  created_at: number;
-  type: CredentialType;
+type Mt5Token = {
+  srv_rand: string;
+  cli_rand: string;
+  cli_rand_answer: string;
+  version_access: string;
+  version_trade: string;
+  createdAt: number;
 };
 
-const MT5_OK_CODES = [
-  'MT_RET_OK',
-  'MT_RET_OK_NONE',
-  'MT_RET_REQUEST_INWAY',
-  'MT_RET_REQUEST_ACCEPTED',
-  'MT_RET_REQUEST_PROCESS',
-  'MT_RET_REQUEST_PLACED',
-  'MT_RET_REQUEST_DONE',
-];
+interface Mt5AuthStart {
+  retcode: string;
+  version_access: string;
+  srv_rand: string;
+}
+
+interface Mt5AuthAnswer {
+  retcode: string;
+  version_access: string;
+  version_trade: string;
+  cli_rand_answer: string;
+}
 
 const KEY_TOKEN = '{platforms}:mt_auth:token';
 const KEY_STATUS = '{platforms}:mt_auth:updating';
-
-type MtVersion = 4 | 5;
 
 export abstract class AbstractMtService {
   protected constructor(
@@ -56,7 +56,6 @@ export abstract class AbstractMtService {
     protected readonly resMapper: ResponseMapper,
     protected readonly reqMapper: RequestMapper,
     protected readonly errorMapper: ErrorMapper,
-    protected readonly version: MtVersion,
   ) {
     // Bootstrap the connection
     this.#bootstrap();
@@ -116,6 +115,7 @@ export abstract class AbstractMtService {
     // Ensure credentials are valid
     this.#validateCredentials(this.server.credentials, this.server.endpoint);
 
+    // Setup axios
     this.axios.defaults['baseURL'] = this._server.endpoint;
     for (const key of ['put', 'patch', 'delete', 'common'] as const) {
       this.axios.defaults.headers[key]['Accept'] = 'application/json';
@@ -124,63 +124,36 @@ export abstract class AbstractMtService {
       this.axios.defaults.headers[key]['User-Agent'] = 'PixelByte CRM';
     }
 
-    this.axios.interceptors.response.use(
-      async (response: AxiosResponse) => {
-        if (5 !== Number(this.version)) {
-          return response;
-        }
-
-        // For MT5 we need to check if there is a response code and if it is not OK
-        // There can be cases where the HTTP code is 20x but the actual query was not successful
-        const mt5Code: string = response.data?.code ?? response.data?.returnCode;
-
-        if (mt5Code && !MT5_OK_CODES.includes(mt5Code)) {
-          const error = {
-            code: mt5Code,
-            response: { data: { Message: `Error (${mt5Code})` }, config: response.config },
-            isAxiosError: true,
-            status: response.status,
-          } as AxiosError;
-
-          this.#reportError(error);
-          return Promise.reject(this.errorMapper.map(error));
-        }
-
-        return response;
-      },
-      async (error: AxiosError) => {
-        // Report error
-        this.#reportError(error);
-
-        // Invalidate token if 401 is received
-        if (401 === Number(error?.response?.status)) {
-          this.#logger.warn(`Invalidating MT${this.version} token for ${this._server.endpoint}`);
-        }
-
-        return Promise.reject(this.errorMapper.map(error));
-      },
-    );
-
-    // If we are using oauth, we need to configure the token
+    // Request interceptor, handles token authentication
     this.axios.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-      if (config.url !== '/oauth2/token') {
+      if (!config.url?.includes('api/auth/start') && !config.url?.includes('api/auth/answer')) {
         if (await this.#isTokenExpired()) {
           await this.#updateToken();
         }
-
-        config.headers.set('Authorization', `Bearer ${(await this.#token())?.access_token}`);
       }
       return config;
+    });
+
+    // Response interceptor, handles error decoding, mapping & reporting
+    this.axios.interceptors.response.use(null, async (error: AxiosError<any>) => {
+      // If we see a 401 or 403 status code, invalidate the token
+      const invalidateToken = [401, 403].includes(Number(error?.response?.status));
+      if (invalidateToken) {
+        this.#logger.warn(`Invalidating ${Platform.MT5} token for '${this._server.endpoint}'`);
+        await this.#token(null);
+      }
+
+      // Report the error
+      this.#reportError(error);
+      return Promise.reject(this.errorMapper.map(error));
     });
   }
 
   /**
    * Gets or sets a shared token for all requests
-   * Uses a local cache for up to 2 seconds to avoid hitting the redis server during
-   * high frequency traffic.
    * @param token the token to set
    */
-  async #token(token?: MtToken): Promise<MtToken | undefined> {
+  async #token(token?: Mt5Token | null): Promise<Mt5Token | undefined> {
     const key = `${KEY_TOKEN}:${this.#makeKeySuffix(this._server)}`;
 
     if (null === token) {
@@ -192,7 +165,8 @@ export abstract class AbstractMtService {
     if (token) {
       const t = JSON.stringify(token);
       await this.cache.set(key, t, 10_000);
-      await this.redis.set(key, t, 'EX', token.expires_in);
+      await this.redis.set(key, t, 'EX', 600);
+
       return undefined;
     }
 
@@ -210,7 +184,6 @@ export abstract class AbstractMtService {
   /**
    * Fetches a new oAuth token from the server
    * @param silent if true, will fetch in the background without blocking requests
-   * @private
    */
   async #updateToken(silent: boolean = false): Promise<boolean> {
     // If the token is already being updated, wait for it to finish
@@ -227,51 +200,68 @@ export abstract class AbstractMtService {
       return false;
     }
 
-    const msg = `Fetching MT${this.version} token for '${this._server.endpoint}'`;
+    // Prepare the log message
+    const msg = `Fetching ${Platform.MT5} token for '${this.server.endpoint}'`;
     this.#logger.log(`${msg}`);
 
     // Lock the token fetching status
     if (!silent) await this.#isTokenUpdating(true);
 
-    // Fetch the token
-    const { username, password } = this._server.credentials;
-    const response: AxiosResponse | undefined = await this.axios
-      .post(`/oauth2/token`, new URLSearchParams({ grant_type: 'password', username, password }), {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        timeout: 30_000,
-      })
-      .catch((err) => {
-        this.#logger.error(`${msg} - Failed`, err);
-        return undefined;
-      });
+    try {
+      // Fetch the token
+      const { username } = this._server.credentials;
+      const { data: start, headers } = await this.axios.get<Mt5AuthStart>(
+        `/api/auth/start?version=484&agent=pixel_byte_crm&login=${username}&type=manager`,
+        { timeout: 10_000 },
+      );
 
-    const freshToken = response?.data?.access_token;
-    if (freshToken) {
+      // Ensure the response is valid
+      if (!start.retcode.startsWith('0')) {
+        this.#logger.error(`${msg}. Invalid retcode - Failed`);
+        return false;
+      }
+
+      // Extract cookies and set to axios instance for subsequent requests
+      this.axios.defaults.headers.common['Cookie'] = headers['set-cookie']?.join('; ') || '';
+
+      // Generate srvRandAnswer & cliRand, then fetch the rest of the token data with those values
+      const srvRandAnswer = this.#calculateSrvRandAnswer(start.srv_rand);
+      const cliRand = randomBytes(16).toString('hex');
+
+      const { data: answer } = await this.axios.get<Mt5AuthAnswer>(
+        `/api/auth/answer?srv_rand_answer=${srvRandAnswer}&cli_rand=${cliRand}`,
+        { timeout: 10_000 },
+      );
+
       await this.#token({
-        ...response.data,
-        created_at: DateTime.utc().toSeconds(),
-        type: this.credentialType,
+        srv_rand: start.srv_rand,
+        cli_rand: cliRand,
+        cli_rand_answer: answer.cli_rand_answer ?? '',
+        version_access: answer.version_access ?? '',
+        version_trade: answer.version_trade ?? '',
+        createdAt: DateTime.utc().toSeconds(),
       });
-    }
 
-    // Un-lock the token fetching status
-    if (!silent) await this.#isTokenUpdating(false);
-    return freshToken;
+      // Un-lock the token fetching status
+      if (!silent) await this.#isTokenUpdating(false);
+      return true;
+    } catch (err) {
+      this.#logger.error(`${msg} - Failed`, err);
+      return false;
+    }
   }
 
   /**
    * Returns true if the token is expired, false otherwise
-   * @private
    */
   async #isTokenExpired(): Promise<boolean> {
     const token = await this.#token();
-    return !token || token.created_at + token.expires_in - 3600 < DateTime.utc().toSeconds();
+    return !token || token.createdAt + 10 < DateTime.utc().toSeconds();
   }
 
   /**
    * Gets or sets the token fetching state
    * @param state true if a token is being fetched, false otherwise
-   * @private
    */
   async #isTokenUpdating(state?: boolean): Promise<boolean> {
     const key = `${KEY_STATUS}:${this.#makeKeySuffix(this._server)}`;
@@ -296,15 +286,7 @@ export abstract class AbstractMtService {
    * @protected
    */
   protected utcSecToServerTime(unixTime: number): string {
-    switch (this.version) {
-      case 4:
-        return DateTime.fromSeconds(this.utcSecToServerSec(unixTime)).toFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-      case 5:
-        return DateTime.fromSeconds(this.utcSecToServerSec(unixTime)).toFormat('yyyy-MM-dd HH:mm:ss');
-      default:
-        this.#logger.error(`Invalid Mt version '${this.version}'`);
-        throw new PlatformNotSupportedException(this._server.platform, this.version);
-    }
+    return DateTime.fromSeconds(this.utcSecToServerSec(unixTime)).toFormat('yyyy-MM-dd HH:mm:ss');
   }
 
   /**
@@ -355,6 +337,25 @@ export abstract class AbstractMtService {
   }
 
   /**
+   * Calculates the src_rand_answer for the given srv_rand
+   * @param srvRand The srv_rand value provided by the server
+   */
+  #calculateSrvRandAnswer(srvRand: string): string {
+    // Step 1: Hash password with UTF-16LE encoding
+    const pwBytes = createHash('md5').update(this._server.credentials.password, 'utf16le').digest();
+
+    // Step 2: Append 'WebAPI' and hash again
+    const md5PassPlus = Buffer.concat([pwBytes, Buffer.from('WebAPI', 'utf-8')]);
+    const passwordHash = createHash('md5').update(md5PassPlus).digest();
+
+    // Step 3: Calculate srv_rand_answer (password_hash + srv_rand bytes)
+    const srvRandBytes = Buffer.from(srvRand, 'hex');
+    return createHash('md5')
+      .update(Buffer.concat([passwordHash, srvRandBytes]))
+      .digest('hex');
+  }
+
+  /**
    * Takes in the credentials object passed to the service and ensures it is in
    * a format which is valid for the service's requirements
    * @param credentials The credentials object to validate
@@ -362,7 +363,7 @@ export abstract class AbstractMtService {
    * @throws InvalidServerCredentialsException If the format is not correct
    */
   #validateCredentials(credentials: unknown, baseUrl: string): void {
-    const requiredCredentials = ['username', 'password'];
+    const requiredCredentials = ['endpoint', 'username', 'password'];
     const missingProperties = requiredCredentials.filter((prop) => !credentials?.hasOwnProperty(prop));
 
     if (missingProperties.length) {
