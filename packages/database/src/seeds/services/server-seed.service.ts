@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger, Injectable } from '@nestjs/common';
 
-import { Monetisation } from '@crm/types';
+import { Platform, Monetisation, DxServerSettingsDto, TlServerSettingsDto, Mt5ServerSettingsDto } from '@crm/types';
 
 import { toPlatform } from '../helper/to-platform';
 import { ServerEntity } from '../../entities/server.entity';
@@ -27,13 +27,35 @@ export class ServerSeedService {
           continue;
         }
 
+        // Create the settings for the server based on the platform
+        let settings: any = {};
+        const platform = toPlatform(integration.name);
+        switch (platform) {
+          case Platform.DX:
+            settings = new DxServerSettingsDto();
+            settings.host = 'https://swaymarketstage.prosp.devexperts.com';
+            settings.username = 'demo_1';
+            settings.password = 'test';
+            settings.domain = 'default';
+            break;
+          case Platform.MT5:
+            settings = new Mt5ServerSettingsDto();
+            settings.host = '100.51.9.103';
+            settings.username = 'demo_1'; //todo update
+            settings.password = 'test'; //todo update
+            break;
+          case Platform.TL:
+            settings = new TlServerSettingsDto();
+            break;
+        }
+
         const entity = new ServerEntity();
         entity.name = `Test Server ${integration.name}`;
         entity.integrationId = integration.id;
-        entity.platform = toPlatform(integration.name);
+        entity.platform = platform;
         entity.isEnabled = true;
         entity.monetisation = Monetisation.DEMO;
-        entity.settings = {};
+        entity.settings = settings;
         entity.timezone = 'utc';
         entity.offsetHours = 0;
 
