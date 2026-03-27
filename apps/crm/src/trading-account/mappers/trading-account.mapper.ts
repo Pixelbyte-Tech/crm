@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { Cryptography } from '@crm/utils';
 import { TradingAccountEntity } from '@crm/database';
 import { Balance as PlatformBalance, UserGroup as PlatformUserGroup } from '@crm/platform';
 
@@ -22,6 +23,7 @@ export class TradingAccountMapper {
     const model = new TradingAccount();
     model.id = data.id;
     model.userId = data.userId;
+    model.serverId = data.serverId;
     model.platformId = data.platformId;
     model.platformUserId = data.platformUserId ?? undefined;
     model.platformAccountName = data.platformAccountName ?? undefined;
@@ -33,7 +35,7 @@ export class TradingAccountMapper {
     model.currency = data.currency.toUpperCase();
     model.registeredAt = data.registeredAt;
     model.login = data.login;
-    model.password = data.password;
+    model.password = Cryptography.decrypt(data.password);
 
     if (platformUserGroup) {
       model.userGroup = this.userGroupMapper.toUserGroup(platformUserGroup);

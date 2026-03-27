@@ -23,7 +23,12 @@ export * from './tag/tag-created.event';
 export * from './tag/tag-deleted.event';
 export * from './tag/tag-updated.event';
 
-// Tag
+// Trading account schema
+export * from './trading-account/trading-account-created.event';
+export * from './trading-account/trading-account-deleted.event';
+export * from './trading-account/trading-account-updated.event';
+
+// Trading account schema
 export * from './trading-account-schema/trading-account-schema-created.event';
 export * from './trading-account-schema/trading-account-schema-deleted.event';
 export * from './trading-account-schema/trading-account-schema-updated.event';

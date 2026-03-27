@@ -8,6 +8,7 @@ export class TradingAccount {
   /** Trading account unique identifier */
   id: string;
   userId: string;
+  serverId: string;
   platformId: string;
   platformUserId?: string;
   platformAccountName?: string;
@@ -31,6 +32,7 @@ export class TradingAccount {
     if (data) {
       this.id = data.id;
       this.userId = data.userId;
+      this.serverId = data.serverId;
       this.platformId = data.platformId;
       this.platformUserId = data.platformUserId;
       this.platformAccountName = data.platformAccountName;

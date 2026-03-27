@@ -13,13 +13,13 @@ import {
 } from '@nestjs/common';
 
 import { PaginatedResDto } from '@crm/http';
-import { securePassword } from '@crm/utils';
 import { AuthenticatedReq } from '@crm/auth';
+import { Cryptography, securePassword } from '@crm/utils';
 import { PlatformFactory, BalanceOperation } from '@crm/platform';
 import { Gender, Platform, TradingAccountStatus } from '@crm/types';
 import { UserEntity, ServerEntity, TradingAccountEntity } from '@crm/database';
-import { ServerUpdatedEvent, ServerDeletedEvent, ServerCreatedEvent } from '@crm/kafka';
 import { Balance as PlatformBalance, UserGroup as PlatformUserGroup } from '@crm/platform';
+import { TradingAccountCreatedEvent, TradingAccountDeletedEvent, TradingAccountUpdatedEvent } from '@crm/kafka';
 
 import { GetTradingAccountDto } from '../dto/in/get-trading-account.dto';
 
@@ -226,7 +226,7 @@ export class TradingAccountService {
       throw new MonetisationMismatchException(dto.monetisation, server.monetisation);
     }
 
-    // todo Check settings match trading account schema
+    // todo Use schema instead and link trading account entity to schema
 
     // Initialise a connection to the platform
     const platformServer = this.platformServerFactory.toPlatformServer(server);
@@ -241,7 +241,7 @@ export class TradingAccountService {
     // Prepare any additional data for the request
     let additionalData: Record<string, any> | undefined;
     if (Platform.TL === server.platform) {
-      additionalData = { idempotencyKey: '' };
+      additionalData = { idempotencyKey: '' }; // todo set key
     }
 
     // Create the account on the platform
@@ -283,7 +283,7 @@ export class TradingAccountService {
       status: TradingAccountStatus.ACTIVE,
       currency: dto.currency,
       login: platformAccount.masterCredential.login,
-      password: platformAccount.masterCredential.password,
+      password: Cryptography.encrypt(platformAccount.masterCredential.password),
     });
 
     if (!entity) {
@@ -298,18 +298,24 @@ export class TradingAccountService {
 
     // Trigger the creation event
     this.kafka.emit(
-      ServerCreatedEvent.type,
-      new ServerCreatedEvent(
+      TradingAccountCreatedEvent.type,
+      new TradingAccountCreatedEvent(
         {
-          serverId: domainTradingAcc.id,
-          name: domainTradingAcc.name,
+          tradingAccountId: domainTradingAcc.id,
+          userId: domainTradingAcc.userId,
+          serverId: domainTradingAcc.serverId,
+          platformId: domainTradingAcc.platformId,
+          platformUserId: domainTradingAcc.platformUserId,
+          platformAccountName: domainTradingAcc.platformAccountName,
+          friendlyName: domainTradingAcc.friendlyName,
           platform: domainTradingAcc.platform,
           monetisation: domainTradingAcc.monetisation,
-          isEnabled: domainTradingAcc.isEnabled,
-          settings: domainTradingAcc.settings,
-          timezone: domainTradingAcc.timezone,
-          offsetHours: domainTradingAcc.offsetHours,
-          integrationId: domainTradingAcc.integrationId,
+          status: domainTradingAcc.status,
+          leverage: domainTradingAcc.leverage,
+          currency: domainTradingAcc.currency,
+          registeredAt: DateTime.fromJSDate(domainTradingAcc.registeredAt).toMillis(),
+          login: domainTradingAcc.login,
+          password: domainTradingAcc.password,
           createdAt: DateTime.fromJSDate(domainTradingAcc.createdAt).toMillis(),
         },
         req,
@@ -347,7 +353,7 @@ export class TradingAccountService {
       throw new UnprocessableEntityException(`Server '${tradingAccount.serverId}' not found`);
     }
 
-    // todo Check settings match trading account schema
+    // todo Use schema instead and link trading account entity to schema
 
     // Initialise a connection to the platform
     const platformServer = this.platformServerFactory.toPlatformServer(server);
@@ -382,18 +388,24 @@ export class TradingAccountService {
 
     // Trigger the update event
     this.kafka.emit(
-      ServerUpdatedEvent.type,
-      new ServerUpdatedEvent(
+      TradingAccountUpdatedEvent.type,
+      new TradingAccountUpdatedEvent(
         {
-          serverId: domainTradingAcc.id,
-          name: domainTradingAcc.name,
+          tradingAccountId: domainTradingAcc.id,
+          userId: domainTradingAcc.userId,
+          serverId: domainTradingAcc.serverId,
+          platformId: domainTradingAcc.platformId,
+          platformUserId: domainTradingAcc.platformUserId,
+          platformAccountName: domainTradingAcc.platformAccountName,
+          friendlyName: domainTradingAcc.friendlyName,
           platform: domainTradingAcc.platform,
           monetisation: domainTradingAcc.monetisation,
-          isEnabled: domainTradingAcc.isEnabled,
-          settings: domainTradingAcc.settings,
-          timezone: domainTradingAcc.timezone,
-          offsetHours: domainTradingAcc.offsetHours,
-          integrationId: domainTradingAcc.integrationId,
+          status: domainTradingAcc.status,
+          leverage: domainTradingAcc.leverage,
+          currency: domainTradingAcc.currency,
+          registeredAt: DateTime.fromJSDate(domainTradingAcc.registeredAt).toMillis(),
+          login: domainTradingAcc.login,
+          password: domainTradingAcc.password,
           updatedAt: DateTime.fromJSDate(domainTradingAcc.updatedAt).toMillis(),
         },
         req,
@@ -455,8 +467,8 @@ export class TradingAccountService {
 
     // Trigger the deletion event
     this.kafka.emit(
-      ServerDeletedEvent.type,
-      new ServerDeletedEvent({ tradingAccountId, deletedAt: DateTime.utc().toMillis() }, req),
+      TradingAccountDeletedEvent.type,
+      new TradingAccountDeletedEvent({ tradingAccountId, deletedAt: DateTime.utc().toMillis() }, req),
     );
 
     return true;
