@@ -129,8 +129,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns a user group from the platform based on the given userGroupId
    * @param userGroupId The user group id to get the group for
-   * @return {Promise<UserGroup>} The user group
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroup(userGroupId: string): Promise<UserGroup | null> {
     const { data: groups } = await this.axios.post<{ data: TlGroup[] }>(`/v1/groups/all`, {
@@ -149,8 +148,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the aggregate balances for the given user group
    * @param userGroupId The user group id to get the balances for
-   * @return {Promise<UserGroupAggregateBalance[]>} The user group
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroupAggregateBalances(userGroupId: string): Promise<UserGroupAggregateBalance[]> {
     // Fetch data via the appropriate report
@@ -165,7 +163,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the list of user groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroups(filter?: string): Promise<UserGroup[]> {
     const { data: groups } = await this.axios.post<{ data: TlGroup[] }>(`/v1/groups/all`, {
@@ -187,7 +185,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the list of user commission groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getCommissionGroups(filter?: string): Promise<CommissionGroup[]> {
     // Fetch the commission plans
@@ -213,7 +211,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the list of user spread groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSpreadGroups(filter?: string): Promise<SpreadGroup[]> {
     // Fetch the spread plans
@@ -239,7 +237,7 @@ export class TlService extends AbstractService implements PlatformService {
 
   /**
    * Returns the list of risk plans configured and available for the platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getRiskPlans(): Promise<RiskPlan[]> {
     // Fetch the risk plans
@@ -267,7 +265,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param _symbol The symbol to get the candles for
    * @param _startSecUTC The start time in UTC seconds for the candles
    * @param _endSecUTC The end time in UTC seconds for the candles
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   get1MBars(_symbol: string, _startSecUTC: number, _endSecUTC: number): Promise<Bar[]> {
@@ -281,7 +279,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param _symbols The symbols to get the candles for
    * @param _startSecUTC The start time in UTC seconds for the candles
    * @param _endSecUTC The end time in UTC seconds for the candles
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   get1MBarsForMultipleSymbols(_symbols: string[], _startSecUTC: number, _endSecUTC: number): Promise<Bar[]> {
@@ -295,7 +293,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Creates a new account on the platform
    * @param dto The details to create the account with
    * @param group The group to create the account in
-   * @throws HttpException
+   * @throws PlatformException
    * @throws CredentialsMismatchException
    */
   async createAccount(
@@ -375,7 +373,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the commission group associated with the given account id
    * @param _platformAccountId The account id to get the commission group for
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getAccountCommissionGroup(_platformAccountId: string): Promise<CommissionGroup> {
@@ -385,7 +383,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the account associated with the given account id
    * @param platformAccountId The account id to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccount(platformAccountId: string): Promise<Account> {
     const { data } = await this.axios.post<TlAccount>(`/v1/accounts/details`, {
@@ -398,7 +396,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns the accounts associated with the given account ids
    * @param platformAccountIds The account ids to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccounts(platformAccountIds: string[]): Promise<Account[]> {
     // Chunk the account ids into groups with max length of 10 (API limitation)
@@ -433,7 +431,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Used to update an account's details on the platform
    * @param dto The details to update
    * @param platformAccountId The account id to update
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updateAccount(
     dto: UpdateAccountDto<TlAdditionalUpdateAccountData>,
@@ -542,7 +540,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Updates an account's password on the platform
    * @param dto The details to update
    * @param platformAccountId The account id to update
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updateAccountPassword(dto: UpdatePasswordDto, platformAccountId: string): Promise<PasswordResult> {
     // Fetch the account from the platform
@@ -563,7 +561,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Deletes an account from the platform. The user to which the account belongs
    * will be deleted as well.
    * @param _platformAccountId The account id to delete
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAccount(_platformAccountId: string): Promise<boolean> {
@@ -576,7 +574,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Fetches the balance from the platform for a given account
    * @param platformAccountId The account id to fetch the balance for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getBalance(platformAccountId: string): Promise<Balance> {
     // Fetch the account from the platform
@@ -590,7 +588,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Fetches the balance from the platform for a given set of accounts
    * @param platformAccountId The account ids to fetch the balance for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getBalances(platformAccountId: string[]): Promise<Balance[]> {
     // Chunk the account ids into groups with max length of 10 (API limitation)
@@ -629,7 +627,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param comment The comment to add to the transaction
    * @param platformAccountId The account id to update the balance for
    * @param referenceId The unique reference ID for this transaction
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updateBalance(
     operation: BalanceOperation,
@@ -719,7 +717,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Opens an order on the trading platform
    * @param _dto The details to open the order with
    * @param _platformAccountId The account id to open the order for
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   openOrder(_dto: OpenOrderDto, _platformAccountId: string): Promise<Order> {
@@ -731,7 +729,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param _dto The details to update the order with
    * @param _platformAccountId The account id to update the order for
    * @param _platformOrderId The ID on the trading platform of the order to update
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateOrder(_dto: UpdateOrderDto, _platformAccountId: string, _platformOrderId: string): Promise<UpdateOrderResult> {
@@ -743,7 +741,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param _platformAccountId The account id the order belongs to
    * @param platformOrderId The order id to cancel
    * @param comment The comment to add to the order when cancelling it
-   * @throws HttpException
+   * @throws PlatformException
    */
   async cancelOrder(_platformAccountId: string, platformOrderId: string, comment?: string): Promise<boolean> {
     const result = await this.axios.post(`/v1/orders/cancel`, {
@@ -757,7 +755,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns a boolean indicating whether the given account has open positions
    * @param platformAccountId The account id to get the positions for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async hasOpenPositions(platformAccountId: string): Promise<boolean> {
     const { data: positions } = await this.axios.post<{ data: TlPosition[] }>(`/v2/positions/get-open-positions`, {
@@ -771,7 +769,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns a boolean indicating whether the given account has pending orders
    * @param platformAccountId The account id to get the orders for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async hasPendingOrders(platformAccountId: string): Promise<boolean> {
     const { data: orders } = await this.axios.post<{ data: TlOrder[] }>(`/v1/orders/all`, {
@@ -799,7 +797,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Returns a list of open positions on the trading platform
    * @param platformAccountId Filter the positions by the given account id
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getOpenPositions(platformAccountId?: string): Promise<Position[]> {
     const { data: positions } = await this.axios.post<{ data: TlPosition[] }>(`/v2/positions/get-open-positions`, {
@@ -814,7 +812,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Opens a position on the trading platform
    * @param _dto The details to open the position with
    * @param _platformAccountId The account id to open the position for
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   openPosition(_dto: OpenPositionDto, _platformAccountId: string): Promise<Position> {
@@ -823,7 +821,7 @@ export class TlService extends AbstractService implements PlatformService {
 
   /**
    * Updates an existing position on the trading platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   updatePosition(): Promise<UpdatePositionResult> {
     throw new UnsupportedOperationException(`${Platform.TL}`);
@@ -832,7 +830,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Closes a position on the trading platform. If the lots parameter is not provided,
    * the entire position will be closed.
-   * @throws HttpException
+   * @throws PlatformException
    */
   closePosition(): Promise<ClosePositionResult> {
     throw new UnsupportedOperationException(`${Platform.TL}`);
@@ -843,7 +841,7 @@ export class TlService extends AbstractService implements PlatformService {
    * @param platformAccountId The account id for which to close all positions
    * @param incOrders Whether to include orders in the close all operation
    * @param comment The comment to add to the trades when closing them
-   * @throws HttpException
+   * @throws PlatformException
    */
   async closeAllTrades(
     platformAccountId: string,
@@ -924,7 +922,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Closes all open orders for a given account
    * @param platformAccountId The account id for which to close all orders
    * @param comment The comment to add to the orders when closing them
-   * @throws HttpException
+   * @throws PlatformException
    */
   async cancelAllOrders(platformAccountId: string, comment?: string): Promise<CancelAllOrdersResult> {
     const msg = `Closing all orders for ${platformAccountId}`;
@@ -952,7 +950,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Given a set of symbol names, fetches the symbols from the platform.
    * If the symbols provided are empty, fetches all symbols.
    * @param symbols The symbols to fetch, or empty to fetch all symbols
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSymbols(symbols?: string[]): Promise<Symbol[]> {
     const { data: instruments } = await this.axios.post<{ data: TlInstrument[] }>(`/v1/brand/instrument-details`, {
@@ -971,7 +969,7 @@ export class TlService extends AbstractService implements PlatformService {
    * Given a set of symbol names, fetches the TradingSessions for the given symbols from the platform.
    * If the symbols provided are empty, fetches TradingSessions for all symbols.
    * @param _symbols  The symbols to fetch the TradingSessions for, or empty to fetch all TradingSessions
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getTradingSessions(_symbols: string[]): Promise<Map<string, TradingSessions>> {
@@ -980,7 +978,7 @@ export class TlService extends AbstractService implements PlatformService {
 
   /**
    * Returns the set of holidays configured for the platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   getHolidays(): Promise<TradingHoliday[]> {
     throw new UnsupportedOperationException(`${Platform.TL}`);
@@ -989,7 +987,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Adds a new holiday to the platform for the given symbol.
    * @param _dto The holiday details to add
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addHoliday(_dto: AddHolidayDto): Promise<TradingHoliday> {
@@ -999,7 +997,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Updates an existing holiday on the platform.
    * @param _dto The details to update the holiday with
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateHoliday(_dto: UpdateHolidayDto): Promise<TradingHoliday> {
@@ -1009,7 +1007,7 @@ export class TlService extends AbstractService implements PlatformService {
   /**
    * Deletes an existing holiday from the provided symbols
    * @param _dto The holiday details
-   * @throws HttpException
+   * @throws PlatformException
    * @throws UnknownSymbolException If the symbol is not found on the platform
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1019,7 +1017,7 @@ export class TlService extends AbstractService implements PlatformService {
 
   /**
    * Returns the list of user securities configured and available for the platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSecurities(): Promise<string[]> {
     const { data: instruments } = await this.axios.post<{ data: TlInstrument[] }>(`/v1/brand/instrument-details`, {

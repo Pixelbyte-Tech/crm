@@ -155,7 +155,7 @@ export class CtService extends AbstractCtService implements PlatformService {
    * Returns a list of platform logs for the given time period
    * @param _startSecUTC The start time in UTC seconds
    * @param _endSecUTC The end time in UTC seconds
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getJournal(_startSecUTC: number, _endSecUTC: number): Promise<JournalEntry[]> {
@@ -168,7 +168,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns a user group from the platform based on the given userGroupId
    * @param userGroupId The user group id to get the group for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroup(userGroupId: string): Promise<UserGroup | null> {
     const { data } = await this.axios.get<{ traderGroup: CtTraderGroup[] }>('/v2/webserv/tradergroups');
@@ -180,7 +180,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the aggregate balances for the given user group
    * @param _userGroupId The user group id to get the balances for
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getUserGroupAggregateBalances(_userGroupId: string): Promise<UserGroupAggregateBalance[]> {
@@ -190,7 +190,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the list of user groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroups(filter?: string): Promise<UserGroup[]> {
     const { data } = await this.axios.get<{ traderGroup: CtTraderGroup[] }>('/v2/webserv/tradergroups');
@@ -206,7 +206,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the list of user commission groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getCommissionGroups(filter?: string): Promise<CommissionGroup[]> {
     return (await this.getUserGroups(filter)).map(
@@ -222,7 +222,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the list of user spread groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSpreadGroups(filter?: string): Promise<SpreadGroup[]> {
     return (await this.getUserGroups(filter)).map(
@@ -375,7 +375,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the account associated with the given platformAccountId
    * @param platformAccountId The account id to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccount(platformAccountId: string): Promise<Account> {
     // Get the full trader details
@@ -389,7 +389,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns the accounts associated with the given account ids
    * @param platformAccountId The account ids to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccounts(platformAccountId: string[]): Promise<Account[]> {
     // We will fetch all the accounts in parallel
@@ -688,7 +688,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns a boolean indicating whether the given account has open positions
    * @param platformAccountId The account id to get the positions for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async hasOpenPositions(platformAccountId: string): Promise<boolean> {
     // Check if the trader has any open positions
@@ -730,7 +730,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Returns a list of open positions on the trading platform
    * @param platformAccountId Filter the positions by the given account id
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getOpenPositions(platformAccountId?: string): Promise<Position[]> {
     // List all open positions as required
@@ -904,7 +904,7 @@ export class CtService extends AbstractCtService implements PlatformService {
    * @param platformAccountId The account id for which to close all positions
    * @param incOrders Whether to include orders in the closing
    * @throws PlatformException
-   * @throws HttpException
+   * @throws PlatformException
    */
   async closeAllTrades(platformAccountId: string, incOrders: boolean = true): Promise<CloseAllTradesResult> {
     // Prepare a base response
@@ -1005,7 +1005,7 @@ export class CtService extends AbstractCtService implements PlatformService {
    *
    * @param platformAccountId The account id for which to close all pending orders
    * @throws PlatformException
-   * @throws HttpException
+   * @throws PlatformException
    */
   async cancelAllOrders(platformAccountId: string): Promise<CancelAllOrdersResult> {
     // Prepare a base response
@@ -1118,7 +1118,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Adds a new holiday to the platform for the given symbol.
    * @param _dto The holiday details to add
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addHoliday(_dto: AddHolidayDto): Promise<TradingHoliday> {
@@ -1128,7 +1128,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Updates an existing holiday on the platform.
    * @param _dto The details to update the holiday with
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateHoliday(_dto: UpdateHolidayDto): Promise<TradingHoliday> {
@@ -1138,7 +1138,7 @@ export class CtService extends AbstractCtService implements PlatformService {
   /**
    * Deletes an existing holiday from the provided symbols
    * @param _dto The holiday details
-   * @throws HttpException
+   * @throws PlatformException
    * @throws UnknownSymbolException If the symbol is not found on the platform
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

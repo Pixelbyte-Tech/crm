@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
-import { HttpException } from '@nestjs/common';
+
+import { PlatformException } from '../../exceptions';
 
 export type I18nErrorItem = {
   status?: number;
@@ -8,5 +9,5 @@ export type I18nErrorItem = {
 };
 
 export interface ErrorMapper {
-  map(error: AxiosError): HttpException;
+  map(error: AxiosError): PlatformException;
 }

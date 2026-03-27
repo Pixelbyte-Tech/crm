@@ -1,15 +1,6 @@
 import { AxiosError } from 'axios';
 import { I18nContext } from 'nestjs-i18n';
-import {
-  Injectable,
-  HttpException,
-  ConflictException,
-  BadGatewayException,
-  BadRequestException,
-  GatewayTimeoutException,
-  ServiceUnavailableException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { isUnavailable } from '../../utils/http.utils';
 import { sanitizeError } from '../../utils/sanitize-error.utils';
@@ -28,7 +19,7 @@ type Mt5Error = {
 
 @Injectable()
 export class Mt5ErrorMapper implements ErrorMapper {
-  map(error: AxiosError | PlatformException): HttpException {
+  map(error: AxiosError | PlatformException): PlatformException {
     // If the error is an PlatformException, throw it.
     if (!(error instanceof AxiosError)) {
       throw error;
@@ -38,32 +29,32 @@ export class Mt5ErrorMapper implements ErrorMapper {
 
     // If the error indicates the platform server is unavailable
     if (isUnavailable(error)) {
-      throw new UnavailablePlatformServerException(baseURL);
+      return new UnavailablePlatformServerException(baseURL);
     }
 
     // If the error indicates the credentials are invalid
     if (401 === error.response?.status) {
-      throw new InvalidServerCredentialsException(baseURL);
+      return new InvalidServerCredentialsException(baseURL);
     }
 
     const i18n = I18nContext.current();
     if (!i18n) {
       const mt5Error = error?.response ? (error.response.data as Mt5Error) : null;
-      return new InternalServerErrorException(
+      return new PlatformException(
         mt5Error ? `MT5 API Error - ${this.#getErrorCode(mt5Error?.Message)}` : `MT5 API Error`,
-        { cause: sanitizeError(error) },
+        error,
       );
     }
 
     const defaultError = i18n.t<any, I18nErrorItem>(`mt5.DEFAULT`);
 
     if (!error?.response) {
-      return new InternalServerErrorException(defaultError.msg, { cause: sanitizeError(error) });
+      return new PlatformException(defaultError.msg, sanitizeError(error));
     }
 
     const mt5Error = error.response.data as Mt5Error;
     if (!mt5Error) {
-      return new InternalServerErrorException(defaultError.msg, { cause: sanitizeError(error) });
+      return new PlatformException(defaultError.msg, sanitizeError(error));
     }
 
     const code = this.#getErrorCode(mt5Error?.Message);
@@ -72,31 +63,15 @@ export class Mt5ErrorMapper implements ErrorMapper {
     const entry = i18n.t<any, I18nErrorItem | string>(key, { defaultValue: key });
 
     if (typeof entry === 'string') {
-      return new InternalServerErrorException(defaultError.msg + ` (${code})`, {
-        cause: sanitizeError(error),
-      });
+      return new PlatformException(defaultError.msg + ` (${code})`, sanitizeError(error));
     }
 
     // Special case for duplicate account ids on the platform
     if (mt5Error?.Message.match(/User with login '.*' alredy exist \(MT_RET_ERROR\)/)) {
-      throw new DuplicateAccountIdException(null, error);
+      return new DuplicateAccountIdException(null, error);
     }
 
-    switch (entry?.status ?? error.response.status) {
-      case 400:
-        return new BadRequestException(error.message, { cause: sanitizeError(error) });
-      case 408:
-        return new GatewayTimeoutException(error.message, { cause: sanitizeError(error) });
-      case 409:
-        return new ConflictException(error.message, { cause: sanitizeError(error) });
-      case 502:
-        return new BadGatewayException(error.message, { cause: sanitizeError(error) });
-      case 403:
-      case 503:
-        return new ServiceUnavailableException(error.message, { cause: sanitizeError(error) });
-      default:
-        return new ServiceUnavailableException(error.message, { cause: sanitizeError(error) });
-    }
+    return new PlatformException(error.message, sanitizeError(error), entry?.status ?? error.response.status);
   }
 
   /**

@@ -127,7 +127,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Returns a list of platform logs for the given time period
    * @param startSecUTC The start time in UTC seconds
    * @param endSecUTC The end time in UTC seconds
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getJournal(startSecUTC: number, endSecUTC: number): Promise<JournalEntry[]> {
     const start = this.utcSecToServerTime(startSecUTC);
@@ -166,7 +166,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns a user group from the platform based on the given userGroupId
    * @param userGroupId The user group id to get the group for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroup(userGroupId: string): Promise<UserGroup> {
     const { data } = await this.axios.get<Mt5Group>(`/groups/${encodeURIComponent(userGroupId)}`);
@@ -177,7 +177,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the aggregate balances for the given user group
    * @param _userGroupId The user group id to get the balances for
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getUserGroupAggregateBalances(_userGroupId: string): Promise<UserGroupAggregateBalance[]> {
@@ -187,7 +187,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the list of user groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getUserGroups(filter?: string): Promise<UserGroup[]> {
     const groups = await this.#retrieveMt5Groups(filter);
@@ -198,7 +198,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the list of user commission groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getCommissionGroups(filter?: string): Promise<CommissionGroup[]> {
     const groups = await this.#retrieveMt5Groups(filter);
@@ -209,7 +209,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the list of user spread groups configured and available for the platform
    * @param filter Filter the groups by the given string, e.g. (OSP)
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSpreadGroups(filter?: string): Promise<SpreadGroup[]> {
     return (await this.getUserGroups(filter)).map(
@@ -229,7 +229,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Returns a list of groups from the platform, optionally filtered by
    * the filter param provided.
    * @param filter The filter by which to restrict the groups returned
-   * @throws HttpException
+   * @throws PlatformException
    */
   async #retrieveMt5Groups(filter?: string): Promise<Mt5Group[]> {
     const { data: groups } = await this.axios.get<{ data: Mt5Group[] }>('/groups');
@@ -247,7 +247,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param symbol The symbol to get the candles for
    * @param startSecUTC The start time in UTC seconds for the candles
    * @param endSecUTC The end time in UTC seconds for the candles
-   * @throws HttpException
+   * @throws PlatformException
    */
   async get1MBars(symbol: string, startSecUTC: number, endSecUTC: number): Promise<Bar[]> {
     const response = await this.axios.get<{ data: Mt5Candle[] }>(`/charts`, {
@@ -273,7 +273,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param symbols The symbols to get the candles for
    * @param startSecUTC The start time in UTC seconds for the candles
    * @param endSecUTC The end time in UTC seconds for the candles
-   * @throws HttpException
+   * @throws PlatformException
    */
   async get1MBarsForMultipleSymbols(symbols: string[], startSecUTC: number, endSecUTC: number): Promise<Bar[]> {
     const bars: Bar[] = [];
@@ -297,7 +297,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Creates a new account on the platform
    * @param dto The details to create the account with
    * @param group The group to create the account in
-   * @throws HttpException
+   * @throws PlatformException
    */
   async createAccount(
     dto: CreateAccountDto<Mt5AdditionalCreateAccountData>,
@@ -356,7 +356,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the commission group associated with the given account id
    * @param platformAccountId The account id to get the commission group for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccountCommissionGroup(platformAccountId: string): Promise<CommissionGroup> {
     const { data: user } = await this.axios.get<Mt5User>(`/users/${platformAccountId}`);
@@ -374,7 +374,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the account associated with the given account id
    * @param platformAccountId The account id to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccount(platformAccountId: string): Promise<Account> {
     const { data } = await this.axios.get<Mt5User>(`/users/${platformAccountId}`);
@@ -385,7 +385,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns the accounts associated with the given account ids
    * @param platformAccountId The account ids to fetch
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getAccounts(platformAccountId: string[]): Promise<Account[]> {
     // We will fetch all the accounts in parallel
@@ -409,7 +409,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Used to update an account's details on the platform
    * @param dto The details to update
    * @param platformAccountId The account id to update
-   * @throws HttpException
+   * @throws PlatformException
    * @throws InvalidMethodParametersException
    */
   async updateAccount(
@@ -537,7 +537,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Deletes an account from the platform. The user to which the account belongs
    * will be deleted as well.
    * @param platformAccountId The account id to delete
-   * @throws HttpException
+   * @throws PlatformException
    */
   async deleteAccount(platformAccountId: string): Promise<boolean> {
     const response = await this.axios.delete(`/users/${platformAccountId}`);
@@ -550,7 +550,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Fetches the balance from the platform for a given account
    * @param platformAccountId The account id to fetch the balance for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getBalance(platformAccountId: string): Promise<Balance> {
     const response = await this.axios.get<Mt5Account>(`/accounts/${platformAccountId}`);
@@ -561,7 +561,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Fetches the balance from the platform for a given set of accounts
    * @param platformAccountIds The account ids to fetch the balance for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getBalances(platformAccountIds: string[]): Promise<Balance[]> {
     const balances: Balance[] = [];
@@ -595,7 +595,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param amount The value by which to alter the account balance, positive or negative
    * @param comment The comment to add to the transaction
    * @param platformAccountId The account id to update the balance for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updateBalance(
     operation: BalanceOperation,
@@ -620,7 +620,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Opens an order on the trading platform
    * @param dto The details to open the order with
    * @param platformAccountId The account id to open the order for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async openOrder(dto: OpenOrderDto, platformAccountId: string): Promise<Order> {
     const { data } = await this.axios.post<{ request: Mt5CommandResponse }>(
@@ -647,7 +647,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param dto The details to update the order with
    * @param platformAccountId The account id to update the order for
    * @param platformOrderId The ID on the trading platform of the order to update
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updateOrder(
     dto: UpdateOrderDto,
@@ -700,7 +700,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param _platformAccountId The account id the order belongs to
    * @param platformOrderId The order id to cancel
    * @param comment The comment to add to the order when cancelling it
-   * @throws HttpException
+   * @throws PlatformException
    */
   async cancelOrder(_platformAccountId: string, platformOrderId: string, comment?: string): Promise<boolean> {
     // Find the initial order
@@ -729,7 +729,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns a boolean indicating whether the given account has open positions
    * @param platformAccountId The account id to get the positions for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async hasOpenPositions(platformAccountId: string): Promise<boolean> {
     // Fetch all open positions
@@ -743,7 +743,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns a boolean indicating whether the given account has pending orders
    * @param platformAccountId The account id to get the orders for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async hasPendingOrders(platformAccountId: string): Promise<boolean> {
     // Fetch all orders
@@ -765,7 +765,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Returns a list of open positions on the trading platform
    * @param platformAccountId Filter the positions by the given account id
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getOpenPositions(platformAccountId?: string): Promise<Position[]> {
     // Fetch all open positions
@@ -789,7 +789,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Opens a position on the trading platform
    * @param dto The details to open the position with
    * @param platformAccountId The account id to open the position for
-   * @throws HttpException
+   * @throws PlatformException
    */
   async openPosition(dto: OpenPositionDto, platformAccountId: string): Promise<Position> {
     const { data } = await this.axios.post<{ request: Mt5CommandResponse }>(
@@ -815,7 +815,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param dto The details to update the position with
    * @param platformAccountId The account id to position the order for
    * @param platformPositionId The ID on the trading platform of the position to update
-   * @throws HttpException
+   * @throws PlatformException
    */
   async updatePosition(
     dto: UpdatePositionDto,
@@ -860,7 +860,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param platformPositionId The position id to close
    * @param lots The number of lots to close, or undefined to close the entire position
    * @param comment The comment to add to the trade when closing it
-   * @throws HttpException
+   * @throws PlatformException
    */
   async closePosition(
     platformAccountId: string,
@@ -921,7 +921,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * @param platformAccountId The account id for which to close all positions
    * @param incOrders Whether to include orders in the closing
    * @param comment The comment to add to the trades when closing them
-   * @throws HttpException
+   * @throws PlatformException
    */
   async closeAllTrades(
     platformAccountId: string,
@@ -1034,7 +1034,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * This method IS NOT transactional. Orders are closed one by one in parallel.
    *
    * @param platformAccountId The account id for which to close all positions
-   * @throws HttpException
+   * @throws PlatformException
    */
   async cancelAllOrders(platformAccountId: string): Promise<CancelAllOrdersResult> {
     const closedOrderIds: string[] = [];
@@ -1074,7 +1074,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Given a set of symbol names, fetches the symbols from the platform.
    * If the symbols provided are empty, fetches all symbols.
    * @param symbols The symbols to fetch, or empty to fetch all symbols
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSymbols(symbols?: string[]): Promise<Symbol[]> {
     const response = await this.axios.get<{ data: Mt5Symbol[] }>(`/symbols`);
@@ -1099,7 +1099,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
    * Given a set of symbol names, fetches the TradingSessions for the given symbols from the platform.
    * If the symbols provided are empty, fetches TradingSessions for all symbols.
    * @param symbols  The symbols to fetch the TradingSessions for, or empty to fetch all TradingSessions
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getTradingSessions(symbols?: string[]): Promise<Map<string, TradingSessions>> {
     const response = await this.axios.get<{ data: Mt5Symbol[] }>(`/symbols`);
@@ -1123,7 +1123,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
 
   /**
    * Returns the set of holidays configured for the platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getHolidays(): Promise<TradingHoliday[]> {
     const response = await this.axios.get<{ data: Mt5Holiday[] }>(`/configuration/holidays`);
@@ -1145,7 +1145,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Adds a new holiday to the platform for the given symbol.
    * @param _dto The holiday details to add
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addHoliday(_dto: AddHolidayDto): Promise<TradingHoliday> {
@@ -1155,7 +1155,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Updates an existing holiday on the platform.
    * @param _dto The details to update the holiday with
-   * @throws HttpException
+   * @throws PlatformException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateHoliday(_dto: UpdateHolidayDto): Promise<TradingHoliday> {
@@ -1165,7 +1165,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
   /**
    * Deletes an existing holiday from the provided symbols
    * @param _dto The holiday details
-   * @throws HttpException
+   * @throws PlatformException
    * @throws UnknownSymbolException If the symbol is not found on the platform
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1175,7 +1175,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
 
   /**
    * Returns the list of user securities configured and available for the platform
-   * @throws HttpException
+   * @throws PlatformException
    */
   async getSecurities(): Promise<string[]> {
     const response = await this.axios.get<{ data: Mt5Symbol[] }>(`/symbols`);

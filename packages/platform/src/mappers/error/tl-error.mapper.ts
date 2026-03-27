@@ -1,15 +1,6 @@
 import { AxiosError } from 'axios';
 import { I18nContext } from 'nestjs-i18n';
-import {
-  Injectable,
-  HttpException,
-  ConflictException,
-  BadGatewayException,
-  BadRequestException,
-  GatewayTimeoutException,
-  ServiceUnavailableException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { isUnavailable } from '../../utils/http.utils';
 import { sanitizeError } from '../../utils/sanitize-error.utils';
@@ -29,7 +20,7 @@ type TlError = {
 
 @Injectable()
 export class TlErrorMapper implements ErrorMapper {
-  map(error: AxiosError | PlatformException): HttpException {
+  map(error: AxiosError | PlatformException): PlatformException {
     // If the error is an PlatformException, throw it.
     if (!(error instanceof AxiosError)) {
       throw error;
@@ -39,32 +30,32 @@ export class TlErrorMapper implements ErrorMapper {
 
     // If the error indicates the platform server is unavailable
     if (isUnavailable(error)) {
-      throw new UnavailablePlatformServerException(baseURL);
+      return new UnavailablePlatformServerException(baseURL);
     }
 
     // If the error indicates the credentials are invalid
     if (401 === error.response?.status) {
-      throw new InvalidServerCredentialsException(baseURL);
+      return new InvalidServerCredentialsException(baseURL);
     }
 
     const i18n = I18nContext.current();
     if (!i18n) {
       const tlError = error?.response ? (error.response.data as TlError) : null;
-      return new InternalServerErrorException(tlError ? `TL API Error - ${tlError?.statusCode}` : `TL API Error`, {
-        cause: sanitizeError(error),
-        description: `RequestId: ${tlError?.requestId}`,
-      });
+      return new PlatformException(
+        tlError ? `TL API Error - ${tlError?.statusCode}` : `TL API Error`,
+        sanitizeError(error),
+      );
     }
 
     const defaultError = i18n.t<any, I18nErrorItem>(`tl.DEFAULT`);
 
     if (!error?.response) {
-      return new InternalServerErrorException(defaultError.msg, { cause: sanitizeError(error) });
+      return new PlatformException(defaultError.msg, sanitizeError(error));
     }
 
     const tlError = error.response.data as TlError;
     if (!tlError) {
-      return new InternalServerErrorException(defaultError.msg, { cause: sanitizeError(error) });
+      return new PlatformException(defaultError.msg, sanitizeError(error));
     }
 
     const code = tlError.status;
@@ -73,44 +64,16 @@ export class TlErrorMapper implements ErrorMapper {
     const entry = i18n.t<any, I18nErrorItem | string>(key, { defaultValue: key });
 
     if (typeof entry === 'string') {
-      return new InternalServerErrorException(defaultError.msg, {
-        cause: sanitizeError(error),
-        description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-      });
+      return new PlatformException(
+        `${defaultError.msg}. ${tlError.message}. RequestId: ${tlError.requestId}`,
+        sanitizeError(error),
+      );
     }
 
-    switch (entry?.status ?? error.response.status) {
-      case 400:
-        return new BadRequestException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-      case 408:
-        return new GatewayTimeoutException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-      case 409:
-        return new ConflictException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-      case 502:
-        return new BadGatewayException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-      case 403:
-      case 503:
-        return new ServiceUnavailableException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-      default:
-        return new ServiceUnavailableException(entry.msg, {
-          cause: sanitizeError(error),
-          description: `${tlError.message}. RequestId: ${tlError.requestId}`,
-        });
-    }
+    return new PlatformException(
+      `${entry.msg}. ${tlError.message}. RequestId: ${tlError.requestId}`,
+      sanitizeError(error),
+      entry?.status ?? error.response.status,
+    );
   }
 }
