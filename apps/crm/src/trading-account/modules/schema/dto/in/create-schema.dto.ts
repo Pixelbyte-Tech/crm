@@ -33,11 +33,17 @@ export class CreateSchemaDto {
   @Transform(toBoolean)
   isEnabled?: boolean;
 
-  /** Whether users must be KYC verified before creating an account */
+  /** Whether users must be POI verified before creating an account */
   @IsOptional()
   @Validate(toBoolean)
   @Transform(toBoolean)
-  isKycRequired?: boolean;
+  isPoiRequired?: boolean;
+
+  /** Whether users must be POW verified before creating an account */
+  @IsOptional()
+  @Validate(toBoolean)
+  @Transform(toBoolean)
+  isPowRequired?: boolean;
 
   /** The allowed account leverage values */
   @IsOptional()

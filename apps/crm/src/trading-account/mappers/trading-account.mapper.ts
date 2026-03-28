@@ -23,6 +23,7 @@ export class TradingAccountMapper {
     const model = new TradingAccount();
     model.id = data.id;
     model.userId = data.userId;
+    model.schemaId = data.schemaId ?? undefined;
     model.serverId = data.serverId;
     model.platformId = data.platformId;
     model.platformUserId = data.platformUserId ?? undefined;

@@ -18,6 +18,7 @@ import { ServerEntity } from './server.entity';
 import { WalletTransactionEntity } from './wallet-transaction.entity';
 import { TradingAccountTagEntity } from './trading-account-tag.entity';
 import { TradingAccountNoteEntity } from './trading-account-note.entity';
+import { TradingAccountSchemaEntity } from './trading-account-schema.entity';
 import { WalletTransactionHistoryEntity } from './wallet-transaction-history.entity';
 
 @Entity({ name: 'trading_account' })
@@ -80,6 +81,18 @@ export class TradingAccountEntity {
   walletTransactionHistory: WalletTransactionHistoryEntity[];
 
   /** Many-to-many relations */
+  @ManyToOne(() => TradingAccountSchemaEntity, (e) => e.tradingAccounts, {
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'schemaId' })
+  schema?: TradingAccountSchemaEntity | null;
+
+  @Index()
+  @Column({ type: 'uuid', nullable: true })
+  schemaId?: string | null;
+
   @ManyToOne(() => ServerEntity, (e) => e.tradingAccounts, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

@@ -2,22 +2,17 @@ import { Type, Transform } from 'class-transformer';
 import { IsInt, IsEnum, Validate, IsString, IsOptional, IsNotEmpty, IsPositive } from 'class-validator';
 
 import { Monetisation } from '@crm/types';
-import {
-  toUpperCase,
-  UserIdValidator,
-  ServerIdValidator,
-  PasswordValidator,
-  Iso4217OrCryptoValidator,
-} from '@crm/validation';
+import { TradingAccountSchemaEntity } from '@crm/database';
+import { toUpperCase, UserIdValidator, PasswordValidator, Iso4217OrCryptoValidator } from '@crm/validation';
 
 export class CreateTradingAccountDto {
   /** The user to whom the new trading account should belong */
   @Validate(UserIdValidator)
   userId: string;
 
-  /** The server on which to create the trading account */
-  @Validate(ServerIdValidator)
-  serverId: string;
+  /** The trading account schema id defining this account */
+  @Validate(TradingAccountSchemaEntity)
+  schemaId: string;
 
   /** The chosen trading account leverage */
   @IsInt()
@@ -33,11 +28,6 @@ export class CreateTradingAccountDto {
   /** The monetisation of the trading account */
   @IsEnum(Monetisation)
   monetisation: Monetisation;
-
-  /** The user group id in the platform that will be used */
-  @IsString()
-  @IsNotEmpty()
-  platformUserGroupId: string;
 
   /** A friendly name to assign to the trading account */
   @IsOptional()

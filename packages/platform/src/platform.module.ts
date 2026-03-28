@@ -3,8 +3,8 @@ import { join } from 'path';
 import Redis from 'ioredis';
 import { CacheModule } from '@nestjs/cache-manager';
 import { I18nModule, HeaderResolver, AcceptLanguageResolver } from 'nestjs-i18n';
-import { Type, Module, Provider, DynamicModule, ModuleMetadata } from '@nestjs/common';
 import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-token.interface';
+import { Type, Module, Global, Provider, DynamicModule, ModuleMetadata } from '@nestjs/common';
 import { OptionalFactoryDependency } from '@nestjs/common/interfaces/modules/optional-factory-dependency.interface';
 
 import { Mt5ErrorMapper } from './mappers/error/mt5-error.mapper';
@@ -79,11 +79,8 @@ interface PlatformModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   useFactory?: (...args: unknown[]) => Promise<PlatformModuleOptions> | PlatformModuleOptions;
 }
 
-@Module({
-  imports: [],
-  providers: [],
-  exports: [],
-})
+@Global()
+@Module({})
 export class PlatformModule {
   public static forRootAsync(options: PlatformModuleAsyncOptions): DynamicModule {
     const providers: Provider[] = this.createAsyncProviders(options);

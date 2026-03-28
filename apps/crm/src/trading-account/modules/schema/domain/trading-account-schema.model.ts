@@ -6,7 +6,8 @@ export class TradingAccountSchema {
   name: string;
   description?: string;
   isEnabled: boolean;
-  isKycRequired: boolean;
+  isPoiRequired: boolean;
+  isPowRequired: boolean;
   allowedLeverages?: number[];
   leverageOverwrites?: SchemaLeverageOverwrite[];
   allowedCurrencies?: string[];
@@ -26,7 +27,8 @@ export class TradingAccountSchema {
       this.name = data.name;
       this.description = data.description;
       this.isEnabled = data.isEnabled;
-      this.isKycRequired = data.isKycRequired;
+      this.isPoiRequired = data.isPoiRequired;
+      this.isPowRequired = data.isPowRequired;
       this.allowedLeverages = data.allowedLeverages;
       this.leverageOverwrites = data.leverageOverwrites;
       this.allowedCurrencies = data.allowedCurrencies;

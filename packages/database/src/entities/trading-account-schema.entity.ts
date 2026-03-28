@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 
 import { ServerEntity } from './server.entity';
+import { TradingAccountEntity } from './trading-account.entity';
 import { TradingAccountSchemaLeverageEntity } from './trading-account-schema-leverage.entity';
 
 @Entity({ name: 'trading_account_schema' })
@@ -31,7 +32,10 @@ export class TradingAccountSchemaEntity {
   isEnabled: boolean;
 
   @Column({ type: 'boolean', default: false })
-  isKycRequired: boolean;
+  isPoiRequired: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  isPowRequired: boolean;
 
   @Column({ type: 'int', array: true, nullable: true })
   allowedLeverages?: number[] | null;
@@ -61,6 +65,10 @@ export class TradingAccountSchemaEntity {
   @OneToMany(() => TradingAccountSchemaLeverageEntity, (e) => e.tradingAccountSchema, { cascade: true })
   @JoinColumn()
   leverageOverwrites: TradingAccountSchemaLeverageEntity[];
+
+  @OneToMany(() => TradingAccountEntity, (e) => e.schema)
+  @JoinColumn()
+  tradingAccounts: TradingAccountEntity[];
 
   /** Many-to-many relations */
   @ManyToOne(() => ServerEntity, (e) => e.tradingAccountSchemas, {

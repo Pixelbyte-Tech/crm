@@ -5,6 +5,7 @@ import { SentryModule } from '@sentry/nestjs/setup';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 
+import { GeoModule } from '@crm/geo';
 import { AuthModule } from '@crm/auth';
 import { SwaggerModule } from '@crm/swagger';
 import { DatabaseModule } from '@crm/database';
@@ -22,6 +23,7 @@ import { AppConfig } from './config/app/app-config.type';
 import { AuthConfig } from './config/auth/auth-config.type';
 import { IntegrationModule } from './integration/integration.module';
 import { DatabaseConfig } from './config/database/database-config.type';
+import { GeoConfig } from './trading-account/config/geo/geo-config.type';
 import { GlobalSettingModule } from './global-setting/global-setting.module';
 import { PlatformClientModule } from './platform-client/platform-client.module';
 import { TradingAccountModule } from './trading-account/trading-account.module';
@@ -90,6 +92,15 @@ import { TradingAccountModule } from './trading-account/trading-account.module';
         idleTimeoutMillis: c.get('database.idleTimeoutMillis', { infer: true }),
         connectionTimeoutMillis: c.get('database.connectionTimeoutMillis', { infer: true }),
         maxUses: c.get('database.maxUses', { infer: true }),
+      }),
+    }),
+    GeoModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (c: ConfigService<{ app: AppConfig; geo: GeoConfig }>) => ({
+        redisHost: c.getOrThrow('app.redisHost', { infer: true }),
+        redisPort: c.getOrThrow('app.redisPort', { infer: true }),
+        geoipAccountId: c.getOrThrow('geo.accountId', { infer: true }),
+        geoipLicenseKey: c.getOrThrow('geo.licenseKey', { infer: true }),
       }),
     }),
     GlobalSettingModule,

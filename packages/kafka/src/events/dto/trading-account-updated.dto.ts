@@ -5,6 +5,8 @@ export interface TradingAccountUpdatedDto {
   tradingAccountId: string;
   /** The id of the user the trading account belongs to */
   userId: string;
+  /** The id of the schema used by the trading account */
+  schemaId?: string;
   /** The id of the server the trading account exists on */
   serverId: string;
   /** The id of the trading account on the platform */

@@ -34,7 +34,10 @@ import { SendMailProcessor, SendInvitationsProcessor } from './processors';
         const host = c.getOrThrow('app.redisHost', { infer: true });
         const port = c.getOrThrow('app.redisPort', { infer: true });
 
-        return { redis: `redis://${host}:${port}`, defaultJobOptions: { removeOnComplete: true, removeOnFail: 10 } };
+        return {
+          redis: `redis://${host}:${port}`,
+          defaultJobOptions: { removeOnComplete: true, removeOnFail: 10, backoff: { type: 'exponential' } },
+        };
       },
     }),
     ConfigModule.forFeature(mailConfig),

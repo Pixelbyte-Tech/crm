@@ -12,7 +12,8 @@ export class SchemaMapper {
     model.name = data.name;
     model.description = data.description ?? undefined;
     model.isEnabled = data.isEnabled;
-    model.isKycRequired = data.isKycRequired;
+    model.isPoiRequired = data.isPoiRequired;
+    model.isPowRequired = data.isPowRequired;
     model.allowedLeverages = data.allowedLeverages ?? undefined;
     model.leverageOverwrites =
       data.leverageOverwrites?.map((o) => ({

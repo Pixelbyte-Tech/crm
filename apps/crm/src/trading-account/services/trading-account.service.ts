@@ -1,8 +1,10 @@
+import { Queue } from 'bull';
 import { DateTime } from 'luxon';
+import { InjectQueue } from '@nestjs/bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { ClientKafka } from '@nestjs/microservices';
-import { In, Between, Repository, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { In, Between, Repository, EntityManager, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import {
   Logger,
   Inject,
@@ -12,36 +14,48 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
+import { GeoService } from '@crm/geo';
 import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
 import { Cryptography, securePassword } from '@crm/utils';
 import { PlatformFactory, BalanceOperation } from '@crm/platform';
 import { Gender, Platform, TradingAccountStatus } from '@crm/types';
-import { UserEntity, ServerEntity, TradingAccountEntity } from '@crm/database';
 import { Balance as PlatformBalance, UserGroup as PlatformUserGroup } from '@crm/platform';
 import { TradingAccountCreatedEvent, TradingAccountDeletedEvent, TradingAccountUpdatedEvent } from '@crm/kafka';
+import {
+  UserEntity,
+  ServerEntity,
+  UserDetailEntity,
+  TradingAccountEntity,
+  TradingAccountSchemaEntity,
+} from '@crm/database';
 
 import { GetTradingAccountDto } from '../dto/in/get-trading-account.dto';
 
+import { JobType } from '../types';
 import { TradingAccount } from '../domain';
 import { TradingAccountMapper } from '../mappers';
 import { PlatformServerFactory } from '../../common/services';
-import { MonetisationMismatchException } from '../exceptions';
 import { ListTradingAccountsDto, UpdateTradingAccountDto, CreateTradingAccountDto } from '../dto';
+import { SchemaConflictException, SchemaNotEnabledException, MonetisationMismatchException } from '../exceptions';
 
 @Injectable()
 export class TradingAccountService {
   constructor(
+    private readonly geoService: GeoService,
     private readonly platformFactory: PlatformFactory,
     private readonly platformServerFactory: PlatformServerFactory,
     private readonly tradingAccMapper: TradingAccountMapper,
     @Inject('KAFKA') private readonly kafka: ClientKafka,
+    @InjectQueue('trading-account-queue') private readonly queue: Queue,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(ServerEntity)
     private readonly serverRepo: Repository<ServerEntity>,
     @InjectRepository(TradingAccountEntity)
     private readonly tradingAccRepo: Repository<TradingAccountEntity>,
+    @InjectRepository(TradingAccountSchemaEntity)
+    private readonly schemaRepo: Repository<TradingAccountSchemaEntity>,
   ) {}
 
   readonly #logger: Logger = new Logger(this.constructor.name);
@@ -110,6 +124,7 @@ export class TradingAccountService {
           ...(dto.monetisation ? { monetisation: In(dto.monetisation) } : {}),
           ...(dto.integrationId ? { integrationId: dto.integrationId } : {}),
           ...(dto.serverId ? { serverId: dto.serverId } : {}),
+          ...(dto.schemaId ? { schemaId: dto.schemaId } : {}),
         },
         order: { registeredAt: dto.sortDir },
       },
@@ -167,11 +182,8 @@ export class TradingAccountService {
             }
 
             // Add user groups to map
-            accounts
-              .filter((a) => a.platformUserGroupId === userGroupId)
-              .forEach((a) => {
-                userGroupMap.set(a.platformAccountId, userGroup);
-              });
+            const candidates = accounts.filter((a) => a.platformUserGroupId === userGroupId);
+            candidates.forEach((a) => userGroupMap.set(a.platformAccountId, userGroup));
           }
         }
 
@@ -204,20 +216,33 @@ export class TradingAccountService {
    * @param req The authenticated request
    */
   async create(dto: CreateTradingAccountDto, req?: AuthenticatedReq): Promise<TradingAccount> {
-    const msg = `Attempting to create trading account for user '${dto.userId}' on server '${dto.serverId}'`;
+    const msg = `Attempting to create trading account for user '${dto.userId}' via schema '${dto.schemaId}'`;
 
-    // Fetch the server being requested
-    const server = await this.serverRepo.findOne({ where: { id: dto.serverId } });
-    if (!server) {
-      this.#logger.error(`${msg}. Server '${dto.serverId}' not found - Failed`);
-      throw new UnprocessableEntityException(`Server '${dto.serverId}' not found`);
+    // Fetch the schema
+    const schema = await this.schemaRepo.findOne({ where: { id: dto.schemaId } });
+    if (!schema) {
+      this.#logger.error(`${msg}. Schema '${dto.schemaId}' not found - Failed`);
+      throw new NotFoundException(`Schema '${dto.schemaId}' not found`);
     }
 
     // Fetch the user along with user details
     const user = await this.userRepo.findOne({ relations: { detail: true }, where: { id: dto.userId } });
     if (!user) {
       this.#logger.error(`${msg}. User '${dto.userId}' not found - Failed`);
-      throw new UnprocessableEntityException(`User '${dto.userId}' not found`);
+      throw new NotFoundException(`User '${dto.userId}' not found`);
+    }
+
+    // Check if the schema is enabled
+    if (!schema.isEnabled) {
+      this.#logger.error(`${msg}. Schema '${schema.name}' is currently disabled - Failed`);
+      throw new SchemaNotEnabledException(schema.name);
+    }
+
+    // Fetch the server being requested
+    const server = await this.serverRepo.findOne({ where: { id: schema.serverId } });
+    if (!server) {
+      this.#logger.error(`${msg}. Server '${schema.serverId}' not found - Failed`);
+      throw new UnprocessableEntityException(`Server '${schema.serverId}' not found`);
     }
 
     // Ensure the monetisation of the trading account and server match
@@ -226,22 +251,24 @@ export class TradingAccountService {
       throw new MonetisationMismatchException(dto.monetisation, server.monetisation);
     }
 
-    // todo Use schema instead and link trading account entity to schema
+    // Check if the schema is respected
+    await this.#testSchemaConflicts(dto.leverage, dto.userId, schema, dto.currency, user.detail, req);
 
     // Initialise a connection to the platform
     const platformServer = this.platformServerFactory.toPlatformServer(server);
     const platform = this.platformFactory.get(platformServer);
 
     // Find the user group for this account
-    const userGroup = await platform.getUserGroup(dto.platformUserGroupId);
+    const userGroup = await platform.getUserGroup(schema.platformUserGroupId);
     if (!userGroup) {
-      throw new UnprocessableEntityException(`Cannot find user group '${dto.platformUserGroupId}' on platform`);
+      throw new UnprocessableEntityException(`Cannot find user group '${schema.platformUserGroupId}' on platform`);
     }
 
     // Prepare any additional data for the request
     let additionalData: Record<string, any> | undefined;
     if (Platform.TL === server.platform) {
-      additionalData = { idempotencyKey: '' }; // todo set key
+      const num = await this.tradingAccRepo.count({ where: { userId: dto.userId, serverId: schema.serverId } });
+      additionalData = { idempotencyKey: Cryptography.hash(`${dto.userId}-${schema.serverId}-${num}`) };
     }
 
     // Create the account on the platform
@@ -272,24 +299,31 @@ export class TradingAccountService {
       { id: userGroup.platformGroupId, name: userGroup.name },
     );
 
-    // Create and persist the entity
-    const entity = await this.tradingAccRepo.save({
-      platformId: platformAccount.platformAccountId,
-      platformUserId: platformAccount.platformUserId,
-      platformAccountName: platformAccount.platformAccountName,
-      friendlyName: dto.friendlyName,
-      platform: server.platform,
-      monetisation: dto.monetisation,
-      status: TradingAccountStatus.ACTIVE,
-      currency: dto.currency,
-      login: platformAccount.masterCredential.login,
-      password: Cryptography.encrypt(platformAccount.masterCredential.password),
-    });
+    let entity: TradingAccountEntity;
 
-    if (!entity) {
-      this.#logger.error(`${msg} - Failed`);
+    try {
+      // Create and persist the entity
+      entity = await this.tradingAccRepo.save({
+        userId: dto.userId,
+        schemaId: dto.schemaId,
+        serverId: server.id,
+        platformId: platformAccount.platformAccountId,
+        platformUserId: platformAccount.platformUserId,
+        platformAccountName: platformAccount.platformAccountName,
+        friendlyName: dto.friendlyName,
+        platform: server.platform,
+        monetisation: dto.monetisation,
+        status: TradingAccountStatus.ACTIVE,
+        currency: dto.currency,
+        leverage: dto.leverage,
+        login: platformAccount.masterCredential.login,
+        password: Cryptography.encrypt(platformAccount.masterCredential.password),
+      });
+    } catch (err) {
+      this.#logger.error(`${msg} - Failed`, err);
       throw new InternalServerErrorException(
         `Failed to create '${server.platform}' trading account for user '${dto.userId}'`,
+        { cause: err },
       );
     }
 
@@ -303,6 +337,7 @@ export class TradingAccountService {
         {
           tradingAccountId: domainTradingAcc.id,
           userId: domainTradingAcc.userId,
+          schemaId: domainTradingAcc.schemaId,
           serverId: domainTradingAcc.serverId,
           platformId: domainTradingAcc.platformId,
           platformUserId: domainTradingAcc.platformUserId,
@@ -340,7 +375,10 @@ export class TradingAccountService {
     const msg = `Updating trading account '${tradingAccountId}'`;
 
     // Find the original trading account
-    const tradingAccount = await this.tradingAccRepo.findOne({ where: { id: tradingAccountId } });
+    const tradingAccount = await this.tradingAccRepo.findOne({
+      relations: { schema: true },
+      where: { id: tradingAccountId },
+    });
     if (!tradingAccount) {
       this.#logger.error(`${msg}. Trading account not found - Failed`);
       throw new NotFoundException(`Trading account '${tradingAccountId}' not found`);
@@ -353,30 +391,33 @@ export class TradingAccountService {
       throw new UnprocessableEntityException(`Server '${tradingAccount.serverId}' not found`);
     }
 
-    // todo Use schema instead and link trading account entity to schema
+    // Check if the schema is respected
+    if (dto.leverage) {
+      await this.#testSchemaConflicts(dto.leverage, tradingAccount.userId, tradingAccount.schema);
+    }
 
     // Initialise a connection to the platform
     const platformServer = this.platformServerFactory.toPlatformServer(server);
     const platform = this.platformFactory.get(platformServer);
 
-    // Update the account on the platform
-    await platform.updateAccount(
-      {
-        leverage: dto.leverage,
-        ...(dto.status ? { isSuspended: TradingAccountStatus.SUSPENDED === dto.status } : {}),
-      },
-      tradingAccount.platformId,
-    );
+    // Update the entity locally and on the platform
+    const result = await this.tradingAccRepo.manager.transaction(async (tx: EntityManager) => {
+      const result = await tx.update(
+        TradingAccountEntity,
+        { id: tradingAccountId },
+        {
+          ...(dto.friendlyName ? { friendlyName: dto.friendlyName } : {}),
+          ...(dto.status ? { status: dto.status } : {}),
+          ...(dto.leverage ? { leverage: dto.leverage } : {}),
+        },
+      );
 
-    // Update the entity by its id
-    const result = await this.tradingAccRepo.update(
-      { id: tradingAccountId },
-      {
-        ...(dto.friendlyName ? { friendlyName: dto.friendlyName } : {}),
-        ...(dto.status ? { status: dto.status } : {}),
-        ...(dto.leverage ? { leverage: dto.leverage } : {}),
-      },
-    );
+      // Update the account on the platform
+      const isSuspended = dto.status ? TradingAccountStatus.SUSPENDED === dto.status : undefined;
+      await platform.updateAccount({ leverage: dto.leverage, isSuspended }, tradingAccount.platformId);
+
+      return result;
+    });
 
     if (result.affected === 0) {
       this.#logger.error(`${msg} - Failed`);
@@ -393,6 +434,7 @@ export class TradingAccountService {
         {
           tradingAccountId: domainTradingAcc.id,
           userId: domainTradingAcc.userId,
+          schemaId: domainTradingAcc.schemaId,
           serverId: domainTradingAcc.serverId,
           platformId: domainTradingAcc.platformId,
           platformUserId: domainTradingAcc.platformUserId,
@@ -436,41 +478,123 @@ export class TradingAccountService {
     const platformServer = this.platformServerFactory.toPlatformServer(entity.server);
     const platform = this.platformFactory.get(platformServer);
 
-    // todo move this process to a queue
+    const result = await this.tradingAccRepo.manager.transaction(async (tx: EntityManager) => {
+      // Delete the entity
+      const res = await tx.delete(TradingAccountEntity, { id: entity.id });
+      if (!res.affected || res.affected === 0) {
+        this.#logger.error(`${msg} - Failed`);
+        return false;
+      }
 
-    // Close all active trades
-    const closedTradesRes = await platform.closeAllTrades(entity.platformId);
-    if (!closedTradesRes.positionsStatus) {
-      this.#logger.error(`${msg}. Unable to close open positions - Failed`);
-      throw new UnprocessableEntityException('Unable to close open positions');
+      // Close all active trades
+      const ctResult = await platform.closeAllTrades(entity.platformId);
+      if (!ctResult.positionsStatus) {
+        this.#logger.error(`${msg}. Unable to close open positions - Failed`, { res: ctResult.positionsResults });
+        throw new UnprocessableEntityException('Unable to close open positions');
+      }
+
+      // Record the current balance
+      const balance = await platform.getBalance(entity.platformId);
+
+      // Zero the trading account balance
+      const comment = `Account deleted. Balance transferred to PixelByte CRM wallet.`;
+      const balanceRes = await platform.updateBalance(
+        BalanceOperation.SUB,
+        balance.withdrawable,
+        comment,
+        entity.platformId,
+      );
+
+      // Credit back to wallet and delete from platform
+      if (balanceRes) {
+        // todo credit back into wallet
+
+        // Delete the account
+        await platform.deleteAccount(entity.platformId);
+      }
+
+      // Trigger the deletion event
+      this.kafka.emit(
+        TradingAccountDeletedEvent.type,
+        new TradingAccountDeletedEvent({ tradingAccountId, deletedAt: DateTime.utc().toMillis() }, req),
+      );
+
+      return true;
+    });
+
+    if (!result) {
+      this.#logger.log(`${msg}. Scheduling deletion retry`);
+      await this.queue.add(JobType.DELETE_ACCOUNT, { tradingAccountId });
     }
 
-    // Fetch the current balance
-    const balance = await platform.getBalance(entity.platformId);
-    const withdrawable = balance.withdrawable;
+    return result;
+  }
 
-    // Bring the balance to zero
-    const comment = `Closing account via PixelByte CRM`;
-    const isSuccess = await platform.updateBalance(BalanceOperation.SUB, withdrawable, comment, entity.platformId);
-    if (isSuccess) {
-      // todo credit back into wallet
-      // Suspend the account
-      await platform.deleteAccount(entity.platformId);
+  /**
+   * Tests whether trading account settings respect the schema restrictions
+   * @param leverage The leverage requested
+   * @param userId The user id of the owner of the trading account
+   * @param currency The currency requested
+   * @param schema The trading account schema
+   * @param userDetail The user detail entity
+   * @param req The original request
+   * @throws SchemaConflictException If the settings conflict with the schema
+   */
+  async #testSchemaConflicts(
+    leverage: number,
+    userId: string,
+    schema?: TradingAccountSchemaEntity | null,
+    currency?: string,
+    userDetail?: UserDetailEntity | null,
+    req?: AuthenticatedReq,
+  ): Promise<void> {
+    // Skip checks if no schema is used
+    if (!schema) return;
+
+    // Test leverage
+    if (schema.allowedLeverages?.includes(leverage)) {
+      throw new SchemaConflictException(schema.name, 'leverage');
     }
 
-    // Delete the entity
-    const res = await this.tradingAccRepo.delete({ id: entity.id });
-    if (!res.affected || res.affected === 0) {
-      this.#logger.error(`${msg} - Failed`);
-      return false;
+    // Test currency
+    if (currency && schema.allowedCurrencies?.includes(currency)) {
+      throw new SchemaConflictException(schema.name, 'currency');
     }
 
-    // Trigger the deletion event
-    this.kafka.emit(
-      TradingAccountDeletedEvent.type,
-      new TradingAccountDeletedEvent({ tradingAccountId, deletedAt: DateTime.utc().toMillis() }, req),
-    );
+    // Test POI & POW
+    if (schema.isPoiRequired && !userDetail?.isPoiVerified) {
+      throw new SchemaConflictException(schema.name, 'POI not verified');
+    }
+    if (schema.isPowRequired && !userDetail?.isPowVerified) {
+      throw new SchemaConflictException(schema.name, 'POW not verified');
+    }
 
-    return true;
+    // If no IP can be found, allow request
+    if (!req?.ip) return;
+
+    // Test geolocation
+    if (schema.allowedCountries?.length || schema.excludedCountries?.length) {
+      const country = this.geoService.get(req.ip).country?.isoCode;
+      if (!country) {
+        throw new SchemaConflictException(schema.name, 'geolocation error');
+      }
+
+      if (schema.excludedCountries?.length && schema.excludedCountries.includes(country)) {
+        throw new SchemaConflictException(schema.name, 'excludedCountries');
+      }
+
+      if (schema.allowedCountries?.length && !schema.allowedCountries.includes(country)) {
+        throw new SchemaConflictException(schema.name, 'allowedCountries');
+      }
+    }
+
+    // Test number of accounts
+
+    if (schema.maxAccountsPerUser) {
+      const num = await this.tradingAccRepo.count({ where: { userId, schemaId: schema.id } });
+      if (schema.maxAccountsPerUser >= num) {
+        throw new SchemaConflictException(schema.name, 'maxAccountsPerUser');
+      }
+    }
   }
 }

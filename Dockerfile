@@ -97,6 +97,9 @@ FROM base AS development
 # Set working directory
 WORKDIR /app
 
+# Copy the maxmind database for geoip lookups
+COPY packages/geo/files/maxmind /usr/local/maxmind
+
 # Install dependencies
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 
@@ -125,6 +128,9 @@ RUN apk add --no-cache openssl curl
 
 # Copy built output from build stage
 COPY --from=pre-production /app/pruned .
+
+# Copy the maxmind database for geoip lookups
+COPY packages/geo/files/maxmind /usr/local/maxmind
 
 # Expose the right port
 EXPOSE 3000

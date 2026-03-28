@@ -9,8 +9,10 @@ export interface TradingAccountSchemaCreatedDto {
   description?: string;
   /** Whether the schema is enabled and usable */
   isEnabled?: boolean;
-  /** Whether users must be KYC verified before creating an account */
-  isKycRequired?: boolean;
+  /** Whether users must be POI verified before creating an account */
+  isPoiRequired?: boolean;
+  /** Whether users must be POW verified before creating an account */
+  isPowRequired?: boolean;
   /** The allowed account leverage values */
   allowedLeverages?: number[];
   /** Any leverage overwrites applicable to the schema */

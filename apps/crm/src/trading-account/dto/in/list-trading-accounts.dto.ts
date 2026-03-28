@@ -2,6 +2,7 @@ import { Type, Transform } from 'class-transformer';
 import { IsEnum, IsDate, Validate, IsOptional } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
+import { TradingAccountSchemaEntity } from '@crm/database';
 import { Platform, Monetisation, IntegrationName, TradingAccountStatus } from '@crm/types';
 import { toArray, toBoolean, UserIdValidator, ServerIdValidator, IntegrationIdValidator } from '@crm/validation';
 
@@ -45,6 +46,11 @@ export class ListTradingAccountsDto extends PaginatedReqDto {
   @IsOptional()
   @Validate(ServerIdValidator)
   serverId?: string;
+
+  /** Filter by schema */
+  @IsOptional()
+  @Validate(TradingAccountSchemaEntity)
+  schemaId?: string;
 
   /** Filter by user */
   @IsOptional()
