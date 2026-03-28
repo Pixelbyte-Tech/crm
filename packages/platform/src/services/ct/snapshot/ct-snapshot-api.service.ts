@@ -8,7 +8,7 @@ import { Monetisation } from '@crm/types';
 
 import { CtErrorMapper } from '../../../mappers/error/ct-error.mapper';
 
-import { CTCredentials, PlatformServer } from '../../../models/platform-server';
+import { CTCredentials, PlatformServer } from '../../../models';
 
 import { PlatformException, UnparseableResponseException } from '../../../exceptions';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { CommissionGroup } from '../../../models/commission-group';
+import { CommissionGroup } from '../../../models';
 
 import { Mt5Group } from '../../../types/mt5/account/group.type';
 

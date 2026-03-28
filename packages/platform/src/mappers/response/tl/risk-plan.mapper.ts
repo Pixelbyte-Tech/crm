@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { RiskPlan } from '../../../models/risk-plan';
+import { RiskPlan } from '../../../models';
 
 import { TlSpreadPlan } from '../../../types/tl/plan/spread-plan.type';
 

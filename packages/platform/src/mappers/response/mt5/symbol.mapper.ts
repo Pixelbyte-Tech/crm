@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { getTimezoneOffset } from '@crm/utils';
 
-import { Symbol } from '../../../models/symbol';
-import { TradingSessions } from '../../../models/trading-session';
+import { Symbol, TradingSessions } from '../../../models';
 
 import { Mt5Symbol, Mt5Session, Mt5SessionTime } from '../../../types/mt5/symbol/symbol.type';
 

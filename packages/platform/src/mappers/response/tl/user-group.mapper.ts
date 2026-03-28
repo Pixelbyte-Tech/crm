@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserGroup } from '../../../models/user-group';
+import { UserGroup } from '../../../models';
 
 import { TlGroup } from '../../../types/tl/account/group.type';
 

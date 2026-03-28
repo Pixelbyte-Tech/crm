@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 
-import { TradingHoliday } from '../../../models/trading-holiday';
+import { TradingHoliday } from '../../../models';
 
 import { Mt5Holiday, Mt5HolidayMode } from '../../../types/mt5/symbol/holiday.type';
 

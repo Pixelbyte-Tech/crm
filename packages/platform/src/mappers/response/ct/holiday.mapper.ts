@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { getTimezoneOffset } from '@crm/utils';
 
-import { TradingHoliday } from '../../../models/trading-holiday';
+import { TradingHoliday } from '../../../models';
 
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 

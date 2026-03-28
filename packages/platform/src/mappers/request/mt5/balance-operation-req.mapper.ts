@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BalanceOperation } from '../../../models/balance';
+import { BalanceOperation } from '../../../models';
 
 import { UnprocessableResponseException } from '../../../exceptions';
 

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Side, PositionStatus } from '@crm/types';
 
-import { Position } from '../../../models/position';
+import { Position } from '../../../models';
 
 import { Mt5Deal } from '../../../types/mt5/trade/deal.type';
 

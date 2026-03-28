@@ -46,6 +46,7 @@ export class TradingAccountMapper {
       model.balance = this.balanceMapper.toBalance(platformBalance);
     }
 
+    model.tags = [];
     if (data.tradingAccountTags?.length > 0) {
       model.tags = data.tradingAccountTags.map((tag) => this.tagMapper.toTag(tag.tag));
     }

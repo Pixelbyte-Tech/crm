@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { getTimezoneOffset } from '@crm/utils';
 
-import { TradingSession, TradingSessions } from '../../../models/trading-session';
+import { TradingSession, TradingSessions } from '../../../models';
 
 import { ProtoScheduleProfile } from '../../../services/ct/manager/proto/base/ts';
 

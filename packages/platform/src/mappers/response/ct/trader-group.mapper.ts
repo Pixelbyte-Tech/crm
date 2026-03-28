@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserGroup } from '../../../models/user-group';
+import { UserGroup } from '../../../models';
 
 import { CtTraderGroup } from '../../../types/ct/account/group.type';
 

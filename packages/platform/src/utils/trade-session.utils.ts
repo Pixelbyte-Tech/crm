@@ -1,4 +1,4 @@
-import { TradingSession } from '../models/trading-session';
+import { TradingSession } from '../models';
 
 export interface OffsetResult extends TradingSession {
   openDay: number;

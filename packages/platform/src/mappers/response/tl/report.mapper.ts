@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { ClosePositionResult } from '../../../models/close-position-result';
-import { UserGroupAggregateBalance } from '../../../models/user-group-aggregate-balance';
+import { ClosePositionResult, UserGroupAggregateBalance } from '../../../models';
 
 import { TlAccountStatementReport } from '../../../types/tl/report/account-statement-report.type';
 import { TlClosedPositionsHistoryReport } from '../../../types/tl/report/closed-positions-history-report.type';

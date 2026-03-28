@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { SpreadGroup } from '../../../models/spread-group';
+import { SpreadGroup } from '../../../models';
 
 import { TlSpreadPlan } from '../../../types/tl/plan/spread-plan.type';
 

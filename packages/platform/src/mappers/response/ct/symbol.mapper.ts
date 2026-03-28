@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Symbol } from '../../../models/symbol';
-import { TradingSessions } from '../../../models/trading-session';
+import { Symbol, TradingSessions } from '../../../models';
 
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 

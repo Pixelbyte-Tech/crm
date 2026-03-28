@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Symbol } from '../../../models/symbol';
+import { Symbol } from '../../../models';
 
 import { TlInstrument } from '../../../types/tl/symbol/instrument.type';
 

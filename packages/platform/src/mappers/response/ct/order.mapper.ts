@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { OrderType } from '@crm/types';
 
-import { Order, OrderStatus } from '../../../models/order';
+import { Order, OrderStatus } from '../../../models';
 
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 

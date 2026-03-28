@@ -1,7 +1,7 @@
 import Long from 'long';
 import { Injectable } from '@nestjs/common';
 
-import { BalanceOperation } from '../../../models/balance';
+import { BalanceOperation } from '../../../models';
 
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 

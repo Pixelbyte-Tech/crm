@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 
-import { JournalEntry } from '../../../models/journal-entry';
+import { JournalEntry } from '../../../models';
 
 import { Mt5JournalEntry } from '../../../types/mt5/statistics/journal-entry.type';
 

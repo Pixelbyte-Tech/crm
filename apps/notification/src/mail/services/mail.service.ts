@@ -14,8 +14,8 @@ import { AppConfig } from '../../config/app/app-config.type';
 @Injectable()
 export class MailService {
   constructor(
-    private readonly factory: TransportFactory,
     private readonly i18n: I18nService,
+    private readonly factory: TransportFactory,
     private readonly config: ConfigService<{ mail: MailConfig; app: AppConfig }>,
   ) {}
 
@@ -177,13 +177,13 @@ export class MailService {
   }
 
   /**
-   * Constructs a URL object to the FE
-   * @param path The path to append to the FE URL
+   * Constructs a URL object which references the frontend
+   * @param path The path to append to the frontend URL
    */
   #constructFeUrl(path?: string): URL {
     let feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
     if (!feUrl.startsWith('http') && !feUrl.endsWith('https')) {
-      feUrl = `http://${feUrl}`;
+      feUrl = `https://${feUrl}`;
     }
 
     return path ? new URL(path, feUrl) : new URL(feUrl);

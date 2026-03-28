@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Side, PositionStatus } from '@crm/types';
 
-import { Position } from '../../../models/position';
-import { ClosePositionResult } from '../../../models/close-position-result';
+import { Position, ClosePositionResult } from '../../../models';
 
 import { CtManagerApiService } from '../../../services/ct/manager/ct-manager-api.service';
 

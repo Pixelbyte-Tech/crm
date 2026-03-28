@@ -7,8 +7,7 @@ import { DateTime } from 'luxon';
 import objectHash from 'object-hash';
 import { Logger } from '@nestjs/common';
 
-import { Tick } from '../../../models/tick';
-import { CTCredentials } from '../../../models/platform-server';
+import { Tick, CTCredentials } from '../../../models';
 
 import { Serializer } from '../../serializer.service';
 import { CtManagerApiService } from './ct-manager-api.service';

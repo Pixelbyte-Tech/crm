@@ -1,7 +1,7 @@
 import { codes } from 'currency-codes';
 import { Injectable } from '@nestjs/common';
 
-import { CommissionGroup } from '../../../models/commission-group';
+import { CommissionGroup } from '../../../models';
 
 import { TlCommissionPlan } from '../../../types/tl/plan/commission-plan.type';
 

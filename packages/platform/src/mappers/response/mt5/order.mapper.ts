@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 import { OrderType } from '@crm/types';
 
-import { Order } from '../../../models/order';
+import { Order } from '../../../models';
 
 import { Mt5Order } from '../../../types/mt5/trade/order.type';
 
