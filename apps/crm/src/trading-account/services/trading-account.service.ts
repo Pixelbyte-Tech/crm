@@ -406,9 +406,9 @@ export class TradingAccountService {
         TradingAccountEntity,
         { id: tradingAccountId },
         {
-          ...(dto.friendlyName ? { friendlyName: dto.friendlyName } : {}),
           ...(dto.status ? { status: dto.status } : {}),
           ...(dto.leverage ? { leverage: dto.leverage } : {}),
+          ...(dto.friendlyName ? { friendlyName: dto.friendlyName } : {}),
         },
       );
 
