@@ -17,9 +17,7 @@ import { HealthModule } from './health/health.module';
       useFactory: (c: ConfigService) => {
         const port = Number(c.getOrThrow('REDIS_PORT'));
         const host = c.getOrThrow('REDIS_HOST');
-        return {
-          redis: { host, port, keepAlive: 1, reconnectOnError: () => true },
-        };
+        return { redis: { host, port, keepAlive: 1, reconnectOnError: () => true } };
       },
     }),
     BullModule.registerQueue({ name: 'geo-queue' }),
