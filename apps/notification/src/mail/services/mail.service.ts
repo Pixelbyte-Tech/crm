@@ -182,7 +182,7 @@ export class MailService {
    */
   #constructFeUrl(path?: string): URL {
     let feUrl = this.config.getOrThrow('app.frontendUrl', { infer: true });
-    if (!feUrl.startsWith('http') && !feUrl.endsWith('https')) {
+    if (!feUrl.startsWith('http') && !feUrl.startsWith('https')) {
       feUrl = `https://${feUrl}`;
     }
 
