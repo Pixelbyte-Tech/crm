@@ -173,8 +173,8 @@ export abstract class AbstractCtService {
   async #updateToken(silent: boolean = false): Promise<boolean> {
     // If the token is already being updated, wait for it to finish
     if (await this.#isTokenUpdating()) {
-      const now = DateTime.utc().toUnixInteger();
-      while (now > DateTime.utc().minus({ seconds: 15 }).toUnixInteger()) {
+      const deadline = DateTime.utc().plus({ seconds: 15 }).toUnixInteger();
+      while (DateTime.utc().toUnixInteger() < deadline) {
         if (!(await this.#isTokenUpdating())) {
           return !(await this.#isTokenExpired());
         }

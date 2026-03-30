@@ -186,8 +186,8 @@ export abstract class AbstractMtService {
   async #updateToken(silent: boolean = false): Promise<boolean> {
     // If the token is already being updated, wait for it to finish
     if (await this.#isTokenUpdating()) {
-      const now = DateTime.utc().toUnixInteger();
-      while (now > DateTime.utc().minus({ seconds: 30 }).toUnixInteger()) {
+      const deadline = DateTime.utc().plus({ seconds: 30 }).toUnixInteger();
+      while (DateTime.utc().toUnixInteger() < deadline) {
         if (!(await this.#isTokenUpdating())) {
           return !(await this.#isTokenExpired());
         }
