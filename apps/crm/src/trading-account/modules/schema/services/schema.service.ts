@@ -207,13 +207,18 @@ export class SchemaService {
     const msg = `Updating schema '${schemaId}'`;
 
     // Prepare the leverage overwrites
-    const leverageOverwrites = dto.leverageOverwrites?.length
-      ? dto.leverageOverwrites?.map((l) => ({
-          leverages: l.leverages,
-          allowedCountries: l.allowedCountries ?? undefined,
-          excludedCountries: l.excludedCountries ?? undefined,
-        }))
-      : undefined;
+    let leverageOverwrites: any[] | null | undefined;
+    if (null === dto.leverageOverwrites) {
+      leverageOverwrites = null;
+    }
+
+    if (dto.leverageOverwrites?.length) {
+      leverageOverwrites = dto.leverageOverwrites?.map((l) => ({
+        leverages: l.leverages,
+        allowedCountries: l.allowedCountries ?? undefined,
+        excludedCountries: l.excludedCountries ?? undefined,
+      }));
+    }
 
     // Update the entity by its id
     const result = await this.schemaRepo.update(
