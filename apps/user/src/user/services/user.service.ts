@@ -1,3 +1,5 @@
+import { randomInt } from 'node:crypto';
+
 import { isNil } from 'lodash';
 import { DateTime } from 'luxon';
 import { Request } from 'express';
@@ -18,8 +20,8 @@ import { Cryptography } from '@crm/utils';
 import { PaginatedResDto } from '@crm/http';
 import { AuthenticatedReq } from '@crm/auth';
 import { UserEntity, LoyaltyEntity, UserSettingEntity } from '@crm/database';
+import { Role, User, UserStatus, LoyaltyProgram, GlobalSettingKey } from '@crm/types';
 import { UserCreatedEvent, UserDeletedEvent, UserUpdatedEvent, UserEmailUpdatedEvent } from '@crm/kafka';
-import { Role, User, UserDetail, UserStatus, UserSetting, LoyaltyProgram, GlobalSettingKey } from '@crm/types';
 
 import { GlobalSettingService } from './global-setting.service';
 
@@ -70,25 +72,24 @@ export class UserService {
    * @param dto The list dto
    */
   async list(dto: ListUsersDto): Promise<PaginatedResDto<User>> {
-    const qb = this.userRepo.createQueryBuilder('u').orderBy({ createdAt: dto.sortDir });
+    const qb = this.userRepo.createQueryBuilder('u').orderBy({ 'u."createdAt"': dto.sortDir });
 
     if (dto.incDetail) {
-      qb.leftJoinAndSelect(UserDetail, 'd');
+      qb.leftJoinAndSelect('u.detail', 'd');
     }
 
     if (dto.incSettings) {
-      qb.leftJoinAndSelect(UserSetting, 's');
+      qb.leftJoinAndSelect('u.settings', 's');
     }
 
     if (dto.from && dto.to) {
       qb.where('u."createdAt" BETWEEN :from AND :to', { from: dto.from, to: dto.to });
-    } else {
-      if (dto.from) {
-        qb.where('u."createdAt" >= :from', { from: dto.from });
-      }
-      if (dto.to) {
-        qb.where('u."createdAt" <= :to', { to: dto.to });
-      }
+    }
+    if (dto.from && !dto.to) {
+      qb.where('u."createdAt" >= :from', { from: dto.from });
+    }
+    if (dto.to && !dto.from) {
+      qb.where('u."createdAt" <= :to', { to: dto.to });
     }
 
     // Find the resources paginated
@@ -122,7 +123,7 @@ export class UserService {
     userSettings.canDeposit = Boolean(canDeposit);
     userSettings.canWithdraw = Boolean(canWithdraw);
     userSettings.canAutoWithdraw = Boolean(canAutoWithdraw);
-    userSettings.maxAutoWithdrawAmount = Number(maxAutoWithdrawAmount ?? 1000);
+    userSettings.maxAutoWithdrawAmount = Number(maxAutoWithdrawAmount) ?? 1000;
 
     // Create the user loyalty
     const loyalty = new LoyaltyEntity();
@@ -131,12 +132,12 @@ export class UserService {
     // Create the new user
     const user = await this.userRepo.save({
       email: dto.email,
-      password: Cryptography.hash(dto.password),
+      passwordHash: Cryptography.hash(dto.password),
       roles: [Role.USER],
       firstName: dto.firstName,
       middleName: dto.middleName,
       lastName: dto.lastName,
-      securityPin: Math.floor(1000 + Math.random() * 9000).toString(),
+      securityPin: randomInt(1000, 10000).toString(),
       status: UserStatus.ACTIVE,
       settings: userSettings,
       loyalty,
@@ -199,35 +200,35 @@ export class UserService {
     let privacyAcceptedAt: Date | null | undefined = dto.isPrivacyAccepted && !user.isPrivacyAccepted ? now : undefined;
     let termsAcceptedAt: Date | null | undefined = dto.isTermsAccepted && !user.isTermsAccepted ? now : undefined;
 
-    if (undefined !== dto.isCookiesAccepted && !dto.isCookiesAccepted) {
+    if (!isNil(dto.isCookiesAccepted) && !dto.isCookiesAccepted) {
       cookiesAcceptedAt = null;
     }
 
-    if (undefined !== dto.isPrivacyAccepted && !dto.isPrivacyAccepted) {
+    if (!isNil(dto.isPrivacyAccepted) && !dto.isPrivacyAccepted) {
       privacyAcceptedAt = null;
     }
 
-    if (undefined !== dto.isTermsAccepted && !dto.isTermsAccepted) {
+    if (!isNil(dto.isTermsAccepted) && !dto.isTermsAccepted) {
       termsAcceptedAt = null;
     }
 
     // Perform the update
     const result = await this.userRepo.update(userId, {
       ...(dto.email ? { email: dto.email, isEmailVerified: false, emailVerifiedAt: null } : {}),
-      ...(dto.password ? { password: Cryptography.hash(dto.password) } : {}),
+      ...(dto.password ? { passwordHash: Cryptography.hash(dto.password) } : {}),
       ...(dto.firstName ? { firstName: dto.firstName } : {}),
       ...(dto.middleName ? { middleName: dto.middleName } : {}),
       ...(dto.lastName ? { lastName: dto.lastName } : {}),
       ...(dto.status ? { status: dto.status } : {}),
       ...(dto.securityPin ? { securityPin: dto.securityPin.toString() } : {}),
 
-      ...(dto.isCookiesAccepted ? { isCookiesAccepted: dto.isCookiesAccepted } : {}),
+      ...(!isNil(dto.isCookiesAccepted) ? { isCookiesAccepted: dto.isCookiesAccepted } : {}),
       ...(cookiesAcceptedAt ? { cookiesAcceptedAt } : {}),
 
-      ...(dto.isPrivacyAccepted ? { isPrivacyAccepted: dto.isPrivacyAccepted } : {}),
+      ...(!isNil(dto.isPrivacyAccepted) ? { isPrivacyAccepted: dto.isPrivacyAccepted } : {}),
       ...(privacyAcceptedAt ? { privacyAcceptedAt } : {}),
 
-      ...(dto.isTermsAccepted ? { isTermsAccepted: dto.isTermsAccepted } : {}),
+      ...(!isNil(dto.isTermsAccepted) ? { isTermsAccepted: dto.isTermsAccepted } : {}),
       ...(termsAcceptedAt ? { termsAcceptedAt } : {}),
     });
 
@@ -248,7 +249,7 @@ export class UserService {
             id: user.id,
             oldEmail: user.email,
             newEmail: dto.email,
-            updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis(),
+            updatedAt: DateTime.fromJSDate(domainUser.updatedAt).toMillis(),
           },
           req,
         ),
@@ -319,7 +320,10 @@ export class UserService {
       // Trigger the update event
       this.kafka.emit(
         UserUpdatedEvent.type,
-        new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+        new UserUpdatedEvent(
+          { user: domainUser, updatedAt: DateTime.fromJSDate(domainUser.updatedAt).toMillis() },
+          req,
+        ),
       );
 
       this.#logger.log(`${msg} - Complete`);
@@ -364,7 +368,10 @@ export class UserService {
       // Trigger the update event
       this.kafka.emit(
         UserUpdatedEvent.type,
-        new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+        new UserUpdatedEvent(
+          { user: domainUser, updatedAt: DateTime.fromJSDate(domainUser.updatedAt).toMillis() },
+          req,
+        ),
       );
 
       this.#logger.log(`${msg} - Complete`);

@@ -45,7 +45,7 @@ export class NotificationService {
 
       return result.identifiers.length > 0;
     } catch (err) {
-      this.#logger.error(`${err}`);
+      this.#logger.error(`${msg} - Failed`, err);
       return false;
     }
   }
@@ -75,7 +75,7 @@ export class NotificationService {
 
       return result.identifiers.length > 0;
     } catch (err) {
-      this.#logger.error(`${err}`);
+      this.#logger.error(`${msg} - Failed`, err);
       return false;
     }
   }

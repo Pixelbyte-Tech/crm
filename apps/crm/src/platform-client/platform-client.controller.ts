@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
@@ -47,7 +47,7 @@ export class PlatformClientController {
   @OpenApi({ type: PlatformClient })
   @Post()
   public async create(
-    @Query() dto: CreatePlatformClientDto,
+    @Body() dto: CreatePlatformClientDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: PlatformClient }> {
     return { data: await this.service.create(dto, req) };
@@ -64,7 +64,7 @@ export class PlatformClientController {
   @Patch(':clientId')
   public async update(
     @Param('clientId', PlatformClientIdValidator) clientId: string,
-    @Query() dto: UpdatePlatformClientDto,
+    @Body() dto: UpdatePlatformClientDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: PlatformClient }> {
     return { data: await this.service.update(clientId, dto, req) };

@@ -12,7 +12,7 @@ import { SwaggerModule, SwaggerService } from '@crm/swagger';
 
 import { AppModule } from './app.module';
 // Initialise Sentry instrumentation
-import './insturment';
+import './instrument';
 import { AppConfig } from './config/app/app-config.type';
 
 async function bootstrap() {

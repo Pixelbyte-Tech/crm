@@ -131,7 +131,7 @@ export class SubjectFactory {
         return new TradingAccountTagSubject();
 
       case TradingAccountSchemaSubject.name:
-        return new PaymentTransactionSubject(await this.#find(TradingAccountSchemaEntity, ['userId'], req, filter));
+        return new TradingAccountSubject(await this.#find(TradingAccountSchemaEntity, ['userId'], req, filter));
 
       case TradingAccountSchemaLeverageSubject.name:
         return new TradingAccountSchemaLeverageSubject();

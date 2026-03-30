@@ -18,7 +18,7 @@ export class Sql1783980000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     while (this.#year < 2040) {
       while (this.#month < 13) {
-        const date = DateTime.now().set({ year: this.#year, month: this.#month });
+        const date = DateTime.utc().set({ year: this.#year, month: this.#month });
 
         const start = date.startOf('month').toFormat('yyyy-LL-dd 00:00:00.000');
         const end = date.endOf('month').toFormat('yyyy-LL-dd 23:59:59.999');
@@ -41,7 +41,7 @@ export class Sql1783980000000 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     while (this.#year < 2035) {
       while (this.#month < 13) {
-        const date = DateTime.now().set({ year: this.#year, month: this.#month });
+        const date = DateTime.utc().set({ year: this.#year, month: this.#month });
         const suffix = `${this.#year}_${date.toFormat('LL')}`;
 
         for (const table of this.#tables) {

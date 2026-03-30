@@ -2,7 +2,7 @@ import { Type, Transform } from 'class-transformer';
 import { Min, IsInt, IsEnum, Validate, IsOptional, IsISO31661Alpha2 } from 'class-validator';
 
 import { IntegrationName } from '@crm/types';
-import { toArray, toBoolean, toUpperCase } from '@crm/validation';
+import { toArray, toBoolean, toUpperCase, BooleanValidator } from '@crm/validation';
 
 import { IntegrationSetting } from '../../types';
 import { SettingsValidator } from '../../validators';
@@ -14,7 +14,7 @@ export class CreateIntegrationDto {
 
   /** Whether the integration should be automatically enabled */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isEnabled: boolean = false;
 

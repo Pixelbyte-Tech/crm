@@ -62,8 +62,10 @@ export class SchemaService {
    * @param dto The list dto
    */
   async list(serverId: string, dto: ListSchemasDto): Promise<PaginatedResDto<TradingAccountSchema>> {
-    const qb = this.schemaRepo.createQueryBuilder('s').orderBy({ createdAt: dto.sortDir });
-    qb.where('s."serverId" = :serverId', { serverId });
+    const qb = this.schemaRepo
+      .createQueryBuilder('s')
+      .where('s."serverId" = :serverId', { serverId })
+      .orderBy({ 's."createdAt"': dto.sortDir });
 
     if (!isNil(dto.isEnabled)) {
       qb.andWhere('s."isEnabled" = :isEnabled', { isEnabled: dto.isEnabled });
@@ -74,23 +76,25 @@ export class SchemaService {
     }
 
     if (dto.allowedLeverages?.length) {
-      const vals = dto.allowedLeverages.map((l) => `${l}`).join(', ');
-      qb.andWhere(`s."allowedLeverages" && ARRAY[${vals}]`);
+      qb.andWhere(`s."allowedLeverages" && ARRAY[:...allowedLeverages]::int[]`, {
+        allowedLeverages: dto.allowedLeverages,
+      });
     }
 
     if (dto.allowedCurrencies?.length) {
-      const vals = dto.allowedCurrencies.map((l) => `${l}`).join(', ');
-      qb.andWhere(`s."allowedCurrencies" && ARRAY[${vals}]`);
+      qb.andWhere(`s."allowedCurrencies" && ARRAY[:...allowedCurrencies]`, {
+        allowedCurrencies: dto.allowedCurrencies,
+      });
     }
 
     if (dto.allowedCountries?.length) {
-      const vals = dto.allowedCountries.map((l) => `${l}`).join(', ');
-      qb.andWhere(`s."allowedCountries" && ARRAY[${vals}]`);
+      qb.andWhere(`s."allowedCountries" && ARRAY[:...allowedCountries]`, { allowedCountries: dto.allowedCountries });
     }
 
     if (dto.excludedCountries?.length) {
-      const vals = dto.excludedCountries.map((l) => `${l}`).join(', ');
-      qb.andWhere(`s."excludedCountries" && ARRAY[${vals}]`);
+      qb.andWhere(`s."excludedCountries" && ARRAY[:...excludedCountries]`, {
+        excludedCountries: dto.excludedCountries,
+      });
     }
 
     if (dto.minDepositAmountUsd) {
@@ -202,6 +206,15 @@ export class SchemaService {
   ): Promise<TradingAccountSchema> {
     const msg = `Updating schema '${schemaId}'`;
 
+    // Prepare the leverage overwrites
+    const leverageOverwrites = dto.leverageOverwrites?.length
+      ? dto.leverageOverwrites?.map((l) => ({
+          leverages: l.leverages,
+          allowedCountries: l.allowedCountries ?? undefined,
+          excludedCountries: l.excludedCountries ?? undefined,
+        }))
+      : undefined;
+
     // Update the entity by its id
     const result = await this.schemaRepo.update(
       { id: schemaId, serverId },
@@ -219,12 +232,7 @@ export class SchemaService {
         ...(undefined !== dto.maxDepositAmountUsd ? { maxDepositAmountUsd: dto.maxDepositAmountUsd } : {}),
         ...(undefined !== dto.maxAccountsPerUser ? { maxAccountsPerUser: dto.maxAccountsPerUser } : {}),
         ...(dto.platformUserGroupId ? { platformUserGroupId: dto.platformUserGroupId } : {}),
-        leverageOverwrites:
-          dto.leverageOverwrites?.map((l) => ({
-            leverages: l.leverages,
-            allowedCountries: l.allowedCountries ?? undefined,
-            excludedCountries: l.excludedCountries ?? undefined,
-          })) ?? undefined,
+        ...(leverageOverwrites ? { leverageOverwrites } : {}),
       },
     );
 

@@ -19,6 +19,7 @@ pnpm-debug.log*
 
 # IDEs and editors
 /.idea
+!/.idea/dictionaries
 .project
 .classpath
 .c9/

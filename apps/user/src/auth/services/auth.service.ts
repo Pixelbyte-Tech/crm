@@ -160,7 +160,10 @@ export class AuthService {
     }
 
     try {
-      const result = await this.userRepo.update(userId, { isEmailVerified: true });
+      const result = await this.userRepo.update(userId, {
+        isEmailVerified: true,
+        emailVerifiedAt: DateTime.utc().toJSDate(),
+      });
       this.#logger.log(`${msg} - Complete`);
 
       return (result.affected ?? 0) > 0;
@@ -199,7 +202,7 @@ export class AuthService {
       return true;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
-      throw new InternalServerErrorException('Failed to update user email', { cause: err });
+      throw new InternalServerErrorException('Failed to reset user password', { cause: err });
     }
   }
 

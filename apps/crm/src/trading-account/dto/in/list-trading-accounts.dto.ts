@@ -2,9 +2,16 @@ import { Type, Transform } from 'class-transformer';
 import { IsEnum, IsDate, Validate, IsOptional } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
-import { TradingAccountSchemaEntity } from '@crm/database';
 import { Platform, Monetisation, IntegrationName, TradingAccountStatus } from '@crm/types';
-import { toArray, toBoolean, UserIdValidator, ServerIdValidator, IntegrationIdValidator } from '@crm/validation';
+import {
+  toArray,
+  toBoolean,
+  UserIdValidator,
+  BooleanValidator,
+  ServerIdValidator,
+  IntegrationIdValidator,
+  TradingAccountSchemaIdValidator,
+} from '@crm/validation';
 
 export class ListTradingAccountsDto extends PaginatedReqDto {
   /** The registration from date to filter by */
@@ -49,7 +56,7 @@ export class ListTradingAccountsDto extends PaginatedReqDto {
 
   /** Filter by schema */
   @IsOptional()
-  @Validate(TradingAccountSchemaEntity)
+  @Validate(TradingAccountSchemaIdValidator)
   schemaId?: string;
 
   /** Filter by user */
@@ -59,13 +66,13 @@ export class ListTradingAccountsDto extends PaginatedReqDto {
 
   /** Whether to include the account balance */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   incBalance?: boolean;
 
   /** Whether to include the account user group */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   incUserGroup?: boolean;
 }

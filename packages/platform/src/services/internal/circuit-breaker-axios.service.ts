@@ -83,7 +83,7 @@ export class CircuitBreakerAxios {
         .on('reject', () => this.#logger.error(`Breaker ${opts.name} request rejected`))
         .on('open', () => this.#logger.warn(`Breaker ${opts.name} opened`))
         .on('halfOpen', () => this.#logger.warn(`Breaker ${opts.name} half-opened`))
-        .on('close', () => this.#logger.error(`Breaker ${opts.name} closed. Endpoint is ok`));
+        .on('close', () => this.#logger.log(`Breaker ${opts.name} closed. Endpoint is ok`));
 
       this.#circuitBreakers.set(key, breaker);
     }

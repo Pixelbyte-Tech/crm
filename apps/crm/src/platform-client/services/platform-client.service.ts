@@ -62,8 +62,8 @@ export class PlatformClientService {
       { limit: dto.limit, page: dto.page },
       {
         where: {
-          ...(dto.platform ? { platform: In(dto.platform) } : {}),
-          ...(dto.monetisation ? { monetisation: In(dto.monetisation) } : {}),
+          ...(dto.platform?.length ? { platform: In(dto.platform) } : {}),
+          ...(dto.monetisation?.length ? { monetisation: In(dto.monetisation) } : {}),
           ...(dto.integrationId ? { integrationId: dto.integrationId } : {}),
           ...(!isNil(dto.enabled) ? { isEnabled: dto.enabled } : {}),
         },

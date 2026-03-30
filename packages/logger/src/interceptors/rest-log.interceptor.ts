@@ -32,7 +32,7 @@ export class RestLogInterceptor<T extends Record<string, any>> implements NestIn
       }
     }
 
-    const startTime = DateTime.now();
+    const startTime = DateTime.utc();
     set(req, 'meta', { time: startTime.toISO() });
 
     const { userId, sessionId } = this.#getRequestSubjects(req);
@@ -57,7 +57,7 @@ export class RestLogInterceptor<T extends Record<string, any>> implements NestIn
 
         // Calculate the duration of the request
         if ('meta' in req && isObject(req.meta)) {
-          const durationMs = DateTime.now().diff(startTime).toMillis();
+          const durationMs = DateTime.utc().diff(startTime).toMillis();
           set(result, 'meta', { ...req.meta, durationMs });
         }
 

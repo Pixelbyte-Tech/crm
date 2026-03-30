@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { GlobalSetting } from '@crm/types';
@@ -47,7 +47,7 @@ export class GlobalSettingController {
   @OpenApi({ type: GlobalSetting })
   @Post()
   public async create(
-    @Query() dto: CreateGlobalSettingDto,
+    @Body() dto: CreateGlobalSettingDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: GlobalSetting }> {
     return { data: await this.service.create(dto, req) };
@@ -64,7 +64,7 @@ export class GlobalSettingController {
   @Patch(':settingId')
   public async update(
     @Param('settingId', GlobalSettingIdValidator) settingId: string,
-    @Query() dto: UpdateGlobalSettingDto,
+    @Body() dto: UpdateGlobalSettingDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: GlobalSetting }> {
     return { data: await this.service.update(settingId, dto, req) };

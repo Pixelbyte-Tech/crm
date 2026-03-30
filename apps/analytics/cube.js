@@ -71,6 +71,7 @@ module.exports = {
     }
 
     if (securityContext?.userId) {
+      query.filters = query.filters || [];
       query.filters.push({
         member: 'user.id',
         operator: 'equals',

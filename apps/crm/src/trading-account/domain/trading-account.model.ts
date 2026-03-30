@@ -43,7 +43,7 @@ export class TradingAccount {
       this.monetisation = data.monetisation;
       this.status = data.status;
       this.leverage = data.leverage;
-      this.currency = data.currency.toUpperCase();
+      this.currency = data.currency?.toUpperCase();
       this.registeredAt = data.registeredAt;
       this.login = data.login;
       this.password = data.password;

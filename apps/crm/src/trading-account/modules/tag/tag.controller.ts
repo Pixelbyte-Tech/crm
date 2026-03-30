@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
@@ -46,7 +46,7 @@ export class TagController {
   @Auth(Action.CREATE, TagSubject)
   @OpenApi({ type: Tag })
   @Post()
-  public async create(@Query() dto: CreateTagDto, @Req() req: AuthenticatedReq): Promise<{ data: Tag }> {
+  public async create(@Body() dto: CreateTagDto, @Req() req: AuthenticatedReq): Promise<{ data: Tag }> {
     return { data: await this.service.create(dto, req) };
   }
 
@@ -61,7 +61,7 @@ export class TagController {
   @Patch(':tagId')
   public async update(
     @Param('tagId', TagIdValidator) tagId: string,
-    @Query() dto: UpdateTagDto,
+    @Body() dto: UpdateTagDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Tag }> {
     return { data: await this.service.update(tagId, dto, req) };

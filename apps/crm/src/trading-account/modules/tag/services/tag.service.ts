@@ -34,7 +34,7 @@ export class TagService {
 
   /**
    * Fetches a tag by its id
-   * @param tagId The id of the ptag to fetch
+   * @param tagId The id of the tag to fetch
    */
   async get(tagId: string): Promise<Tag> {
     const msg = `Fetching tag '${tagId}'`;

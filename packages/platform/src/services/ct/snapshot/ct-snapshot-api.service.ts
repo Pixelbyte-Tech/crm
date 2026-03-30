@@ -42,7 +42,12 @@ export class CtSnapshotApiService {
     // Add the response interceptors
     this.#client.interceptors.response.use(
       (response: AxiosResponse) => {
-        response.data = this.#toMessage(response.config.headers['x-msg-type'], response.data);
+        const msgType = response.config.headers?.['x-msg-type'];
+        if (!msgType) {
+          throw new Error('Missing x-msg-type header in response');
+        }
+
+        response.data = this.#toMessage(msgType, response.data);
         return response;
       },
       async (error: AxiosError) => Promise.reject(this.ctErrorMapper.mapSnapshotApiError(error)),
@@ -59,6 +64,7 @@ export class CtSnapshotApiService {
       this.#logger.debug(`${msg} - Complete`);
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
+      throw err;
     }
   }
 
@@ -81,7 +87,7 @@ export class CtSnapshotApiService {
     size = Math.min(Math.max(size, 100), 15_000);
 
     // Prepare the correct type for the snapshot
-    let type = entity.charAt(0).toUpperCase() + entity.toLowerCase().slice(1);
+    let type = entity.charAt(0).toUpperCase() + entity.slice(1).toLowerCase();
     if ('Balancehistories' === type) {
       type = 'BalanceHistories';
     }

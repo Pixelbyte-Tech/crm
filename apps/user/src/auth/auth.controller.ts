@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
 import { Req, Get, Body, Post, Response, Controller } from '@nestjs/common';
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
@@ -54,14 +53,14 @@ export class AuthController {
       httpOnly: true,
       secure: !Env.isDev(),
       sameSite: 'strict',
-      maxAge: DateTime.fromMillis(result.tokens.refresh.expireMs).toMillis(),
+      maxAge: result.tokens.auth.expireMs,
     });
 
     response.cookie('refresh-token', result.tokens.refresh.token, {
       httpOnly: true,
       secure: !Env.isDev(),
       sameSite: 'strict',
-      maxAge: DateTime.fromMillis(result.tokens.refresh.expireMs).toMillis(),
+      maxAge: result.tokens.refresh.expireMs,
     });
 
     return { data: result };
@@ -90,14 +89,14 @@ export class AuthController {
       httpOnly: true,
       secure: !Env.isDev(),
       sameSite: 'strict',
-      maxAge: DateTime.fromMillis(result.tokens.auth.expireMs).toMillis(),
+      maxAge: result.tokens.auth.expireMs,
     });
 
     response.cookie('refresh-token', result.tokens.refresh.token, {
       httpOnly: true,
       secure: !Env.isDev(),
       sameSite: 'strict',
-      maxAge: DateTime.fromMillis(result.tokens.refresh.expireMs).toMillis(),
+      maxAge: result.tokens.refresh.expireMs,
     });
 
     return { data: result };

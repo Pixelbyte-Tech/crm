@@ -873,16 +873,16 @@ export class TlService extends AbstractService implements PlatformService {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Check if all positions are closed
-    const now = DateTime.now().toUnixInteger();
+    const now = DateTime.utc().toUnixInteger();
     const result: ClosePositionResult[] = [];
 
-    while (!allPositionsClosed && now > DateTime.now().minus({ seconds: 10 }).toUnixInteger()) {
+    while (!allPositionsClosed && now > DateTime.utc().minus({ seconds: 10 }).toUnixInteger()) {
       const { data: report } = await this.axios.post<{ data: TlClosedPositionsHistoryReport[] }>(
         `/v1/reports/closed-positions-history-report`,
         {
           accountIds: [platformAccountId],
-          startDateTime: this.utcSecToServerTime(DateTime.now().toUnixInteger() - 20),
-          endDateTime: this.utcSecToServerTime(DateTime.now().toUnixInteger() + 10),
+          startDateTime: this.utcSecToServerTime(DateTime.utc().toUnixInteger() - 20),
+          endDateTime: this.utcSecToServerTime(DateTime.utc().toUnixInteger() + 10),
           type: this._server.credentials.environment.toUpperCase(),
         },
       );

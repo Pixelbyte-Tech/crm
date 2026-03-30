@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
@@ -57,7 +57,7 @@ export class NoteController {
   @Post(':userId/notes')
   public async create(
     @Param('userId', UserIdValidator) userId: string,
-    @Query() dto: CreateNoteDto,
+    @Body() dto: CreateNoteDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Note }> {
     return { data: await this.service.create(req.user.userId, userId, dto, req) };
@@ -76,7 +76,7 @@ export class NoteController {
   public async update(
     @Param('userId', UserIdValidator) userId: string,
     @Param('noteId', UserNoteIdValidator) noteId: string,
-    @Query() dto: UpdateNoteDto,
+    @Body() dto: UpdateNoteDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Note }> {
     return { data: await this.service.update(noteId, userId, dto, req) };

@@ -2,18 +2,18 @@ import { Type, Transform } from 'class-transformer';
 import { IsInt, Validate, IsNumber, IsOptional, IsPositive, IsISO31661Alpha2 } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
-import { toArray, toBoolean, toUpperCase, Iso4217OrCryptoValidator } from '@crm/validation';
+import { toArray, toBoolean, toUpperCase, BooleanValidator, Iso4217OrCryptoValidator } from '@crm/validation';
 
 export class ListSchemasDto extends PaginatedReqDto {
   /** Whether the schema is enabled and usable */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isEnabled?: boolean;
 
   /** Whether users must be KYC verified before creating an account */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isKycRequired?: boolean;
 

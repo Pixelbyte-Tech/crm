@@ -63,8 +63,8 @@ export class IntegrationService {
       { limit: dto.limit, page: dto.page },
       {
         where: {
-          ...(dto.name ? { name: In(dto.name) } : {}),
-          ...(dto.type ? { type: In(dto.type) } : {}),
+          ...(dto.name?.length ? { name: In(dto.name) } : {}),
+          ...(dto.type?.length ? { type: In(dto.type) } : {}),
           ...(!isNil(dto.enabled) ? { isEnabled: dto.enabled } : {}),
         },
         order: { createdAt: dto.sortDir },

@@ -38,8 +38,8 @@ export abstract class BaseMapperHelper {
 
     // If the cache is locked we wait for the original request to complete
     if (await this.redis.get(lockKey)) {
-      const startTime = DateTime.now().toUnixInteger();
-      while (startTime > DateTime.now().minus({ seconds: 60 }).toUnixInteger()) {
+      const startTime = DateTime.utc().toUnixInteger();
+      while (startTime > DateTime.utc().minus({ seconds: 60 }).toUnixInteger()) {
         await new Promise((resolve) => setTimeout(resolve, 100));
         if (!(await this.redis.get(lockKey))) {
           return cacheFn();

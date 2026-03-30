@@ -2,7 +2,7 @@ import { Type, Transform } from 'class-transformer';
 import { Min, Max, IsInt, IsEnum, Validate, IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 import { Platform, Monetisation } from '@crm/types';
-import { toBoolean, IntegrationIdValidator } from '@crm/validation';
+import { toBoolean, BooleanValidator, IntegrationIdValidator } from '@crm/validation';
 
 import { ServerSetting } from '../../types';
 import { SettingsValidator } from '../../validators';
@@ -23,7 +23,7 @@ export class CreateServerDto {
 
   /** Whether the server should be automatically enabled */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isEnabled: boolean = false;
 

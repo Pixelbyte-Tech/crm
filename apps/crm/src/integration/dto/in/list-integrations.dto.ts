@@ -2,13 +2,13 @@ import { Transform } from 'class-transformer';
 import { IsEnum, Validate, IsOptional } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
-import { toArray, toBoolean } from '@crm/validation';
 import { IntegrationName, IntegrationType } from '@crm/types';
+import { toArray, toBoolean, BooleanValidator } from '@crm/validation';
 
 export class ListIntegrationsDto extends PaginatedReqDto {
   /** Filter by enabled attribute */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   enabled?: boolean;
 

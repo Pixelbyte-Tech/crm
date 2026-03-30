@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { Integration } from '@crm/types';
@@ -48,10 +48,7 @@ export class IntegrationController {
   @Auth(Action.CREATE, IntegrationSubject)
   @OpenApi({ type: Integration })
   @Post()
-  public async create(
-    @Query() dto: CreateIntegrationDto,
-    @Req() req: AuthenticatedReq,
-  ): Promise<{ data: Integration }> {
+  public async create(@Body() dto: CreateIntegrationDto, @Req() req: AuthenticatedReq): Promise<{ data: Integration }> {
     return { data: await this.service.create(dto, req) };
   }
 
@@ -66,7 +63,7 @@ export class IntegrationController {
   @Patch(':integrationId')
   public async update(
     @Param('integrationId', IntegrationIdValidator) integrationId: string,
-    @Query() dto: UpdateIntegrationDto,
+    @Body() dto: UpdateIntegrationDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Integration }> {
     return { data: await this.service.update(integrationId, dto, req) };

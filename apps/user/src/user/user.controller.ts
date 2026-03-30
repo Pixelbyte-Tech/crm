@@ -72,7 +72,7 @@ export class UserController {
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: User }> {
     // Only allow admins to update the status of any user
-    if (req.user.roles[0] === Role.USER) {
+    if (req.user.roles.length === 1 && req.user.roles[0] === Role.USER) {
       dto.status = undefined;
     }
 

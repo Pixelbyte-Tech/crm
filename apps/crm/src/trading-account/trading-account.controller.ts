@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Patch, Query, Delete, Controller } from '@nestjs/common';
 
 import { Role } from '@crm/types';
 import { OpenApi } from '@crm/swagger';
@@ -32,7 +32,7 @@ export class TradingAccountController {
    */
   @Auth(Action.READ, TradingAccountSubject, { use: 'tradingAccountId', in: 'query', findBy: 'id' })
   @OpenApi({ type: TradingAccount })
-  @Get()
+  @Get(':tradingAccountId')
   public async get(
     @Param('tradingAccountId', TradingAccountIdValidator) tradingAccountId: string,
     @Query() dto: GetTradingAccountDto,
@@ -54,7 +54,7 @@ export class TradingAccountController {
   ): Promise<PaginatedResDto<TradingAccount>> {
     // todo test this as it will not work due to the subject
     // If the req is from an end user, scope the accounts
-    if (req.user.roles.length === 1 && req.user.roles.includes(Role.USER)) {
+    if (req.user.roles.length === 1 && req.user.roles[0] === Role.USER) {
       dto.userId = req.user.userId;
     }
 
@@ -70,7 +70,7 @@ export class TradingAccountController {
   @OpenApi({ type: TradingAccount })
   @Post()
   public async create(
-    @Query() dto: CreateTradingAccountDto,
+    @Body() dto: CreateTradingAccountDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: TradingAccount }> {
     return { data: await this.service.create(dto, req) };
@@ -87,11 +87,11 @@ export class TradingAccountController {
   @Patch(':tradingAccountId')
   public async update(
     @Param('tradingAccountId', TradingAccountIdValidator) tradingAccountId: string,
-    @Query() dto: UpdateTradingAccountDto,
+    @Body() dto: UpdateTradingAccountDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: TradingAccount }> {
     // Only allow admins to update the status of any trading account
-    if (req.user.roles[0] === Role.USER) {
+    if (req.user.roles.length === 1 && req.user.roles[0] === Role.USER) {
       dto.status = undefined;
     }
 

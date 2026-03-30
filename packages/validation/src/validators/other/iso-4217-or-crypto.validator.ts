@@ -19,7 +19,7 @@ export class Iso4217OrCryptoValidator implements ValidatorConstraintInterface, P
       return false;
     }
 
-    return isISO4217CurrencyCode(value) || ['BTC', 'BIT', 'ETH'].includes(value.toString().toLowerCase());
+    return isISO4217CurrencyCode(value) || ['BTC', 'BIT', 'ETH'].includes(value.toString().toUpperCase());
   }
 
   /**
@@ -27,7 +27,7 @@ export class Iso4217OrCryptoValidator implements ValidatorConstraintInterface, P
    * @param value The value to transform
    * @param metadata The metadata about the value
    */
-  transform(value: any, metadata: ArgumentMetadata): boolean {
+  transform(value: any, metadata: ArgumentMetadata): string {
     if (!this.validate(value)) {
       throw new BadRequestException(
         this.defaultMessage({

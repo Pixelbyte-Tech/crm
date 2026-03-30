@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
 @Injectable()
@@ -17,7 +17,11 @@ export class PasswordValidator implements ValidatorConstraintInterface, PipeTran
    * @param value The value to transform
    */
   transform(value: unknown): string {
-    this.validate(value);
+    if (!this.validate(value)) {
+      throw new BadRequestException(
+        this.defaultMessage({ property: 'password', value, constraints: [], object: {}, targetName: '' }),
+      );
+    }
     return String(value);
   }
 

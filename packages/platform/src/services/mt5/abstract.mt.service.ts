@@ -186,8 +186,8 @@ export abstract class AbstractMtService {
   async #updateToken(silent: boolean = false): Promise<boolean> {
     // If the token is already being updated, wait for it to finish
     if (await this.#isTokenUpdating()) {
-      const now = DateTime.now().toUnixInteger();
-      while (now > DateTime.now().minus({ seconds: 30 }).toUnixInteger()) {
+      const now = DateTime.utc().toUnixInteger();
+      while (now > DateTime.utc().minus({ seconds: 30 }).toUnixInteger()) {
         if (!(await this.#isTokenUpdating())) {
           return !(await this.#isTokenExpired());
         }
@@ -240,12 +240,13 @@ export abstract class AbstractMtService {
         createdAt: DateTime.utc().toSeconds(),
       });
 
-      // Un-lock the token fetching status
-      if (!silent) await this.#isTokenUpdating(false);
       return true;
     } catch (err) {
       this.#logger.error(`${msg} - Failed`, err);
       return false;
+    } finally {
+      // Un-lock the token fetching status
+      if (!silent) await this.#isTokenUpdating(false);
     }
   }
 

@@ -321,7 +321,7 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
           firstName: dto.firstName,
           lastName: dto.lastName,
           email: dto.email.toLowerCase().trim(),
-          registration: DateTime.now().toSeconds(),
+          registration: DateTime.utc().toSeconds(),
 
           ...(dto.platformAccountId ? { login: dto.platformAccountId } : {}),
 
@@ -982,14 +982,14 @@ export class Mt5Service extends AbstractMtService implements PlatformService {
       ordersStatus: closeOrdersStatus,
     });
 
-    const now = DateTime.now().toUnixInteger();
+    const now = DateTime.utc().toUnixInteger();
 
-    while (positions.length !== closedDealIds.length && now > DateTime.now().minus({ seconds: 10 }).toUnixInteger()) {
+    while (positions.length !== closedDealIds.length && now > DateTime.utc().minus({ seconds: 10 }).toUnixInteger()) {
       // Fetch the most recent deals to find the ones we just closed
       const { data: deals } = await this.axios.get<{ data: Mt5Deal[] }>(`/deals`, {
         params: {
           Login: platformAccountId,
-          From: this.utcSecToServerTime(DateTime.now().minus({ second: 60 }).toSeconds()),
+          From: this.utcSecToServerTime(DateTime.utc().minus({ second: 60 }).toSeconds()),
         },
       });
 

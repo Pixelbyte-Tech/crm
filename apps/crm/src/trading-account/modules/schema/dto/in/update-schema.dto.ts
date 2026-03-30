@@ -11,7 +11,7 @@ import {
   IsISO31661Alpha2,
 } from 'class-validator';
 
-import { toArray, toBoolean, toUpperCase, Iso4217OrCryptoValidator } from '@crm/validation';
+import { toArray, toBoolean, toUpperCase, BooleanValidator, Iso4217OrCryptoValidator } from '@crm/validation';
 
 import { SchemaLeverageDto } from './schema-leverage.dto';
 
@@ -30,19 +30,19 @@ export class UpdateSchemaDto {
 
   /** Whether the schema is enabled and usable */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isEnabled?: boolean;
 
   /** Whether users must be POI verified before creating an account */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isPoiRequired?: boolean;
 
   /** Whether users must be POW verified before creating an account */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   isPowRequired?: boolean;
 
@@ -55,7 +55,7 @@ export class UpdateSchemaDto {
 
   /** Any leverage overwrites applicable to the schema */
   @IsOptional()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => SchemaLeverageDto)
   leverageOverwrites?: SchemaLeverageDto[] | null;
 

@@ -3,12 +3,12 @@ import { IsEnum, Validate, IsOptional } from 'class-validator';
 
 import { PaginatedReqDto } from '@crm/http';
 import { Platform, Monetisation, IntegrationName } from '@crm/types';
-import { toArray, toBoolean, IntegrationIdValidator } from '@crm/validation';
+import { toArray, toBoolean, BooleanValidator, IntegrationIdValidator } from '@crm/validation';
 
 export class ListServersDto extends PaginatedReqDto {
   /** Filter by enabled attribute */
   @IsOptional()
-  @Validate(toBoolean)
+  @Validate(BooleanValidator)
   @Transform(toBoolean)
   enabled?: boolean;
 

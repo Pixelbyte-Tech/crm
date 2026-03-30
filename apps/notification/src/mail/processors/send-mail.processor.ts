@@ -52,11 +52,19 @@ export class SendMailProcessor {
             switch (notification.template) {
               case NotificationTemplate.USER_CONFIRM_EMAIL:
                 meta = notification.meta as unknown as { token: string; expireMs: number };
-                result = await this.mailService.sendConfirmEmail(notification.user.email, meta.token);
+                result = await this.mailService.sendConfirmEmail(
+                  notification.user.email,
+                  meta.token,
+                  notification.user.firstName,
+                );
                 break;
               case NotificationTemplate.USER_FORGOT_PASSWORD:
                 meta = notification.meta as unknown as { token: string; expireMs: number };
-                result = await this.mailService.sendResetPassword(notification.user.email, meta.token);
+                result = await this.mailService.sendResetPassword(
+                  notification.user.email,
+                  meta.token,
+                  notification.user.firstName,
+                );
                 break;
               default:
                 this.logger.error(`Unknown template '${notification.template}' for notification '${notification.id}'`);

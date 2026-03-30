@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
@@ -57,7 +57,7 @@ export class SchemaController {
   @Post(':serverId/trading-account-schemas')
   public async create(
     @Param('serverId', ServerIdValidator) serverId: string,
-    @Query() dto: CreateSchemaDto,
+    @Body() dto: CreateSchemaDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: TradingAccountSchema }> {
     return { data: await this.service.create(serverId, dto, req) };
@@ -76,7 +76,7 @@ export class SchemaController {
   public async update(
     @Param('serverId', ServerIdValidator) serverId: string,
     @Param('schemaId', TradingAccountSchemaIdValidator) schemaId: string,
-    @Query() dto: UpdateSchemaDto,
+    @Body() dto: UpdateSchemaDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: TradingAccountSchema }> {
     return { data: await this.service.update(serverId, schemaId, dto, req) };

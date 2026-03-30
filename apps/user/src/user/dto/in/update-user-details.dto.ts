@@ -55,6 +55,7 @@ export class UpdateUserDetailsDto {
   @IsISO31661Alpha2()
   country?: string | null;
 
+  @IsOptional()
   @IsISO6391()
   language?: string | null;
 

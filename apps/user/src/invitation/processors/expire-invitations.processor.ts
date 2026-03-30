@@ -24,8 +24,6 @@ export class ExpireInvitationsProcessor {
    */
   @Process(JobType.EXPIRE_INVITATIONS)
   async handle(job: Job) {
-    const { integrationId } = job.data;
-
     return Sentry.startNewTrace(async () => {
       return Sentry.startSpan({ name: JobType.EXPIRE_INVITATIONS, op: 'processor' }, async () => {
         // Bind the logger
@@ -39,7 +37,7 @@ export class ExpireInvitationsProcessor {
           for (const invitation of invitations) {
             const expirationDate = DateTime.fromJSDate(invitation.createdAt).plus({ days: invitation.expiresInDays });
 
-            if (DateTime.now() >= expirationDate) {
+            if (DateTime.utc() >= expirationDate) {
               invitation.status = InvitationStatus.EXPIRED;
               await this.invitationRepo.save(invitation);
               this.logger.log(`Expired invitation '${invitation.id}' for email '${invitation.email}'`);
@@ -53,7 +51,6 @@ export class ExpireInvitationsProcessor {
             tags: {
               component: ExpireInvitationsProcessor.name,
               process: JobType.EXPIRE_INVITATIONS,
-              integrationId: integrationId,
             },
           });
 

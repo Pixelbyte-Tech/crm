@@ -51,7 +51,7 @@ export class InvitationService {
 
     // Test the roles being granted do not exceed the inviting user's permissions
     // If user is admin they can grant any role to the invitee
-    if (!user.roles.includes(Role.ADMIN) || !dto.roles.every((role) => user.roles.includes(role))) {
+    if (!user.roles.includes(Role.ADMIN) && !dto.roles.every((role) => user.roles.includes(role))) {
       throw new ExcessiveRoleGrantException(dto.roles.filter((role) => !user.roles.includes(role)));
     }
 
@@ -180,16 +180,13 @@ export class InvitationService {
       await this.userRepo.manager.transaction(async (trx: EntityManager) => {
         await trx.update(UserEntity, { id: user.id }, { roles: invitation.roles });
         await trx.update(InvitationEntity, { token: token }, { status: InvitationStatus.ACCEPTED });
-
-        this.#logger.log(`${msg} - Complete`);
       });
+      this.#logger.log(`${msg} - Complete`);
+      return true;
     } catch (err) {
       this.#logger.error(`${msg} - Failed to assign user to company`, err);
       return false;
     }
-
-    this.#logger.error(`${msg} - Failed`);
-    return false;
   }
 
   /**

@@ -1,5 +1,5 @@
 import { ApiTags, ApiExtraModels } from '@nestjs/swagger';
-import { Get, Req, Post, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
+import { Get, Req, Post, Body, Param, Query, Patch, Delete, Controller } from '@nestjs/common';
 
 import { OpenApi } from '@crm/swagger';
 import { PaginatedResDto } from '@crm/http';
@@ -46,7 +46,7 @@ export class ServerController {
   @Auth(Action.CREATE, ServerSubject)
   @OpenApi({ type: Server })
   @Post()
-  public async create(@Query() dto: CreateServerDto, @Req() req: AuthenticatedReq): Promise<{ data: Server }> {
+  public async create(@Body() dto: CreateServerDto, @Req() req: AuthenticatedReq): Promise<{ data: Server }> {
     return { data: await this.service.create(dto, req) };
   }
 
@@ -61,7 +61,7 @@ export class ServerController {
   @Patch(':serverId')
   public async update(
     @Param('serverId', ServerIdValidator) serverId: string,
-    @Query() dto: UpdateServerDto,
+    @Body() dto: UpdateServerDto,
     @Req() req: AuthenticatedReq,
   ): Promise<{ data: Server }> {
     return { data: await this.service.update(serverId, dto, req) };

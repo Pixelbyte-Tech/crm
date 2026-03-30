@@ -113,15 +113,15 @@ export class TradingAccountService {
         relations: { tradingAccountTags: true, server: true },
         where: {
           ...(dto.registeredAtFrom && dto.registeredAtTo
-            ? { firstSeenAt: Between(dto.registeredAtFrom, dto.registeredAtTo) }
+            ? { registeredAt: Between(dto.registeredAtFrom, dto.registeredAtTo) }
             : {
                 ...(dto.registeredAtFrom ? { registeredAt: MoreThanOrEqual(dto.registeredAtFrom) } : {}),
                 ...(dto.registeredAtTo ? { registeredAt: LessThanOrEqual(dto.registeredAtTo) } : {}),
               }),
           ...(dto.userId ? { userId: dto.userId } : {}),
-          ...(dto.status ? { status: In(dto.status) } : {}),
-          ...(dto.platform ? { platform: In(dto.platform) } : {}),
-          ...(dto.monetisation ? { monetisation: In(dto.monetisation) } : {}),
+          ...(dto.status?.length ? { status: In(dto.status) } : {}),
+          ...(dto.platform?.length ? { platform: In(dto.platform) } : {}),
+          ...(dto.monetisation?.length ? { monetisation: In(dto.monetisation) } : {}),
           ...(dto.integrationId ? { integrationId: dto.integrationId } : {}),
           ...(dto.serverId ? { serverId: dto.serverId } : {}),
           ...(dto.schemaId ? { schemaId: dto.schemaId } : {}),
@@ -186,20 +186,16 @@ export class TradingAccountService {
             candidates.forEach((a) => userGroupMap.set(a.platformAccountId, userGroup));
           }
         }
-
-        return {
-          data: entities.items.map((item) =>
-            this.tradingAccMapper.toTradingAcc(
-              item,
-              userGroupMap.get(item.platformId),
-              balancesMap.get(item.platformId),
-            ),
-          ),
-          page: entities.meta.currentPage,
-          limit: entities.meta.itemsPerPage,
-          total: entities.meta.totalItems,
-        };
       }
+
+      return {
+        data: entities.items.map((item) =>
+          this.tradingAccMapper.toTradingAcc(item, userGroupMap.get(item.platformId), balancesMap.get(item.platformId)),
+        ),
+        page: entities.meta.currentPage,
+        limit: entities.meta.itemsPerPage,
+        total: entities.meta.totalItems,
+      };
     }
 
     return {
@@ -464,11 +460,11 @@ export class TradingAccountService {
    * @param req The authenticated request
    */
   async delete(tradingAccountId: string, req?: AuthenticatedReq): Promise<boolean> {
-    const msg = `Deleting trading account '${tradingAccountId}`;
+    const msg = `Deleting trading account '${tradingAccountId}'`;
     this.#logger.log(`${msg} - Start`);
 
     // Find the entity
-    const entity = await this.tradingAccRepo.findOne({ where: { id: tradingAccountId } });
+    const entity = await this.tradingAccRepo.findOne({ relations: { server: true }, where: { id: tradingAccountId } });
     if (!entity) {
       this.#logger.error(`${msg}. Trading account not found - Failed`);
       throw new NotFoundException('Trading account not found');
@@ -552,12 +548,12 @@ export class TradingAccountService {
     if (!schema) return;
 
     // Test leverage
-    if (schema.allowedLeverages?.includes(leverage)) {
+    if (!schema.allowedLeverages?.includes(leverage)) {
       throw new SchemaConflictException(schema.name, 'leverage');
     }
 
     // Test currency
-    if (currency && schema.allowedCurrencies?.includes(currency)) {
+    if (currency && !schema.allowedCurrencies?.includes(currency)) {
       throw new SchemaConflictException(schema.name, 'currency');
     }
 
@@ -589,10 +585,9 @@ export class TradingAccountService {
     }
 
     // Test number of accounts
-
     if (schema.maxAccountsPerUser) {
       const num = await this.tradingAccRepo.count({ where: { userId, schemaId: schema.id } });
-      if (schema.maxAccountsPerUser >= num) {
+      if (num >= schema.maxAccountsPerUser) {
         throw new SchemaConflictException(schema.name, 'maxAccountsPerUser');
       }
     }

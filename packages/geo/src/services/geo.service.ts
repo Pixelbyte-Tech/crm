@@ -19,16 +19,12 @@ export class GeoService implements OnModuleInit {
   /**
    * Automatically executed when the module is initialised.
    */
-  async onModuleInit(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // Update the database in the background
-      void this.#updateDb();
+  onModuleInit(): void {
+    // Update the database in the background
+    void this.#updateDb();
 
-      // Initialise the database reader in the background
-      void this.#initReader();
-
-      resolve(true);
-    });
+    // Initialise the database reader in the background
+    void this.#initReader();
   }
 
   /**

@@ -52,17 +52,17 @@ export class UpdateUserDto {
   @IsOptional()
   @Validate(BooleanValidator)
   @Transform(toBoolean)
-  isCookiesAccepted?: boolean | null;
+  isCookiesAccepted?: boolean;
 
   /** Whether the user has accepted the privacy policy */
   @IsOptional()
   @Validate(BooleanValidator)
   @Transform(toBoolean)
-  isPrivacyAccepted?: boolean | null;
+  isPrivacyAccepted?: boolean;
 
   /** Whether the user has accepted the terms of service */
   @IsOptional()
   @Validate(BooleanValidator)
   @Transform(toBoolean)
-  isTermsAccepted?: boolean | null;
+  isTermsAccepted?: boolean;
 }
