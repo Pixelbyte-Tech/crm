@@ -162,7 +162,7 @@ export class UserService {
           {
             user: domainUser,
             confirmEmailToken: token.token,
-            createdAt: DateTime.fromJSDate(user.createdAt).toMillis(),
+            createdAt: DateTime.fromJSDate(domainUser.createdAt).toMillis(),
           },
           req,
         ),
@@ -259,7 +259,7 @@ export class UserService {
     // Trigger the update event
     this.kafka.emit(
       UserUpdatedEvent.type,
-      new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(user.updatedAt).toMillis() }, req),
+      new UserUpdatedEvent({ user: domainUser, updatedAt: DateTime.fromJSDate(domainUser.updatedAt).toMillis() }, req),
     );
 
     this.#logger.log(`${msg} - Complete`);
