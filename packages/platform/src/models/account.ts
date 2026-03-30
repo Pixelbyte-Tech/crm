@@ -20,7 +20,7 @@ export class Account {
   constructor(data: Account) {
     this.platformAccountId = data.platformAccountId;
     this.platformUserGroupId = data.platformUserGroupId;
-    this.currency = data.currency;
+    this.currency = data.currency?.toUpperCase();
     this.isTradingAllowed = data.isTradingAllowed;
     this.isSuspended = data.isSuspended;
     this.platformAccountName = data.platformAccountName;

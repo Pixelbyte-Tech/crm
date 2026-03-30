@@ -25,6 +25,10 @@ export class DeleteAccountProcessor {
         // Bind the logger
         this.logger.bind(DeleteAccountProcessor.name, job);
 
+        if (!tradingAccountId) {
+          this.logger.error(`Missing required job params, skipping...`);
+        }
+
         const msg = `Deleting trading account ${tradingAccountId}`;
         this.logger.log(`${msg} - Start`);
 
@@ -35,11 +39,7 @@ export class DeleteAccountProcessor {
         } catch (err) {
           this.logger.error(`${msg} - Failed`, err);
           Sentry.captureException(err, {
-            tags: {
-              component: DeleteAccountProcessor.name,
-              process: JobType.DELETE_ACCOUNT,
-              tradingAccountId: tradingAccountId,
-            },
+            tags: { component: DeleteAccountProcessor.name, process: JobType.DELETE_ACCOUNT, tradingAccountId },
           });
 
           throw err;

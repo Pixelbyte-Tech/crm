@@ -11,6 +11,6 @@ export class CommissionGroup {
   constructor(data: CommissionGroup) {
     this.platformGroupId = data.platformGroupId;
     this.name = data.name;
-    this.currency = data.currency;
+    this.currency = data.currency?.toUpperCase();
   }
 }

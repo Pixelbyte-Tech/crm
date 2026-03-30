@@ -492,6 +492,7 @@ export class TradingAccountService {
       // Record the current balance
       const balance = await platform.getBalance(entity.platformId);
 
+      // todo use transaction and credit wallet first
       // Zero the trading account balance
       const comment = `Account deleted. Balance transferred to PixelByte CRM wallet.`;
       const balanceRes = await platform.updateBalance(

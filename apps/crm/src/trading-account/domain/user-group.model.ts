@@ -7,7 +7,7 @@ export class UserGroup {
     if (data) {
       this.platformId = data.platformId;
       this.platformName = data.platformName;
-      this.currency = data.currency;
+      this.currency = data.currency?.toUpperCase();
     }
   }
 }

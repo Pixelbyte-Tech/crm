@@ -1,4 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
-@Module({})
+import { PlatformServerFactory } from './services';
+
+@Global()
+@Module({
+  providers: [PlatformServerFactory],
+  exports: [PlatformServerFactory],
+})
 export class CommonModule {}

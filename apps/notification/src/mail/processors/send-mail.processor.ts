@@ -25,7 +25,7 @@ export class SendMailProcessor {
   @Process({ name: JobType.SEND_MAIL, concurrency: 1 })
   async handle(job: Job) {
     return Sentry.startNewTrace(async () => {
-      return Sentry.startSpan({ name: JobType.SEND_MAIL, op: 'notification' }, async () => {
+      return Sentry.startSpan({ name: JobType.SEND_MAIL, op: 'processor' }, async () => {
         // Bind the logger
         this.logger.bind(SendMailProcessor.name, job);
 

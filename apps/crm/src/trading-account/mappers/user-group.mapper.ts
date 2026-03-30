@@ -10,7 +10,7 @@ export class UserGroupMapper {
     const model = new UserGroup();
     model.platformId = data.platformGroupId;
     model.platformName = data.name ?? undefined;
-    model.currency = data.currency ?? undefined;
+    model.currency = data.currency?.toUpperCase() ?? undefined;
 
     return model;
   }

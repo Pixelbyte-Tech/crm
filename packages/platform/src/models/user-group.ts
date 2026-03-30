@@ -11,6 +11,6 @@ export class UserGroup {
   constructor(data: UserGroup) {
     this.platformGroupId = data.platformGroupId;
     this.name = data.name;
-    this.currency = data.currency;
+    this.currency = data.currency?.toUpperCase();
   }
 }
